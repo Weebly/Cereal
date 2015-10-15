@@ -227,6 +227,7 @@ let vehicle: Vehicle = Car(make: "Foo", model: "Bar", cylinders: 8)
 let encoder = CerealEncoder()
 try encoder.encode(vehicle, forKey: "vehicle")
 
+// Decoding
 let decoder = CerealDecoder(data: encoder.toData())
 let decodedVehicle: Vehicle = try decoder.decodeCereal("vehicle") as! Vehicle
 ```
@@ -236,7 +237,7 @@ let decodedVehicle: Vehicle = try decoder.decodeCereal("vehicle") as! Vehicle
 In addition to allowing you to encode and decode protocols, you can use IdentifyingCerealType as a method to
 ensure the same type gets decoded as was encoded.
 
-### Handling dictionaries and arrys with protocol types
+### Handling dictionaries and arrays with protocol types
 
 When working with protocol collections, such as [Vehicle], the compiler has issues encoding and decoding the types. To support
 these theres an extension on Array and Dictionary, ```CER_casted()``` which will cast the type into the appropriately expected type:
