@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
                    DESC
 
   s.license      = "MIT"
-
+  s.homepage           = "https://github.com/Weebly/Cereal.git"
   s.author             = { "ketzusaka" => "james@weebly.com" }
   s.social_media_url   = "http://twitter.com/ketzusaka"
 
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target = "2.0"
   #s.tvos.deployment_target = "1.0"
 
-  s.source       = { :git => "http://github.com/Weebly/Cereal.git", :tag => "v1.0.0" }
+  s.source       = { :git => "https://github.com/Weebly/Cereal.git", :tag => "v1.0.0" }
   s.requires_arc = true
   s.source_files = "Cereal/*.swift"
 
