@@ -23,10 +23,10 @@ extension Employee: CerealType {
         static let gender = "gender"
     }
 
-    init(cereal: CerealDecoder) throws {
-        name = try cereal.decode(Keys.name) ?? ""
-        age = try cereal.decode(Keys.age) ?? 0
-        gender = try cereal.decodeCereal(Keys.gender) ?? .Female
+    init(decoder: CerealDecoder) throws {
+        name = try decoder.decode(Keys.name) ?? ""
+        age = try decoder.decode(Keys.age) ?? 0
+        gender = try decoder.decodeCereal(Keys.gender) ?? .Female
     }
 
     func encodeWithCereal(inout cereal: CerealEncoder) throws {

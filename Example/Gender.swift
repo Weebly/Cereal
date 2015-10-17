@@ -18,8 +18,8 @@ extension Gender: CerealType {
         static let root = "gender"
     }
 
-    init(cereal: CerealDecoder) throws {
-        self.init(rawValue: try cereal.decode(Keys.root) ?? Gender.Female.rawValue)!
+    init(decoder: CerealDecoder) throws {
+        self.init(rawValue: try decoder.decode(Keys.root) ?? Gender.Female.rawValue)!
     }
 
     func encodeWithCereal(inout cereal: CerealEncoder) throws {

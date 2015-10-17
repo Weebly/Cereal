@@ -38,14 +38,14 @@ struct Car: Vehicle {
 
     static let initializationIdentifier = "car"
 
-    init(cereal: CerealDecoder) throws {
-        guard let make: String = try cereal.decode(SharedKeys.make) else { throw VehicleError.MissingData }
+    init(decoder: CerealDecoder) throws {
+        guard let make: String = try decoder.decode(SharedKeys.make) else { throw VehicleError.MissingData }
         self.make = make
 
-        guard let model: String = try cereal.decode(SharedKeys.model) else { throw VehicleError.MissingData }
+        guard let model: String = try decoder.decode(SharedKeys.model) else { throw VehicleError.MissingData }
         self.model = model
 
-        guard let cylinders: Int = try cereal.decode(Keys.cylinders) else { throw VehicleError.MissingData }
+        guard let cylinders: Int = try decoder.decode(Keys.cylinders) else { throw VehicleError.MissingData }
         self.cylinders = cylinders
     }
 
@@ -77,14 +77,14 @@ struct Train: Vehicle {
 
     static let initializationIdentifier = "train"
 
-    init(cereal: CerealDecoder) throws {
-        guard let make: String = try cereal.decode(SharedKeys.make) else { throw VehicleError.MissingData }
+    init(decoder: CerealDecoder) throws {
+        guard let make: String = try decoder.decode(SharedKeys.make) else { throw VehicleError.MissingData }
         self.make = make
 
-        guard let model: String = try cereal.decode(SharedKeys.model) else { throw VehicleError.MissingData }
+        guard let model: String = try decoder.decode(SharedKeys.model) else { throw VehicleError.MissingData }
         self.model = model
 
-        guard let cars: Int = try cereal.decode(Keys.cars) else { throw VehicleError.MissingData }
+        guard let cars: Int = try decoder.decode(Keys.cars) else { throw VehicleError.MissingData }
         self.cars = cars
     }
 
