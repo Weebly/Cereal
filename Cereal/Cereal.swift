@@ -51,6 +51,7 @@ enum CerealTypeIdentifier: String {
     case Int64 = "z"
     case Double = "d"
     case Float = "f"
+    case Date = "t"
     case Array = "a"
     case Dictionary = "m"
     case Cereal = "c"

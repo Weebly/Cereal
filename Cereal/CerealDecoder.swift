@@ -1069,6 +1069,11 @@ public struct CerealDecoder {
                 throw CerealError.InvalidEncoding
             }
             return convertedValue
+        case .Date:
+            guard let convertedValue = NSTimeInterval(value) else {
+                throw CerealError.InvalidEncoding
+            }
+            return NSDate(timeIntervalSince1970: convertedValue)
         }
     }
 

@@ -309,6 +309,9 @@ public struct CerealEncoder {
         } else if let value = item as? Bool {
             let convertedValue = value ? "t" : "f"
             return "b,1:\(convertedValue)"
+        } else if let value = item as? NSDate {
+            let interval = value.timeIntervalSince1970
+            return "t,\(String(interval).characters.count):\(interval)"
         } else if let identifyingCerealItem = item as? IdentifyingCerealType {
             return try encodeItem(identifyingCerealItem)
         } else if let cerealItem = item as? CerealType {
