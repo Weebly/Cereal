@@ -45,8 +45,9 @@ public struct CerealEncoder {
     - parameter     item:    The object being encoded.
     - parameter     key:     The key the object should be encoded under.
     */
-    public mutating func encode<ItemType: CerealRepresentable>(item: ItemType, forKey key: String) throws {
-        items[key] = try encodeItem(item)
+    public mutating func encode<ItemType: CerealRepresentable>(item: ItemType?, forKey key: String) throws {
+        guard let unwrapped = item else { return }
+        items[key] = try encodeItem(unwrapped)
     }
 
     /**
@@ -55,8 +56,9 @@ public struct CerealEncoder {
     - parameter     item:    The object being encoded.
     - parameter     key:     The key the object should be encoded under.
     */
-    public mutating func encode(item: IdentifyingCerealType, forKey key: String) throws {
-        self.items[key] = try encodeItem(item)
+    public mutating func encode(item: IdentifyingCerealType?, forKey key: String) throws {
+        guard let unwrapped = item else { return }
+        self.items[key] = try encodeItem(unwrapped)
     }
 
     // MARK: - Arrays
@@ -67,8 +69,9 @@ public struct CerealEncoder {
     - parameter     items:   The objects being encoded.
     - parameter     key:     The key the objects should be encoded under.
     */
-    public mutating func encode<ItemType: CerealRepresentable>(items: [ItemType], forKey key: String) throws {
-        self.items[key] = try encodeItems(items)
+    public mutating func encode<ItemType: CerealRepresentable>(items: [ItemType]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
     }
 
     /**
@@ -77,8 +80,9 @@ public struct CerealEncoder {
     - parameter     items:   The objects being encoded.
     - parameter     key:     The key the objects should be encoded under.
     */
-    public mutating func encodeIdentifyingItems(items: [IdentifyingCerealType], forKey key: String) throws {
-        self.items[key] = try encodeIdentifyingItems(items)
+    public mutating func encodeIdentifyingItems(items: [IdentifyingCerealType]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeIdentifyingItems(unwrapped)
     }
 
     // MARK: Arrays of Dictionaries
@@ -89,8 +93,9 @@ public struct CerealEncoder {
     - parameter     items:   The dictionaries being encoded.
     - parameter     key:     The key the objects should be encoded under.
     */
-    public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]], forKey key: String) throws {
-        self.items[key] = try encodeItems(items)
+    public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
     }
 
     /**
@@ -99,8 +104,9 @@ public struct CerealEncoder {
     - parameter     items:   The dictionaries being encoded.
     - parameter     key:     The key the objects should be encoded under.
     */
-    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [[ItemKeyType: IdentifyingCerealType]], forKey key: String) throws {
-        self.items[key] = try encodeItems(items)
+    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [[ItemKeyType: IdentifyingCerealType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
     }
 
     // MARK: - Dictionaries
@@ -111,8 +117,9 @@ public struct CerealEncoder {
     - parameter     items:   The dictionary being encoded.
     - parameter     key:     The key the objects should be encoded under.
     */
-    public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: ItemValueType], forKey key: String) throws {
-        self.items[key] = try encodeItems(items)
+    public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
     }
 
     /**
@@ -121,8 +128,9 @@ public struct CerealEncoder {
     - parameter     items:   The dictionary being encoded.
     - parameter     key:     The key the objects should be encoded under.
     */
-    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: IdentifyingCerealType], forKey key: String) throws {
-        self.items[key] = try encodeIdentifyingItems(items)
+    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: IdentifyingCerealType]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeIdentifyingItems(unwrapped)
     }
 
     // MARK: Dictionaries of Arrays
@@ -133,8 +141,9 @@ public struct CerealEncoder {
     - parameter     items:   The dictionary being encoded.
     - parameter     key:     The key the objects should be encoded under.
     */
-    public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]], forKey key: String) throws {
-        self.items[key] = try encodeItems(items)
+    public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
     }
 
     /**
@@ -143,8 +152,9 @@ public struct CerealEncoder {
     - parameter     items:   The dictionary being encoded.
     - parameter     key     The key the objects should be encoded under.
     */
-    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: [IdentifyingCerealType]], forKey key: String) throws {
-        self.items[key] = try encodeIdentifyingItems(items)
+    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: [IdentifyingCerealType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeIdentifyingItems(unwrapped)
     }
 
     // MARK: - Root encoding

@@ -16,6 +16,14 @@ class CerealDecoderTests: XCTestCase {
         super.tearDown()
     }
 
+    func testDecodingEmptyEncodingData_isOkay() {
+        do {
+            _ = try CerealDecoder(encodedString: "")
+        } catch {
+            XCTFail("Couldn't decode an empty string")
+        }
+    }
+
     // MARK: - Primitives
 
     func testDecodingString() {

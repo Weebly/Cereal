@@ -10,6 +10,125 @@ import XCTest
 @testable import Cereal
 
 class CerealEncoderTests: XCTestCase {
+    // MARK: Empty / Nil encoding
+
+    func testToString_withNoData_isOkay() {
+        let subject = CerealEncoder()
+        XCTAssertEqual(subject.toString(), "")
+    }
+
+    func testEncode_withNilPrimitive_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: String? = nil
+            try subject.encode(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilIdentifying_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: Fooable? = nil
+            try subject.encode(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilArrayOfPrimitive_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: [String]? = nil
+            try subject.encode(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilArrayOfIdentifying_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: [IdentifyingCerealType]? = nil
+            try subject.encodeIdentifyingItems(item?.CER_casted(), forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilArrayOfDictionaryPrimitives_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: [[String: Int]]? = nil
+            try subject.encode(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilArrayOfDictionaryIdentifying_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: [[String: IdentifyingCerealType]]? = nil
+            try subject.encodeIdentifyingItems(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilDictionaryOfPrimitive_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: [String: Bool]? = nil
+            try subject.encode(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilDictionaryOfIdentifying_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: [String: IdentifyingCerealType]? = nil
+            try subject.encodeIdentifyingItems(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilDictionaryOfArrayOfPrimitive_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: [String: [Bool]]? = nil
+            try subject.encode(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    func testEncode_withNilDictionaryOfArrayOfIdentifying_resultsInEmptyString() {
+        var subject = CerealEncoder()
+        do {
+            let item: [String: [IdentifyingCerealType]]? = nil
+            try subject.encodeIdentifyingItems(item, forKey: "test")
+            XCTAssertEqual(subject.toString(), "")
+        } catch let error {
+            XCTFail("Failed due to error: \(error)")
+        }
+    }
+
+    // TODO: Test empty encode for each encode method
+
     // MARK: - Primitives
 
     func testToString_withMultiplePrimitives() {
