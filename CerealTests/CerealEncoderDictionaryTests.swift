@@ -15,6 +15,149 @@ class CerealEncoderDictionaryTests: XCTestCase {
         super.tearDown()
     }
 
+    // MARK: [NSDate: XXX]
+
+    func testToString_withNSDateToBoolDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([first: true, second: false], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,29:"))
+            XCTAssertTrue(result.containsSubstring("t,4:10.0:b,1:t"))
+            XCTAssertTrue(result.containsSubstring("t,4:20.0:b,1:f"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSDateToIntDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 15.0)
+            let second = NSDate(timeIntervalSince1970: 25.0)
+            try subject.encode([first: 1, second: 3], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,29:"))
+            XCTAssertTrue(result.containsSubstring("t,4:15.0:i,1:1"))
+            XCTAssertTrue(result.containsSubstring("t,4:25.0:i,1:3"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSDateToInt64Dictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([first: 1, second: 123456789012345678] as [NSDate: Int64], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,47:"))
+            XCTAssertTrue(result.containsSubstring("t,4:10.0:z,1:1"))
+            XCTAssertTrue(result.containsSubstring("t,4:20.0:z,18:123456789012345678"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSDateToStringDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([first: "hello", second: "world"], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,37:"))
+            XCTAssertTrue(result.containsSubstring("t,4:10.0:s,5:hello"))
+            XCTAssertTrue(result.containsSubstring("t,4:20.0:s,5:world"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSDateToFloatDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([first: 1.3, second: 3.14] as [NSDate: Float], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,34:"))
+            XCTAssertTrue(result.containsSubstring("t,4:10.0:f,3:1.3"))
+            XCTAssertTrue(result.containsSubstring("t,4:20.0:f,4:3.14"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSDateToDoubleDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([first: 2.3, second: 1.14], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,34:"))
+            XCTAssertTrue(result.containsSubstring("t,4:10.0:d,3:2.3"))
+            XCTAssertTrue(result.containsSubstring("t,4:20.0:d,4:1.14"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSDateToCerealDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let firstKey = NSDate(timeIntervalSince1970: 10.0)
+            let secondKey = NSDate(timeIntervalSince1970: 20.0)
+            let first = TestCerealType(foo: "bar")
+            let second = TestCerealType(foo: "baz")
+            try subject.encode([firstKey: first, secondKey: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,59:"))
+            XCTAssertTrue(result.containsSubstring("t,4:10.0:c,15:k,3:foo:s,3:bar"))
+            XCTAssertTrue(result.containsSubstring("t,4:20.0:c,15:k,3:foo:s,3:baz"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSDateToIdentifyingCerealDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let firstKey = NSDate(timeIntervalSince1970: 10.0)
+            let secondKey = NSDate(timeIntervalSince1970: 20.0)
+            let first = TestIdentifyingCerealType(foo: "bar")
+            let second = TestIdentifyingCerealType(foo: "baz")
+            try subject.encodeIdentifyingItems([firstKey: first, secondKey: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,73:"))
+            XCTAssertTrue(result.containsSubstring("t,4:10.0:p,22:4:tict:k,3:foo:s,3:bar"))
+            XCTAssertTrue(result.containsSubstring("t,4:20.0:p,22:4:tict:k,3:foo:s,3:baz"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSDateToProtocoledIdentifyingCerealDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let firstKey = NSDate(timeIntervalSince1970: 10.0)
+            let secondKey = NSDate(timeIntervalSince1970: 20.0)
+            let first = TestIdentifyingCerealType(foo: "bar")
+            let second = TestIdentifyingCerealType(foo: "baz")
+            try subject.encodeIdentifyingItems([firstKey: first, secondKey: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,73:"))
+            XCTAssertTrue(result.containsSubstring("t,4:10.0:p,22:4:tict:k,3:foo:s,3:bar"))
+            XCTAssertTrue(result.containsSubstring("t,4:20.0:p,22:4:tict:k,3:foo:s,3:baz"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     // MARK: [Bool: XXX]
 
     func testToString_withBoolToBoolDictionary() {
@@ -90,6 +233,21 @@ class CerealEncoderDictionaryTests: XCTestCase {
             XCTAssertTrue(result.hasPrefix("k,3:wat:m,28:"))
             XCTAssertTrue(result.containsSubstring("b,1:t:d,3:2.3"))
             XCTAssertTrue(result.containsSubstring("b,1:f:d,4:1.14"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withBoolToNSDateDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([true: first, false: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,29:"))
+            XCTAssertTrue(result.containsSubstring("b,1:t:t,4:10.0"))
+            XCTAssertTrue(result.containsSubstring("b,1:f:t,4:20.0"))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -220,6 +378,21 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
+    func testToString_withIntToNSDateDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([0: first, 1: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,29:"))
+            XCTAssertTrue(result.containsSubstring("i,1:0:t,4:10.0"))
+            XCTAssertTrue(result.containsSubstring("i,1:1:t,4:20.0"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     func testToString_withIntToCerealDictionary() {
         do {
             var subject = CerealEncoder()
@@ -345,6 +518,19 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
+    func testToString_withInt64ToNSDateDictionary() {
+        do {
+            var subject = CerealEncoder()
+            try subject.encode([0: 8.6, 123456789012345678: 9.4] as [Int64: Double], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,45:"))
+            XCTAssertTrue(result.containsSubstring("z,1:0:d,3:8.6"))
+            XCTAssertTrue(result.containsSubstring("z,18:123456789012345678:d,3:9.4"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     func testToString_withInt64ToCerealDictionary() {
         do {
             var subject = CerealEncoder()
@@ -451,6 +637,21 @@ class CerealEncoderDictionaryTests: XCTestCase {
             XCTAssertTrue(result.hasPrefix("k,3:wat:m,33:"))
             XCTAssertTrue(result.containsSubstring("s,3:foo:d,5:99.99"))
             XCTAssertTrue(result.containsSubstring("s,3:bar:d,3:3.7"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withStringToNSDateDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode(["foo": first, "bar": second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,33:"))
+            XCTAssertTrue(result.containsSubstring("s,3:foo:t,4:10.0"))
+            XCTAssertTrue(result.containsSubstring("s,3:bar:t,4:20.0"))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -566,6 +767,21 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
+    func testToString_withFloatToNSDateDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 11.0)
+            let second = NSDate(timeIntervalSince1970: 19.0)
+            try subject.encode([1.0: first, 1.1: second] as [Float: NSDate], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,33:"))
+            XCTAssertTrue(result.containsSubstring("f,3:1.0:t,4:11.0"))
+            XCTAssertTrue(result.containsSubstring("f,3:1.1:t,4:19.0"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     func testToString_withFloatToCerealDictionary() {
         do {
             var subject = CerealEncoder()
@@ -671,6 +887,21 @@ class CerealEncoderDictionaryTests: XCTestCase {
             XCTAssertTrue(result.hasPrefix("k,3:wat:m,33:"))
             XCTAssertTrue(result.containsSubstring("d,3:1.0:d,4:1.23"))
             XCTAssertTrue(result.containsSubstring("d,3:1.1:d,4:45.6"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withDoubleToNSDateDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([1.0: first, 1.1: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,33:"))
+            XCTAssertTrue(result.containsSubstring("d,3:1.0:t,4:10.0"))
+            XCTAssertTrue(result.containsSubstring("d,3:1.1:t,4:20.0"))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -798,6 +1029,23 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
+    func testToString_withCerealToNSDateDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let firstKey = TestCerealType(foo: "bar")
+            let secondKey = TestCerealType(foo: "baz")
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([firstKey: first, secondKey: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,59:"))
+            XCTAssertTrue(result.containsSubstring("c,15:k,3:foo:s,3:bar:t,4:10.0"))
+            XCTAssertTrue(result.containsSubstring("c,15:k,3:foo:s,3:baz:t,4:20.0"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     func testToString_withCerealToCerealDictionary() {
         do {
             var subject = CerealEncoder()
@@ -919,6 +1167,23 @@ class CerealEncoderDictionaryTests: XCTestCase {
             XCTAssertTrue(result.hasPrefix("k,3:wat:m,71:"))
             XCTAssertTrue(result.containsSubstring("p,22:4:tict:k,3:foo:s,3:bar:d,3:5.3"))
             XCTAssertTrue(result.containsSubstring("p,22:4:tict:k,3:foo:s,3:baz:d,3:9.1"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withIdentifyingCerealToNSDateDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let firstKey = TestIdentifyingCerealType(foo: "bar")
+            let secondKey = TestIdentifyingCerealType(foo: "baz")
+            let first = NSDate(timeIntervalSince1970: 10.0)
+            let second = NSDate(timeIntervalSince1970: 20.0)
+            try subject.encode([firstKey: first, secondKey: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,73:"))
+            XCTAssertTrue(result.containsSubstring("p,22:4:tict:k,3:foo:s,3:bar:t,4:10.0"))
+            XCTAssertTrue(result.containsSubstring("p,22:4:tict:k,3:foo:s,3:baz:t,4:20.0"))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
