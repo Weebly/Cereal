@@ -89,6 +89,17 @@ class CerealEncoderArrayTests: XCTestCase {
         }
     }
 
+    func testToString_withDateArray() {
+        do {
+            try subject.encode([NSDate(timeIntervalSince1970: 10.0),NSDate(timeIntervalSince1970: 11.0),NSDate(timeIntervalSince1970: 20.0)], forKey: "date")
+            let result = subject.toString()
+            let expected = "k,4:date:a,26:t,4:10.0:t,4:11.0:t,4:20.0"
+            XCTAssertEqual(result, expected)
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     func testToString_withUnsupportedCerealRepresentable_returnsCorrectError() {
         do {
             try subject.encode(NSData(), forKey: "string")
