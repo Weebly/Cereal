@@ -127,8 +127,6 @@ class CerealEncoderTests: XCTestCase {
         }
     }
 
-    // TODO: Test empty encode for each encode method
-
     // MARK: - Primitives
 
     func testToString_withMultiplePrimitives() {
