@@ -106,6 +106,16 @@ class CerealDecoderTests: XCTestCase {
         }
     }
 
+    func testDecodingDate_withNegativeInterval() {
+        do {
+            let subject = try CerealDecoder(encodedString: "k,5:dtest:t,5:-10.0")
+            let resultDate: NSDate = try subject.decode("dtest") ?? NSDate()
+            XCTAssertEqual(resultDate, NSDate(timeIntervalSince1970: -10.0))
+        } catch let error {
+            XCTFail("Decoding failed due to error: \(error)")
+        }
+    }
+
     func testDecodingMultiplePrimitives() {
         do {
             let subject = try CerealDecoder(encodedString: "k,4:test:s,5:hello:k,5:itest:i,5:10000")
