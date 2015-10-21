@@ -4,7 +4,7 @@ solves this issue through deferred decoding with generics, and a protocol that d
 
 # Features
 
-* Encode and decode String, Bool, Int, Int64, Float, and Double
+* Encode and decode String, Bool, Int, Int64, Float, Double, and NSDate
 * Encode and decode Arrays, Arrays of Dictionaries, Dictionaries, and Dictionaries of Arrays
 * Encode and decode your own ```enum``` types
 * Encode and decode your own ```struct``` types

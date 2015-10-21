@@ -1,0 +1,10 @@
+CHANGELOG
+
+1.1
+---------
+Added support for encoding and decoding NSDate
+
+
+1.0.1
+---------
+Converted encoding methods to Optional types
