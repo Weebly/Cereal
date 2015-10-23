@@ -2,6 +2,9 @@ Cereal is a serialization framework built for Swift. Its intended as a substitut
 advanced Swift features. With NSCoding, you cannot encode or decode a Swift struct, enum, or generic class. Cereal
 solves this issue through deferred decoding with generics, and a protocol that doesn't depend on NSObjectProtocol.
 
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
+
 # Features
 
 * Encode and decode String, Bool, Int, Int64, Float, Double, and NSDate
@@ -54,6 +57,14 @@ target :"watchOS Extension Target" do
     platform :watchos, '2.0'
     shared_pods
 end
+```
+
+## Carthage
+
+Carthage is a decentralized dependency manager. Add the following to your Cartfile to build Cereal:
+
+```
+github "Weebly/Cereal" ~> 1.1.0
 ```
 
 ## Manually
