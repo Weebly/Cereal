@@ -36,7 +36,7 @@ both your watchOS target and iOS target, you'll need to use 0.39 to resolve a bu
 For basic integration, add this to your Podfile:
 
 ```
-pod 'Cereal', '~> 1.0'
+pod 'Cereal', '~> 1.1'
 ```
 
 ### Multiple Targets
@@ -45,7 +45,7 @@ If you want to incorporate Cereal with your watchOS target and your iOS target, 
 
 ```ruby
 def shared_pods 
-  pod 'Cereal', '~> 1.0'
+  pod 'Cereal', '~> 1.1'
 end
 
 target :"iOS App Target" do

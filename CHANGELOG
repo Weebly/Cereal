@@ -1,5 +1,9 @@
 CHANGELOG
 
+1.1.1
+---------
+Correct deployment target to 8.0. Thanks @RuiAAPeres
+
 1.1
 ---------
 Added support for encoding and decoding NSDate
