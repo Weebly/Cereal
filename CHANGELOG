@@ -1,5 +1,9 @@
 CHANGELOG
 
+1.1.2
+---------
+Provide better error messages. Thanks @RuiAAPeres
+
 1.1.1
 ---------
 Correct deployment target to 8.0. Thanks @RuiAAPeres
