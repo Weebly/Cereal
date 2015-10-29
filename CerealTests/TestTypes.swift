@@ -165,7 +165,7 @@ struct BarBag<Bar: Barable>: IdentifyingCerealType {
         if let value = try decoder.decodeIdentifyingCereal("bar") as? Bar {
             theBar = value
         } else {
-            throw CerealError.InvalidEncoding
+            throw CerealError.InvalidEncoding("Not able to decode")
         }
     }
 

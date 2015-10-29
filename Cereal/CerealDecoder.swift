@@ -475,7 +475,7 @@ public struct CerealDecoder {
 
         try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
             guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to instantiate keyValue \(keyValue) of type \(keyType)")
             }
 
             decodedItems[decodedKey] = try CerealDecoder.parseEncodedArrayString(value)
@@ -506,7 +506,7 @@ public struct CerealDecoder {
 
         try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
             guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to instantiate keyValue \(keyValue) of type \(keyType)")
             }
 
             decodedItems[decodedKey] = try CerealDecoder.parseEncodedCerealArrayString(value)
@@ -588,7 +588,7 @@ public struct CerealDecoder {
 
         try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
             guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to instantiate keyValue \(keyValue) of type \(keyType)")
             }
 
             decodedItems[decodedKey] = try CerealDecoder.parseEncodedIdentifyingCerealArrayString(value)
@@ -981,7 +981,7 @@ public struct CerealDecoder {
     // MARK: Initial Decoding
     private static func decodeData(data: NSData) throws -> String {
         guard let string = NSString(data: data, encoding: NSUTF8StringEncoding) as? String else {
-            throw CerealError.InvalidEncoding
+            throw CerealError.InvalidEncoding("Failed to instantiate string")
         }
 
         return string
@@ -993,13 +993,13 @@ public struct CerealDecoder {
 
         while scanIndex != encodedString.endIndex {
             if encodedString.substringWithRange(scanIndex ..< scanIndex.advancedBy(2)) != "k," {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to get sub string")
             }
 
             scanIndex = scanIndex.advancedBy(2)
 
             guard let keyLengthEndIndex = encodedString.firstOccuranceOfString(":", fromIndex: scanIndex) else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to get key length")
             }
 
             guard let keyLength = Int(encodedString[scanIndex ..< keyLengthEndIndex]) else {
@@ -1037,41 +1037,41 @@ public struct CerealDecoder {
         case .IdentifyingCereal:
             return try instantiateIdentifyingCereal(value)
         case .Array, .Cereal, .Dictionary:
-            throw CerealError.InvalidEncoding
+            throw CerealError.InvalidEncoding(".Array / .Cereal / .Dictionary not expected")
         case .String:
             return value
         case .Int:
             guard let convertedValue = Int(value) else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to create Int with value \(value)")
             }
 
             return convertedValue
         case .Int64:
             guard let convertedValue = Int64(value) else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to create Int64 with value \(value)")
             }
 
             return convertedValue
         case .Double:
             guard let convertedValue = Double(value) else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to create Double with value \(value)")
             }
 
             return convertedValue
         case .Float:
             guard let convertedValue = Float(value) else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to create Float with value \(value)")
             }
 
             return convertedValue
         case .Bool:
             guard let convertedValue = Bool(value) else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to create Bool with value \(value)")
             }
             return convertedValue
         case .Date:
             guard let convertedValue = NSTimeInterval(value) else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to create NSTimeInterval with value \(value)")
             }
             return NSDate(timeIntervalSince1970: convertedValue)
         }
@@ -1088,7 +1088,7 @@ public struct CerealDecoder {
         case .Cereal:
             cereal = try CerealDecoder(encodedString: value)
         default:
-            throw CerealError.InvalidEncoding
+            throw CerealError.InvalidEncoding("Invalid type found: \(type)")
         }
 
         return try DecodedType.init(decoder: cereal)
@@ -1134,7 +1134,7 @@ public struct CerealDecoder {
 
     private static func extractCerealTypeFromEncodedString(encodedString: String, var startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, indexPassedValue: String.Index) {
         guard let type = CerealTypeIdentifier(rawValue: encodedString[index ..< index.advancedBy(1)]) else {
-            throw CerealError.InvalidEncoding
+            throw CerealError.InvalidEncoding("Failed to instantiate CerealTypeIdentifier with \(encodedString[index ..< index.advancedBy(1))")
         }
 
         index = index.advancedBy(2) // Move past type and following comma
@@ -1171,7 +1171,7 @@ public struct CerealDecoder {
 
         try encodedString.iterateEncodedValuesWithInstantationHandler { type, value in
             guard let decodedValue: DecodedType = try CerealDecoder.instantiate(value, ofType: type) as? DecodedType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
             decodedItems.append(decodedValue)
@@ -1202,7 +1202,7 @@ public struct CerealDecoder {
         var decodedItems = [DecodedKeyType: CerealRepresentable]()
         try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
             guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
             decodedItems[decodedKey] = try CerealDecoder.instantiate(value, ofType: type)
@@ -1215,11 +1215,11 @@ public struct CerealDecoder {
         var decodedItems = [DecodedKeyType: DecodedValueType]()
         try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
             guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
             guard let decodedValue: DecodedValueType = try CerealDecoder.instantiate(value, ofType: type) as? DecodedValueType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
             decodedItems[decodedKey] = decodedValue
@@ -1232,7 +1232,7 @@ public struct CerealDecoder {
         var decodedItems = [DecodedKeyType: DecodedValueType]()
         try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
             guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
             decodedItems[decodedKey] = try CerealDecoder.instantiateCereal(value, ofType: type) as DecodedValueType
@@ -1246,7 +1246,7 @@ public struct CerealDecoder {
         try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
             let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(keyValue, ofType: keyType)
             guard let decodedValue: DecodedValueType = try CerealDecoder.instantiate(value, ofType: type) as? DecodedValueType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
             decodedItems[decodedKey] = decodedValue
@@ -1271,7 +1271,7 @@ public struct CerealDecoder {
         var decodedItem = [DecodedKeyType: IdentifyingCerealType]()
         try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
             guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
-                throw CerealError.InvalidEncoding
+                throw CerealError.InvalidEncoding("Failed to decode key value \(keyValue) with key type \(keyType)")
             }
 
             decodedItem[decodedKey] = try CerealDecoder.instantiateIdentifyingCereal(value)

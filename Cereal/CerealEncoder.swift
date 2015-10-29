@@ -322,7 +322,7 @@ public struct CerealEncoder {
             let len = s.characters.count
             return "c,\(len):\(s)"
         } else {
-            throw CerealError.UnsupportedCerealRepresentable
+            throw CerealError.UnsupportedCerealRepresentable("Item \(item) not supported)")
         }
     }
 
