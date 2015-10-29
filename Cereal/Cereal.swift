@@ -15,7 +15,7 @@ public enum CerealError: ErrorType {
     Thrown when an item is encoded incorrectly. This can happen if a `CerealType` (but not `IdentifyingCerealType`)
     is used when for a non-generic method.
     */
-    case InvalidEncoding
+    case InvalidEncoding(String)
 
     /// Thrown when the structure of an encoded item is incorrect.
     case UnsupportedKeyLengthValue
@@ -31,14 +31,14 @@ public enum CerealError: ErrorType {
     You should never conform a type to `CerealRepresentable`; only its subprotocols `CerealType` and 
     `IdentifyingCerealType`.
     */
-    case UnsupportedCerealRepresentable
+    case UnsupportedCerealRepresentable(String)
 
     /**
     Thrown if an `IdentifyingCerealType` was attempted to be decoded, but wasn't registered beforehand.
     
     You register `IdentifyingCerealType`s with `Cereal.register(_: IdentifyingCerealType.Type)`.
     */
-    case UnregisteredCustomType
+    case UnregisteredCustomType(String)
 
     /// Thrown if a root item is attempted to be decoded that doesn't exist.
     case RootItemNotFound
@@ -78,7 +78,7 @@ public func register(identifyingCerealType: IdentifyingCerealType.Type) {
 
 func identifyingCerealTypeWithIdentifier(identifier: String) throws -> IdentifyingCerealType.Type {
     guard let t = identifierMap[identifier] else {
-        throw CerealError.UnregisteredCustomType
+        throw CerealError.UnregisteredCustomType("Type with identifier \(identifier) not found")
     }
 
     return t
