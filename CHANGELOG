@@ -1,5 +1,9 @@
 CHANGELOG
 
+1.2
+---------
+NSURL support. Thanks @RuiAAPeres
+
 1.1.2
 ---------
 Provide better error messages. Thanks @RuiAAPeres
