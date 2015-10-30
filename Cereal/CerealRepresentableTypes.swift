@@ -15,3 +15,4 @@ extension Double: CerealRepresentable { }
 extension Float: CerealRepresentable { }
 extension Bool: CerealRepresentable { }
 extension NSDate: CerealRepresentable { }
+extension NSURL: CerealRepresentable { }

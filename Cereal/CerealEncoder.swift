@@ -320,6 +320,10 @@ public struct CerealEncoder {
         case let value as NSDate :
             let interval = value.timeIntervalSince1970
             return "t,\(String(interval).characters.count):\(interval)"
+        
+        case let value as NSURL :
+            let absoluteString = value.absoluteString
+            return "u,\(absoluteString.characters.count):\(absoluteString)"
             
         case let value as IdentifyingCerealType :
             return try encodeItem(value)
