@@ -115,6 +115,16 @@ class CerealDecoderTests: XCTestCase {
             XCTFail("Decoding failed due to error: \(error)")
         }
     }
+    
+    func testDecodingURL() {
+        do {
+            let subject = try CerealDecoder(encodedString: "k,5:dtest:u,18:http://testing.com")
+            let resultURL: NSURL = try subject.decode("dtest") ?? NSURL()
+            XCTAssertEqual(resultURL, NSURL(string: "http://testing.com"))
+        } catch let error {
+            XCTFail("Decoding failed due to error: \(error)")
+        }
+    }
 
     func testDecodingMultiplePrimitives() {
         do {

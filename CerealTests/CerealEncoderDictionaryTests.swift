@@ -157,6 +157,149 @@ class CerealEncoderDictionaryTests: XCTestCase {
             XCTFail("Encoding failed due to error: \(error)")
         }
     }
+    
+    // MARK: [NSURL: XXX]
+    
+    func testToString_withNSURLToBoolDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSURL(string: "http://test.com")!
+            let second = NSURL(string: "http://test1.com")!
+            try subject.encode([first: true, second: false], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,54:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:b,1:t"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:b,1:f"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSURLToIntDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSURL(string: "http://test.com")!
+            let second = NSURL(string: "http://test1.com")!
+            try subject.encode([first: 1, second: 3], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,54:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:i,1:1"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:i,1:3"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+    
+    func testToString_withNSURLToInt64Dictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSURL(string: "http://test.com")!
+            let second = NSURL(string: "http://test1.com")!
+            try subject.encode([first: 1, second: 123456789012345678] as [NSURL: Int64], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,72:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:z,1:1"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:z,18:123456789012345678"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+    
+    func testToString_withNSURLToStringDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSURL(string: "http://test.com")!
+            let second = NSURL(string: "http://test1.com")!
+            try subject.encode([first: "hello", second: "world"], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,62:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:s,5:hello"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:s,5:world"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSURLToFloatDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSURL(string: "http://test.com")!
+            let second = NSURL(string: "http://test1.com")!
+            try subject.encode([first: 1.3, second: 3.14] as [NSURL: Float], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,59:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:f,3:1.3"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:f,4:3.14"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+    
+    func testToString_withNSURLToDoubleDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let first = NSURL(string: "http://test.com")!
+            let second = NSURL(string: "http://test1.com")!
+            try subject.encode([first: 2.3, second: 1.14], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,59:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:d,3:2.3"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:d,4:1.14"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSURLToCerealDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let firstKey = NSURL(string: "http://test.com")!
+            let secondKey = NSURL(string: "http://test1.com")!
+            let first = TestCerealType(foo: "bar")
+            let second = TestCerealType(foo: "baz")
+            try subject.encode([firstKey: first, secondKey: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,84:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:c,15:k,3:foo:s,3:bar"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:c,15:k,3:foo:s,3:baz"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withNSURLToIdentifyingCerealDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let firstKey = NSURL(string: "http://test.com")!
+            let secondKey = NSURL(string: "http://test1.com")!
+            let first = TestIdentifyingCerealType(foo: "bar")
+            let second = TestIdentifyingCerealType(foo: "baz")
+            try subject.encodeIdentifyingItems([firstKey: first, secondKey: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,98:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:p,22:4:tict:k,3:foo:s,3:bar"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:p,22:4:tict:k,3:foo:s,3:baz"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+    
+    func testToString_withNSURLToProtocoledIdentifyingCerealDictionary() {
+        do {
+            var subject = CerealEncoder()
+            let firstKey = NSURL(string: "http://test.com")!
+            let secondKey = NSURL(string: "http://test1.com")!
+            let first = TestIdentifyingCerealType(foo: "bar")
+            let second = TestIdentifyingCerealType(foo: "baz")
+            try subject.encodeIdentifyingItems([firstKey: first, secondKey: second], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,98:"))
+            XCTAssertTrue(result.containsSubstring("u,15:http://test.com:p,22:4:tict:k,3:foo:s,3:bar"))
+            XCTAssertTrue(result.containsSubstring("u,16:http://test1.com:p,22:4:tict:k,3:foo:s,3:baz"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
 
     // MARK: [Bool: XXX]
 

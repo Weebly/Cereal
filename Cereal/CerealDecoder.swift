@@ -1074,6 +1074,12 @@ public struct CerealDecoder {
                 throw CerealError.InvalidEncoding("Failed to create NSTimeInterval with value \(value)")
             }
             return NSDate(timeIntervalSince1970: convertedValue)
+        case .URL:
+            guard let url = NSURL(string: value) else {
+                throw CerealError.InvalidEncoding("Failed to create NSURL with value \(value)")
+            }
+            
+            return url
         }
     }
 

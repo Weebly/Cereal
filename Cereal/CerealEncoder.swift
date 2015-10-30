@@ -296,33 +296,48 @@ public struct CerealEncoder {
     // MARK: Basic
 
     private func encodeItem<ItemType: CerealRepresentable>(item: ItemType) throws -> String {
-        if let value = item as? Int {
+        
+        switch item {
+            
+        case let value as Int :
             return "i,\(String(value).characters.count):\(value)"
-        } else if let value = item as? Int64 {
+            
+        case let value as Int64 :
             return "z,\(String(value).characters.count):\(value)"
-        } else if let value = item as? String {
+            
+        case let value as String:
             return "s,\(value.characters.count):\(value)"
-        } else if let value = item as? Double {
+            
+        case let value as Double :
             return "d,\(String(value).characters.count):\(value)"
-        } else if let value = item as? Float {
+            
+        case let value as Float :
             return "f,\(String(value).characters.count):\(value)"
-        } else if let value = item as? Bool {
-            let convertedValue = value ? "t" : "f"
-            return "b,1:\(convertedValue)"
-        } else if let value = item as? NSDate {
+            
+        case let value as Bool :
+            return "b,1:\(value ? "t" : "f")"
+            
+        case let value as NSDate :
             let interval = value.timeIntervalSince1970
             return "t,\(String(interval).characters.count):\(interval)"
-        } else if let identifyingCerealItem = item as? IdentifyingCerealType {
-            return try encodeItem(identifyingCerealItem)
-        } else if let cerealItem = item as? CerealType {
+        
+        case let value as NSURL :
+            let absoluteString = value.absoluteString
+            return "u,\(absoluteString.characters.count):\(absoluteString)"
+            
+        case let value as IdentifyingCerealType :
+            return try encodeItem(value)
+            
+        case let value as CerealType :
+            
             var cereal = CerealEncoder()
-            try cerealItem.encodeWithCereal(&cereal)
+            try value.encodeWithCereal(&cereal)
             let s = cereal.toString()
-
+            
             let len = s.characters.count
             return "c,\(len):\(s)"
-        } else {
-            throw CerealError.UnsupportedCerealRepresentable("Item \(item) not supported)")
+            
+        default: throw CerealError.UnsupportedCerealRepresentable("Item \(item) not supported)")
         }
     }
 

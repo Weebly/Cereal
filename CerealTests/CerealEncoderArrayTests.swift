@@ -99,6 +99,17 @@ class CerealEncoderArrayTests: XCTestCase {
             XCTFail("Encoding failed due to error: \(error)")
         }
     }
+    
+    func testToString_withURLArray() {
+        do {
+            try subject.encode([NSURL(string: "http://test.com")!,NSURL(string: "http://test1.com")!,NSURL(string: "http://test2.com")!], forKey: "urls")
+            let result = subject.toString()
+            let expected = "k,4:urls:a,64:u,15:http://test.com:u,16:http://test1.com:u,16:http://test2.com"
+            XCTAssertEqual(result, expected)
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
 
     func testToString_withUnsupportedCerealRepresentable_returnsCorrectError() {
         do {
