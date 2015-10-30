@@ -274,7 +274,20 @@ class CerealEncoderTests: XCTestCase {
             XCTFail("Encoding failed due to error: \(error)")
         }
     }
-
+    
+    // MARK: NSURL
+    
+    func testToString_withURL() {
+        var subject = CerealEncoder()
+        do {
+            try subject.encode(NSURL(string: "http://test.com"), forKey: "myurl")
+            let result = subject.toString()
+            XCTAssertEqual(result, "k,5:myurl:u,15:http://test.com")
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+    
     // MARK: - Custom Types
 
     func testToString_withCereal() {
