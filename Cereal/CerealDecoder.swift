@@ -14,10 +14,10 @@ import Foundation
 public struct CerealDecoder {
     private struct DeferredItem {
         let type: CerealTypeIdentifier
-        let value: String
+        var value: String
     }
 
-    private var items = [String: DeferredItem]()
+    private let items: [String: DeferredItem]
 
     /**
     Initializes a `CerealDecoder` with the data contained in data.
@@ -52,11 +52,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedType: CerealRepresentable>(key: String) throws -> DecodedType? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.instantiate(data.value, ofType: data.type) as? DecodedType
+        return try CerealDecoder.instantiate(&data.value, ofType: data.type) as? DecodedType
     }
 
     /**
@@ -68,11 +68,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedType: CerealType>(key: String) throws -> DecodedType? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.instantiateCereal(data.value, ofType: data.type) as DecodedType
+        return try CerealDecoder.instantiateCereal(&data.value, ofType: data.type) as DecodedType
     }
 
     /**
@@ -87,11 +87,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCereal(key: String) throws -> IdentifyingCerealType? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.instantiateIdentifyingCereal(data.value)
+        return try CerealDecoder.instantiateIdentifyingCereal(&data.value)
     }
 
     // MARK: Arrays
@@ -110,11 +110,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedType: CerealRepresentable>(key: String) throws -> [DecodedType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedArrayString(data.value)
+        return try CerealDecoder.parseEncodedArrayString(&data.value)
     }
 
     /**
@@ -130,11 +130,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode(key: String) throws -> [CerealRepresentable]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedArrayString(data.value)
+        return try CerealDecoder.parseEncodedArrayString(&data.value)
     }
 
     /**
@@ -145,11 +145,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedType: CerealType>(key: String) throws -> [DecodedType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedCerealArrayString(data.value)
+        return try CerealDecoder.parseEncodedCerealArrayString(&data.value)
     }
 
     /**
@@ -161,11 +161,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCerealArray(key: String) throws -> [IdentifyingCerealType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedIdentifyingCerealArrayString(data.value)
+        return try CerealDecoder.parseEncodedIdentifyingCerealArrayString(&data.value)
     }
 
     // MARK: Arrays of Dictionaries
@@ -184,14 +184,14 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [[DecodedKeyType: DecodedValueType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { type, value in
-            decodedItems.append(try CerealDecoder.parseEncodedDictionaryString(value))
+        try data.value.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            decodedItems.append(try CerealDecoder.parseEncodedDictionaryString(&value))
         }
 
         return decodedItems
@@ -211,14 +211,14 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [[DecodedKeyType: DecodedValueType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { type, value in
-            decodedItems.append(try CerealDecoder.parseEncodedCerealDictionaryString(value))
+        try data.value.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            decodedItems.append(try CerealDecoder.parseEncodedCerealDictionaryString(&value))
         }
 
         return decodedItems
@@ -238,14 +238,14 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [[DecodedKeyType: DecodedValueType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { type, value in
-            decodedItems.append(try CerealDecoder.parseEncodedCerealDictionaryString(value))
+        try data.value.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            decodedItems.append(try CerealDecoder.parseEncodedCerealDictionaryString(&value))
         }
         
         return decodedItems
@@ -259,14 +259,14 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealPair<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [[DecodedKeyType: DecodedValueType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { type, value in
-            decodedItems.append(try CerealDecoder.parseEncodedCerealPairDictionaryString(value))
+        try data.value.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            decodedItems.append(try CerealDecoder.parseEncodedCerealPairDictionaryString(&value))
         }
         
         return decodedItems
@@ -287,13 +287,13 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCerealArray<DecodedKeyType: protocol<CerealRepresentable, Hashable>>(key: String) throws -> [[DecodedKeyType: IdentifyingCerealType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [[DecodedKeyType: IdentifyingCerealType]]()
-        try data.value.iterateEncodedValuesWithInstantationHandler { type, value in
-            decodedItems.append(try CerealDecoder.parseEncodedIdentifyingCerealDictionaryString(value))
+        try data.value.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            decodedItems.append(try CerealDecoder.parseEncodedIdentifyingCerealDictionaryString(&value))
         }
 
         return decodedItems
@@ -310,13 +310,13 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealToIdentifyingCerealArray<DecodedKeyType: protocol<CerealType, Hashable>>(key: String) throws -> [[DecodedKeyType: IdentifyingCerealType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [[DecodedKeyType: IdentifyingCerealType]]()
-        try data.value.iterateEncodedValuesWithInstantationHandler { type, value in
-            decodedItems.append(try CerealDecoder.parseEncodedCerealToIdentifyingCerealDictionaryString(value))
+        try data.value.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            decodedItems.append(try CerealDecoder.parseEncodedCerealToIdentifyingCerealDictionaryString(&value))
         }
 
         return decodedItems
@@ -335,11 +335,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedDictionaryString(data.value)
+        return try CerealDecoder.parseEncodedDictionaryString(&data.value)
     }
 
     /**
@@ -353,11 +353,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedKeyType: protocol<CerealRepresentable, Hashable>>(key: String) throws -> [DecodedKeyType: CerealRepresentable]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedDictionaryString(data.value)
+        return try CerealDecoder.parseEncodedDictionaryString(&data.value)
     }
 
     /**
@@ -374,11 +374,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedCerealDictionaryString(data.value)
+        return try CerealDecoder.parseEncodedCerealDictionaryString(&data.value)
     }
 
     /**
@@ -395,11 +395,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedCerealDictionaryString(data.value)
+        return try CerealDecoder.parseEncodedCerealDictionaryString(&data.value)
     }
 
     /**
@@ -413,11 +413,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCerealDictionary<DecodedKeyType: protocol<CerealRepresentable, Hashable>>(key: String) throws -> [DecodedKeyType: IdentifyingCerealType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedIdentifyingCerealDictionaryString(data.value)
+        return try CerealDecoder.parseEncodedIdentifyingCerealDictionaryString(&data.value)
     }
 
     /**
@@ -427,11 +427,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealPair<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedCerealPairDictionaryString(data.value)
+        return try CerealDecoder.parseEncodedCerealPairDictionaryString(&data.value)
     }
 
     /**
@@ -445,11 +445,11 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealToIdentifyingCerealDictionary<DecodedKeyType: protocol<CerealType, Hashable>>(key: String) throws -> [DecodedKeyType: IdentifyingCerealType]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
-        return try CerealDecoder.parseEncodedCerealToIdentifyingCerealDictionaryString(data.value)
+        return try CerealDecoder.parseEncodedCerealToIdentifyingCerealDictionaryString(&data.value)
     }
 
     // MARK: Dictionaries of Arrays
@@ -467,18 +467,18 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [DecodedKeyType: [DecodedValueType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
-            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
+        try data.value.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, _, var value) in
+            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(&keyValue, ofType: keyType) as? DecodedKeyType else {
                 throw CerealError.InvalidEncoding("Failed to instantiate keyValue \(keyValue) of type \(keyType)")
             }
 
-            decodedItems[decodedKey] = try CerealDecoder.parseEncodedArrayString(value)
+            decodedItems[decodedKey] = try CerealDecoder.parseEncodedArrayString(&value)
         }
 
         return decodedItems
@@ -498,18 +498,18 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [DecodedKeyType: [DecodedValueType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
-            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
+        try data.value.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, _, var value) in
+            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(&keyValue, ofType: keyType) as? DecodedKeyType else {
                 throw CerealError.InvalidEncoding("Failed to instantiate keyValue \(keyValue) of type \(keyType)")
             }
 
-            decodedItems[decodedKey] = try CerealDecoder.parseEncodedCerealArrayString(value)
+            decodedItems[decodedKey] = try CerealDecoder.parseEncodedCerealArrayString(&value)
         }
         
         return decodedItems
@@ -529,15 +529,15 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [DecodedKeyType: [DecodedValueType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
-            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(keyValue, ofType: keyType)
-            decodedItems[decodedKey] = try CerealDecoder.parseEncodedArrayString(value)
+        try data.value.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, _, var value) in
+            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(&keyValue, ofType: keyType)
+            decodedItems[decodedKey] = try CerealDecoder.parseEncodedArrayString(&value)
         }
         
         return decodedItems
@@ -551,15 +551,15 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealPair<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [DecodedKeyType: [DecodedValueType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
-            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(keyValue, ofType: keyType)
-            decodedItems[decodedKey] = try CerealDecoder.parseEncodedCerealArrayString(value)
+        try data.value.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, _, var value) in
+            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(&keyValue, ofType: keyType)
+            decodedItems[decodedKey] = try CerealDecoder.parseEncodedCerealArrayString(&value)
         }
         
         return decodedItems
@@ -580,18 +580,18 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCerealDictionary<DecodedKeyType: protocol<CerealRepresentable, Hashable>>(key: String) throws -> [DecodedKeyType: [IdentifyingCerealType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [DecodedKeyType: [IdentifyingCerealType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
-            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
+        try data.value.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, _, var value) in
+            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(&keyValue, ofType: keyType) as? DecodedKeyType else {
                 throw CerealError.InvalidEncoding("Failed to instantiate keyValue \(keyValue) of type \(keyType)")
             }
 
-            decodedItems[decodedKey] = try CerealDecoder.parseEncodedIdentifyingCerealArrayString(value)
+            decodedItems[decodedKey] = try CerealDecoder.parseEncodedIdentifyingCerealArrayString(&value)
         }
 
         return decodedItems
@@ -608,15 +608,15 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealToIdentifyingCerealDictionary<DecodedKeyType: protocol<CerealType, Hashable>>(key: String) throws -> [DecodedKeyType: [IdentifyingCerealType]]? {
-        guard let data = items[key] else {
+        guard var data = items[key] else {
             return nil
         }
 
         var decodedItems = [DecodedKeyType: [IdentifyingCerealType]]()
 
-        try data.value.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
-            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(keyValue, ofType: keyType)
-            decodedItems[decodedKey] = try CerealDecoder.parseEncodedIdentifyingCerealArrayString(value)
+        try data.value.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, _, var value) in
+            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(&keyValue, ofType: keyType)
+            decodedItems[decodedKey] = try CerealDecoder.parseEncodedIdentifyingCerealArrayString(&value)
         }
 
         return decodedItems
@@ -987,7 +987,7 @@ public struct CerealDecoder {
         return string
     }
 
-    private static func decodeString(encodedString: String) throws -> [String: DeferredItem] {
+    private static func decodeString(var encodedString: String) throws -> [String: DeferredItem] {
         var deferredItems = [String: DeferredItem]()
         var scanIndex = encodedString.startIndex
 
@@ -1016,10 +1016,10 @@ public struct CerealDecoder {
             scanIndex = keyEndIndex.advancedBy(1) // Move past the : after the key
 
             let cerealType: CerealTypeIdentifier
-            (cerealType, scanIndex) = try CerealDecoder.extractCerealTypeFromEncodedString(encodedString, startingAtIndex: scanIndex)
+            (cerealType, scanIndex) = try CerealDecoder.extractCerealTypeFromEncodedString(&encodedString, startingAtIndex: scanIndex)
 
             let value: String
-            (value, scanIndex) = try extractValueFromEncodedString(encodedString, startingAtIndex: scanIndex)
+            (value, scanIndex) = try extractValueFromEncodedString(&encodedString, startingAtIndex: scanIndex)
 
             deferredItems[key] = DeferredItem(type: cerealType, value: value)
         }
@@ -1032,10 +1032,10 @@ public struct CerealDecoder {
     // being asked for
 
     /// Used for primitive or identifying cereal values
-    private static func instantiate(value: String, ofType type: CerealTypeIdentifier) throws -> CerealRepresentable {
+    private static func instantiate(inout value: String, ofType type: CerealTypeIdentifier) throws -> CerealRepresentable {
         switch type {
         case .IdentifyingCereal:
-            return try instantiateIdentifyingCereal(value)
+            return try instantiateIdentifyingCereal(&value)
         case .Array, .Cereal, .Dictionary:
             throw CerealError.InvalidEncoding(".Array / .Cereal / .Dictionary not expected")
         case .String:
@@ -1084,12 +1084,12 @@ public struct CerealDecoder {
     }
 
     /// Used for CerealType where we have type data from the compiler
-    private static func instantiateCereal<DecodedType: CerealType>(value: String, ofType type: CerealTypeIdentifier) throws -> DecodedType {
+    private static func instantiateCereal<DecodedType: CerealType>(inout value: String, ofType type: CerealTypeIdentifier) throws -> DecodedType {
         let cereal: CerealDecoder
         switch type {
         case .IdentifyingCereal:
             // Skip the identifying data as we have the type in this case from the generic
-            let (_, index) = try extractValueFromEncodedString(value, startingAtIndex: value.startIndex)
+            let (_, index) = try extractValueFromEncodedString(&value, startingAtIndex: value.startIndex)
             cereal = try CerealDecoder(encodedString: value[index ..< value.endIndex])
         case .Cereal:
             cereal = try CerealDecoder(encodedString: value)
@@ -1100,11 +1100,11 @@ public struct CerealDecoder {
         return try DecodedType.init(decoder: cereal)
     }
 
-    private static func instantiateIdentifyingCereal(value: String) throws -> IdentifyingCerealType {
+    private static func instantiateIdentifyingCereal(inout value: String) throws -> IdentifyingCerealType {
         var scanIndex = value.startIndex
         let identifier: String
 
-        (identifier, scanIndex) = try CerealDecoder.extractValueFromEncodedString(value, startingAtIndex: scanIndex)
+        (identifier, scanIndex) = try CerealDecoder.extractValueFromEncodedString(&value, startingAtIndex: scanIndex)
 
         let type = try identifyingCerealTypeWithIdentifier(identifier)
         let cereal = try CerealDecoder(encodedString: value[scanIndex ..< value.endIndex])
@@ -1115,7 +1115,7 @@ public struct CerealDecoder {
     // An extractor takes a String and returns value (and optionally type) data while increasing an
     // index along the passed in string.
 
-    private static func extractValueFromEncodedString(encodedString: String, startingAtIndex index: String.Index) throws -> (value: String, indexPassedValue: String.Index) {
+    private static func extractValueFromEncodedString(inout encodedString: String, startingAtIndex index: String.Index) throws -> (value: String, indexPassedValue: String.Index) {
         var scanIndex = index
 
         guard let valueLengthEndIndex = encodedString.firstOccuranceOfString(":", fromIndex: scanIndex) else {
@@ -1138,7 +1138,7 @@ public struct CerealDecoder {
         return (value: value, indexPassedValue: scanIndex)
     }
 
-    private static func extractCerealTypeFromEncodedString(encodedString: String, var startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, indexPassedValue: String.Index) {
+    private static func extractCerealTypeFromEncodedString(inout encodedString: String, var startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, indexPassedValue: String.Index) {
         guard let type = CerealTypeIdentifier(rawValue: encodedString[index ..< index.advancedBy(1)]) else {
             throw CerealError.InvalidEncoding("Failed to instantiate CerealTypeIdentifier with \(encodedString[index ..< index.advancedBy(1))")
         }
@@ -1148,12 +1148,12 @@ public struct CerealDecoder {
         return (type: type, indexPassedValue: index)
     }
 
-    private static func extractTypeAndValueFromEncodedString(encodedString: String, var startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, value: String, endIndex: String.Index) {
+    private static func extractTypeAndValueFromEncodedString(inout encodedString: String, var startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, value: String, endIndex: String.Index) {
         let cerealType: CerealTypeIdentifier
-        (cerealType, index) = try CerealDecoder.extractCerealTypeFromEncodedString(encodedString, startingAtIndex: index)
+        (cerealType, index) = try CerealDecoder.extractCerealTypeFromEncodedString(&encodedString, startingAtIndex: index)
 
         let value: String
-        (value, index) = try CerealDecoder.extractValueFromEncodedString(encodedString, startingAtIndex: index)
+        (value, index) = try CerealDecoder.extractValueFromEncodedString(&encodedString, startingAtIndex: index)
 
         return (type: cerealType, value: value, endIndex: index)
     }
@@ -1162,21 +1162,21 @@ public struct CerealDecoder {
     // Parsers are to DRY up some of the decoding code. For example, [CerealType] and [CerealRepresentable: [CerealType]] can reuse a parser for decoding
     // the array of CerealType.
 
-    private static func parseEncodedArrayString(encodedString: String) throws -> [CerealRepresentable] {
+    private static func parseEncodedArrayString(inout encodedString: String) throws -> [CerealRepresentable] {
         var decodedItems = [CerealRepresentable]()
 
-        try encodedString.iterateEncodedValuesWithInstantationHandler { type, value in
-            decodedItems.append(try CerealDecoder.instantiate(value, ofType: type))
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            decodedItems.append(try CerealDecoder.instantiate(&value, ofType: type))
         }
 
         return decodedItems
     }
 
-    private static func parseEncodedArrayString<DecodedType: CerealRepresentable>(encodedString: String) throws -> [DecodedType] {
+    private static func parseEncodedArrayString<DecodedType: CerealRepresentable>(inout encodedString: String) throws -> [DecodedType] {
         var decodedItems = [DecodedType]()
 
-        try encodedString.iterateEncodedValuesWithInstantationHandler { type, value in
-            guard let decodedValue: DecodedType = try CerealDecoder.instantiate(value, ofType: type) as? DecodedType else {
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            guard let decodedValue: DecodedType = try CerealDecoder.instantiate(&value, ofType: type) as? DecodedType else {
                 throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
@@ -1186,45 +1186,45 @@ public struct CerealDecoder {
         return decodedItems
     }
 
-    private static func parseEncodedCerealArrayString<DecodedType: CerealType>(encodedString: String) throws -> [DecodedType] {
+    private static func parseEncodedCerealArrayString<DecodedType: CerealType>(inout encodedString: String) throws -> [DecodedType] {
         var decodedItems = [DecodedType]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { type, value in
-            decodedItems.append(try CerealDecoder.instantiateCereal(value, ofType: type))
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (type, var value) in
+            decodedItems.append(try CerealDecoder.instantiateCereal(&value, ofType: type))
         }
 
         return decodedItems
     }
 
-    private static func parseEncodedIdentifyingCerealArrayString(encodedString: String) throws -> [IdentifyingCerealType] {
+    private static func parseEncodedIdentifyingCerealArrayString(inout encodedString: String) throws -> [IdentifyingCerealType] {
         var decodedItems = [IdentifyingCerealType]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { _, value in
-            decodedItems.append(try CerealDecoder.instantiateIdentifyingCereal(value))
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (_, var value) in
+            decodedItems.append(try CerealDecoder.instantiateIdentifyingCereal(&value))
         }
 
         return decodedItems
     }
 
-    private static func parseEncodedDictionaryString<DecodedKeyType: protocol<Hashable, CerealRepresentable>>(encodedString: String) throws -> [DecodedKeyType: CerealRepresentable] {
+    private static func parseEncodedDictionaryString<DecodedKeyType: protocol<Hashable, CerealRepresentable>>(inout encodedString: String) throws -> [DecodedKeyType: CerealRepresentable] {
         var decodedItems = [DecodedKeyType: CerealRepresentable]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
-            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, type, var value) in
+            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(&keyValue, ofType: keyType) as? DecodedKeyType else {
                 throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
-            decodedItems[decodedKey] = try CerealDecoder.instantiate(value, ofType: type)
+            decodedItems[decodedKey] = try CerealDecoder.instantiate(&value, ofType: type)
         }
 
         return decodedItems
     }
 
-    private static func parseEncodedDictionaryString<DecodedKeyType: protocol<Hashable, CerealRepresentable>, DecodedValueType: CerealRepresentable>(encodedString: String) throws -> [DecodedKeyType: DecodedValueType] {
+    private static func parseEncodedDictionaryString<DecodedKeyType: protocol<Hashable, CerealRepresentable>, DecodedValueType: CerealRepresentable>(inout encodedString: String) throws -> [DecodedKeyType: DecodedValueType] {
         var decodedItems = [DecodedKeyType: DecodedValueType]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
-            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, type, var value) in
+            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(&keyValue, ofType: keyType) as? DecodedKeyType else {
                 throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
-            guard let decodedValue: DecodedValueType = try CerealDecoder.instantiate(value, ofType: type) as? DecodedValueType else {
+            guard let decodedValue: DecodedValueType = try CerealDecoder.instantiate(&value, ofType: type) as? DecodedValueType else {
                 throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
@@ -1234,24 +1234,24 @@ public struct CerealDecoder {
         return decodedItems
     }
 
-    private static func parseEncodedCerealDictionaryString<DecodedKeyType: protocol<Hashable, CerealRepresentable>, DecodedValueType: CerealType>(encodedString: String) throws -> [DecodedKeyType: DecodedValueType] {
+    private static func parseEncodedCerealDictionaryString<DecodedKeyType: protocol<Hashable, CerealRepresentable>, DecodedValueType: CerealType>(inout encodedString: String) throws -> [DecodedKeyType: DecodedValueType] {
         var decodedItems = [DecodedKeyType: DecodedValueType]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
-            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, type, var value) in
+            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(&keyValue, ofType: keyType) as? DecodedKeyType else {
                 throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
-            decodedItems[decodedKey] = try CerealDecoder.instantiateCereal(value, ofType: type) as DecodedValueType
+            decodedItems[decodedKey] = try CerealDecoder.instantiateCereal(&value, ofType: type) as DecodedValueType
         }
 
         return decodedItems
     }
 
-    private static func parseEncodedCerealDictionaryString<DecodedKeyType: protocol<Hashable, CerealType>, DecodedValueType: CerealRepresentable>(encodedString: String) throws -> [DecodedKeyType: DecodedValueType] {
+    private static func parseEncodedCerealDictionaryString<DecodedKeyType: protocol<Hashable, CerealType>, DecodedValueType: CerealRepresentable>(inout encodedString: String) throws -> [DecodedKeyType: DecodedValueType] {
         var decodedItems = [DecodedKeyType: DecodedValueType]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
-            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(keyValue, ofType: keyType)
-            guard let decodedValue: DecodedValueType = try CerealDecoder.instantiate(value, ofType: type) as? DecodedValueType else {
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, type, var value) in
+            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(&keyValue, ofType: keyType)
+            guard let decodedValue: DecodedValueType = try CerealDecoder.instantiate(&value, ofType: type) as? DecodedValueType else {
                 throw CerealError.InvalidEncoding("Failed to decode value \(value) of type \(type)")
             }
 
@@ -1261,11 +1261,11 @@ public struct CerealDecoder {
         return decodedItems
     }
 
-    private static func parseEncodedCerealPairDictionaryString<DecodedKeyType: protocol<Hashable, CerealType>, DecodedValueType: CerealType>(encodedString: String) throws -> [DecodedKeyType: DecodedValueType] {
+    private static func parseEncodedCerealPairDictionaryString<DecodedKeyType: protocol<Hashable, CerealType>, DecodedValueType: CerealType>(inout encodedString: String) throws -> [DecodedKeyType: DecodedValueType] {
         var decodedItems = [DecodedKeyType: DecodedValueType]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, type, value in
-            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(keyValue, ofType: keyType)
-            let decodedValue: DecodedValueType = try CerealDecoder.instantiateCereal(value, ofType: type)
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, type, var value) in
+            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(&keyValue, ofType: keyType)
+            let decodedValue: DecodedValueType = try CerealDecoder.instantiateCereal(&value, ofType: type)
 
             decodedItems[decodedKey] = decodedValue
         }
@@ -1273,24 +1273,24 @@ public struct CerealDecoder {
         return decodedItems
     }
 
-    private static func parseEncodedIdentifyingCerealDictionaryString<DecodedKeyType: protocol<Hashable, CerealRepresentable>>(encodedString: String) throws -> [DecodedKeyType: IdentifyingCerealType] {
+    private static func parseEncodedIdentifyingCerealDictionaryString<DecodedKeyType: protocol<Hashable, CerealRepresentable>>(inout encodedString: String) throws -> [DecodedKeyType: IdentifyingCerealType] {
         var decodedItem = [DecodedKeyType: IdentifyingCerealType]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
-            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(keyValue, ofType: keyType) as? DecodedKeyType else {
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, _, var value) in
+            guard let decodedKey: DecodedKeyType = try CerealDecoder.instantiate(&keyValue, ofType: keyType) as? DecodedKeyType else {
                 throw CerealError.InvalidEncoding("Failed to decode key value \(keyValue) with key type \(keyType)")
             }
 
-            decodedItem[decodedKey] = try CerealDecoder.instantiateIdentifyingCereal(value)
+            decodedItem[decodedKey] = try CerealDecoder.instantiateIdentifyingCereal(&value)
         }
 
         return decodedItem
     }
 
-    private static func parseEncodedCerealToIdentifyingCerealDictionaryString<DecodedKeyType: protocol<Hashable, CerealType>>(encodedString: String) throws -> [DecodedKeyType: IdentifyingCerealType] {
+    private static func parseEncodedCerealToIdentifyingCerealDictionaryString<DecodedKeyType: protocol<Hashable, CerealType>>(inout encodedString: String) throws -> [DecodedKeyType: IdentifyingCerealType] {
         var decodedItem = [DecodedKeyType: IdentifyingCerealType]()
-        try encodedString.iterateEncodedValuesWithInstantationHandler { keyType, keyValue, _, value in
-            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(keyValue, ofType: keyType)
-            decodedItem[decodedKey] = try CerealDecoder.instantiateIdentifyingCereal(value)
+        try encodedString.iterateEncodedValuesWithInstantationHandler { (keyType, var keyValue, _, var value) in
+            let decodedKey: DecodedKeyType = try CerealDecoder.instantiateCereal(&keyValue, ofType: keyType)
+            decodedItem[decodedKey] = try CerealDecoder.instantiateIdentifyingCereal(&value)
         }
 
         return decodedItem
@@ -1299,27 +1299,27 @@ public struct CerealDecoder {
 
 
 extension String {
-    func iterateEncodedValuesWithInstantationHandler(instantiationHandler: (type: CerealTypeIdentifier, value: String) throws -> Void) throws {
+    mutating func iterateEncodedValuesWithInstantationHandler(instantiationHandler: (type: CerealTypeIdentifier, value: String) throws -> Void) throws {
         var scanIndex = startIndex
         while scanIndex != endIndex {
             let type: CerealTypeIdentifier
             let value: String
-            (type, value, scanIndex) = try CerealDecoder.extractTypeAndValueFromEncodedString(self, startingAtIndex: scanIndex)
+            (type, value, scanIndex) = try CerealDecoder.extractTypeAndValueFromEncodedString(&self, startingAtIndex: scanIndex)
 
             try instantiationHandler(type: type, value: value)
         }
     }
 
-    func iterateEncodedValuesWithInstantationHandler(instantiationHandler: (keyType: CerealTypeIdentifier, keyValue: String, type: CerealTypeIdentifier, value: String) throws -> Void) throws {
+    mutating func iterateEncodedValuesWithInstantationHandler(instantiationHandler: (keyType: CerealTypeIdentifier, keyValue: String, type: CerealTypeIdentifier, value: String) throws -> Void) throws {
         var scanIndex = startIndex
         while scanIndex != endIndex {
             let keyType: CerealTypeIdentifier
             let keyValue: String
-            (keyType, keyValue, scanIndex) = try CerealDecoder.extractTypeAndValueFromEncodedString(self, startingAtIndex: scanIndex)
+            (keyType, keyValue, scanIndex) = try CerealDecoder.extractTypeAndValueFromEncodedString(&self, startingAtIndex: scanIndex)
 
             let type: CerealTypeIdentifier
             let value: String
-            (type, value, scanIndex) = try CerealDecoder.extractTypeAndValueFromEncodedString(self, startingAtIndex: scanIndex)
+            (type, value, scanIndex) = try CerealDecoder.extractTypeAndValueFromEncodedString(&self, startingAtIndex: scanIndex)
 
             try instantiationHandler(keyType: keyType, keyValue: keyValue, type: type, value: value)
         }
