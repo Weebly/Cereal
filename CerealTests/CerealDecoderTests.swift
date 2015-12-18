@@ -106,6 +106,30 @@ class CerealDecoderTests: XCTestCase {
         }
     }
 
+    func testDecodingPreciseDate() {
+        do {
+            let date = NSDate(timeIntervalSinceReferenceDate: NSTimeInterval(String(72169399.35149699))!)
+            let dateString = String(date.timeIntervalSinceReferenceDate)
+            let subject = try CerealDecoder(encodedString: "k,5:dtest:T,\(dateString.characters.count):\(dateString)")
+            let resultDate: NSDate = try subject.decode("dtest") ?? NSDate()
+            XCTAssertEqual(resultDate, NSDate(timeIntervalSinceReferenceDate: 72169399.35149699))
+        } catch let error {
+            XCTFail("Decoding failed due to error: \(error)")
+        }
+    }
+
+    func testDecodingCurrentDate() {
+        do {
+            let date = NSDate()
+            let dateString = String(date.timeIntervalSinceReferenceDate)
+            let subject = try CerealDecoder(encodedString: "k,5:dtest:T,\(dateString.characters.count):\(dateString)")
+            let resultDate: NSDate = try subject.decode("dtest") ?? NSDate()
+            XCTAssertEqual(resultDate, date)
+        } catch let error {
+            XCTFail("Decoding failed due to error: \(error)")
+        }
+    }
+
     func testDecodingDate_withNegativeInterval() {
         do {
             let subject = try CerealDecoder(encodedString: "k,5:dtest:t,5:-10.0")

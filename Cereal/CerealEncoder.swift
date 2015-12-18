@@ -318,8 +318,8 @@ public struct CerealEncoder {
             return "b,1:\(value ? "t" : "f")"
             
         case let value as NSDate :
-            let interval = value.timeIntervalSince1970
-            return "t,\(String(interval).characters.count):\(interval)"
+            let interval = value.timeIntervalSinceReferenceDate
+            return "T,\(String(interval).characters.count):\(interval)"
         
         case let value as NSURL :
             let absoluteString = value.absoluteString

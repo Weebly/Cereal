@@ -256,9 +256,9 @@ class CerealEncoderTests: XCTestCase {
     func testToString_withDate() {
         var subject = CerealEncoder()
         do {
-            try subject.encode(NSDate(timeIntervalSince1970: 5), forKey: "mydate")
+            try subject.encode(NSDate(timeIntervalSinceReferenceDate: 5), forKey: "mydate")
             let result = subject.toString()
-            XCTAssertEqual(result, "k,6:mydate:t,3:5.0")
+            XCTAssertEqual(result, "k,6:mydate:T,3:5.0")
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -267,9 +267,9 @@ class CerealEncoderTests: XCTestCase {
     func testToString_withDateWithNegativeIntervalSince1970() {
         var subject = CerealEncoder()
         do {
-            try subject.encode(NSDate(timeIntervalSince1970: -5), forKey: "mydate")
+            try subject.encode(NSDate(timeIntervalSinceReferenceDate: -5), forKey: "mydate")
             let result = subject.toString()
-            XCTAssertEqual(result, "k,6:mydate:t,4:-5.0")
+            XCTAssertEqual(result, "k,6:mydate:T,4:-5.0")
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
