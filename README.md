@@ -20,7 +20,7 @@ solves this issue through deferred decoding with generics, and a protocol that d
 # Requirements
 
 * iOS 8.0+ / Mac OS X 10.9 / watchOS 2
-* Xcode 7.0+ (7.1 for Cocoapods w/ Watch OS 2)
+* Xcode 7.0+ (7.1 for CocoaPods w/ Watch OS 2)
 
 # Installation
 
