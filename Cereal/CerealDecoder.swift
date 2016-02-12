@@ -1144,8 +1144,9 @@ public struct CerealDecoder {
     }
 
     private static func extractCerealTypeFromEncodedString(encodedString: String, var startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, indexPassedValue: String.Index) {
-        guard let type = CerealTypeIdentifier(rawValue: encodedString[index ..< index.advancedBy(1)]) else {
-            throw CerealError.InvalidEncoding("Failed to instantiate CerealTypeIdentifier with \(encodedString[index ..< index.advancedBy(1))")
+        let encodedStringSlice = encodedString[index ..< index.advancedBy(1)]
+        guard let type = CerealTypeIdentifier(rawValue: encodedStringSlice) else {
+            throw CerealError.InvalidEncoding("Failed to instantiate CerealTypeIdentifier with \(encodedStringSlice)")
         }
 
         index = index.advancedBy(2) // Move past type and following comma
