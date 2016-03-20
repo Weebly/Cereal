@@ -60,6 +60,26 @@ public struct CerealDecoder {
     }
 
     /**
+     Decodes the `RawRepresentable` object contained in key.
+
+     This method is identical to `decode<DecodedType: CerealRepresentable>`, but may automatically decode
+     `RawRepresentable` types whose RawValue conforms `CerealRepresentable`.
+
+     - parameter    key:     The key that the object being decoded resides at.
+     - returns:      The instantiated object, or nil if no object was at the specified key.
+     */
+    public func decode<DecodedType: RawRepresentable where DecodedType: CerealRepresentable, DecodedType.RawValue: CerealRepresentable>(key: String) throws -> DecodedType? {
+        guard let data = items[key] else {
+            return nil
+        }
+
+        guard let rawValue = try CerealDecoder.instantiate(data.value, ofType: data.type) as? DecodedType.RawValue else {
+            return nil
+        }
+        return DecodedType(rawValue: rawValue)
+    }
+
+    /**
     Decodes the object contained in key.
 
     This method can decode any type that conforms to `CerealType`.

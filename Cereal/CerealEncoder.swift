@@ -51,6 +51,18 @@ public struct CerealEncoder {
     }
 
     /**
+     Encodes an object conforming to `RawRepresentable` and `CerealRepresentable` (enums, OptionSetType etc) 
+     whose RawValue conforms to `CerealRepresentable` under `key`.
+
+     - parameter     item:    The object being encoded.
+     - parameter     key:     The key the object should be encoded under.
+     */
+    public mutating func encode<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(item: ItemType?, forKey key: String) throws {
+        guard let unwrapped = item else { return }
+        items[key] = try encodeItem(unwrapped.rawValue)
+    }
+
+    /**
     Encodes an object conforming to `IdentifyingCerealType` under `key`.
 
     - parameter     item:    The object being encoded.

@@ -162,6 +162,28 @@ class CerealDecoderTests: XCTestCase {
         }
     }
 
+    // MARK: RawRepresentable
+
+    func testDecodingStringEnum() {
+        do {
+            let subject = try CerealDecoder(encodedString: "k,8:enumtest:s,9:TestCase2")
+            let resultEnum: TestEnum = try subject.decode("enumtest") ?? .TestCase1
+            XCTAssertEqual(resultEnum, TestEnum.TestCase2)
+        } catch let error {
+            XCTFail("Decoding failed due to error: \(error)")
+        }
+    }
+
+    func testDecodingIntOptionSet() {
+        do {
+            let subject = try CerealDecoder(encodedString: "k,13:optionsettest:i,1:3")
+            let resultOptions: TestSetType = try subject.decode("optionsettest") ?? []
+            XCTAssertEqual(resultOptions, [TestSetType.FirstOption, TestSetType.SecondOption])
+        } catch let error {
+            XCTFail("Decoding failed due to error: \(error)")
+        }
+    }
+
     // MARK: - Custom Types
 
     func testDecoding_withCereal() {

@@ -287,7 +287,32 @@ class CerealEncoderTests: XCTestCase {
             XCTFail("Encoding failed due to error: \(error)")
         }
     }
-    
+
+    // MARK: RawRepresentable
+
+    func testToString_withStringEnum() {
+        var subject = CerealEncoder()
+        do {
+            try subject.encode(TestEnum.TestCase2, forKey: "myenum")
+            let result = subject.toString()
+            XCTAssertEqual(result, "k,6:myenum:s,9:TestCase2")
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withIntOptionSet() {
+        var subject = CerealEncoder()
+        do {
+            let options: TestSetType = [TestSetType.FirstOption, TestSetType.SecondOption]
+            try subject.encode(options, forKey: "myoptionset")
+            let result = subject.toString()
+            XCTAssertEqual(result, "k,11:myoptionset:i,1:3")
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     // MARK: - Custom Types
 
     func testToString_withCereal() {

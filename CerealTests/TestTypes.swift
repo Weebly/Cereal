@@ -199,3 +199,21 @@ struct MyBaz: Bazable {
 // Extending objects with CerealRepresentable is not supported, so this will be used to test
 // that if it is, the correct error is used.
 extension NSData: CerealRepresentable { }
+
+enum TestEnum: String {
+    case TestCase1
+    case TestCase2
+}
+
+extension TestEnum: CerealRepresentable { }
+
+struct TestSetType : OptionSetType {
+    let rawValue: Int
+
+    static let None         = TestSetType(rawValue: 0)
+    static let FirstOption  = TestSetType(rawValue: 1 << 0)
+    static let SecondOption = TestSetType(rawValue: 1 << 1)
+    static let ThirdOption  = TestSetType(rawValue: 1 << 2)
+}
+
+extension TestSetType: CerealRepresentable { }
