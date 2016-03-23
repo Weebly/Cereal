@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target = "2.0"
   #s.tvos.deployment_target = "1.0"
 
-  s.source       = { :git => "https://github.com/Weebly/Cereal.git", :tag => "v1.3" }
+  s.source       = { :git => "https://github.com/Weebly/Cereal.git", :tag => "v1.3.0" }
   s.requires_arc = true
   s.source_files = "Cereal/*.swift"
 
