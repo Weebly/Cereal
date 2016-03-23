@@ -1163,7 +1163,8 @@ public struct CerealDecoder {
         return (value: value, indexPassedValue: scanIndex)
     }
 
-    private static func extractCerealTypeFromEncodedString(encodedString: String, var startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, indexPassedValue: String.Index) {
+    private static func extractCerealTypeFromEncodedString(encodedString: String, startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, indexPassedValue: String.Index) {
+        var index = index
         let encodedStringSlice = encodedString[index ..< index.advancedBy(1)]
         guard let type = CerealTypeIdentifier(rawValue: encodedStringSlice) else {
             throw CerealError.InvalidEncoding("Failed to instantiate CerealTypeIdentifier with \(encodedStringSlice)")
@@ -1174,7 +1175,8 @@ public struct CerealDecoder {
         return (type: type, indexPassedValue: index)
     }
 
-    private static func extractTypeAndValueFromEncodedString(encodedString: String, var startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, value: String, endIndex: String.Index) {
+    private static func extractTypeAndValueFromEncodedString(encodedString: String, startingAtIndex index: String.Index) throws -> (type: CerealTypeIdentifier, value: String, endIndex: String.Index) {
+        var index = index
         let cerealType: CerealTypeIdentifier
         (cerealType, index) = try CerealDecoder.extractCerealTypeFromEncodedString(encodedString, startingAtIndex: index)
 

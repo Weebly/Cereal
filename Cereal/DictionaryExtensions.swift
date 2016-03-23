@@ -14,7 +14,8 @@ extension Dictionary {
     - returns:      The casted copy
     */
     public func CER_casted<CastedType>() -> [Key: CastedType] {
-        return reduce([Key: CastedType]()) { (var memo, object) in
+        return reduce([Key: CastedType]()) { memo, object in
+            var memo = memo
             memo[object.0] = (object.1 as! CastedType)
             return memo
         }

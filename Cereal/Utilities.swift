@@ -15,7 +15,8 @@ you cannot return a [[Key: IdentifyingCerealType]] to a subprotocol of Identifyi
 */
 public func deepCast<KeyType: Hashable, ValueType, CastedType>(sequence: [[KeyType: ValueType]]) -> [[KeyType: CastedType]] {
     return sequence.map {
-        return $0.reduce([KeyType: CastedType]()) { (var memo, object) in
+        return $0.reduce([KeyType: CastedType]()) { memo, object in
+            var memo = memo
             memo[object.0] = (object.1 as! CastedType)
             return memo
         }
@@ -30,7 +31,8 @@ you cannot return a [Key: [IdentifyingCerealType]] to a subprotocol of Identifyi
 - returns:      The casted copy
 */
 public func deepArrayCast<KeyType: Hashable, ValueType, CastedType>(sequence: [KeyType: [ValueType]]) -> [KeyType: [CastedType]] {
-    return sequence.reduce([KeyType: [CastedType]]()) { (var memo, object) in
+    return sequence.reduce([KeyType: [CastedType]]()) { memo, object in
+        var memo = memo
         memo[object.0] = object.1.CER_casted()
         return memo
     }
