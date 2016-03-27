@@ -162,6 +162,17 @@ class CerealEncoderArrayTests: XCTestCase {
         }
     }
 
+    func testToString_withStringEnumRawRepresentableArray() {
+        do {
+            try subject.encode([TestEnum.TestCase1, TestEnum.TestCase2], forKey: "raws")
+            let result = subject.toString()
+            let expected = "k,4:raws:a,27:s,9:TestCase1:s,9:TestCase2"
+            XCTAssertEqual(result, expected)
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     // MARK: - Array of Dictionaries
 
     // MARK: [Bool: XXX]

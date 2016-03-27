@@ -714,6 +714,33 @@ class CerealDecoderDictionaryTests: XCTestCase {
         }
     }
 
+    // MARK: [RawRepresentable: XYZ]
+    func testDecoding_withStringEnumToIntDictionary() {
+        do {
+            let subject = try CerealDecoder(encodedString: "k,3:wat:m,39:s,9:TestCase1:i,1:1:s,9:TestCase2:i,1:2")
+            if let dict: [TestEnum: Int] = try subject.decode("wat") {
+                XCTAssertEqual(dict[.TestCase1], 1)
+            } else {
+                XCTFail("Dictionary wasn't decoded correctly")
+            }
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testDecoding_withIntOptionSetToIntDictionary() {
+        do {
+            let subject = try CerealDecoder(encodedString: "k,3:wat:m,23:i,1:3:i,1:1:i,1:4:i,1:2")
+            if let dict: [TestSetType: Int] = try subject.decode("wat") {
+                let testOptions: TestSetType = [TestSetType.FirstOption, TestSetType.SecondOption]
+                XCTAssertEqual(dict[testOptions], 1)
+            } else {
+                XCTFail("Dictionary wasn't decoded correctly")
+            }
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
 
     // MARK: - [ABC: [XYZ]] -
 
