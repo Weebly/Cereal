@@ -14,6 +14,7 @@ solves this issue through deferred decoding with generics, and a protocol that d
 * Encode and decode your own ```class``` types, even if they don't inherit from NSObject
 * Encode and decode as a ```protocol```
 * Encode and decode types with generics
+* Encode and decode `RawRepresentable` types, whose RawValue's are also encodable/decodable
 * Enforce decoding of the same type as encoded with
 * Comprehensive test suite
 
@@ -297,6 +298,61 @@ struct Stack<ItemType: CerealRepresentable>: IdentifyingCerealType {
         return "Stack-\(ItemType.self)"
     }
     // ... rest of the implementation ...
+}
+```
+
+## RawRepresentable support
+
+Adding serialization to `RawRepresentable` types never been easier, since they may be represented with their raw value.
+So, if you have an enum, or option set with a raw value of type that supports `CerealRepresentable` (like `String`, `Bool`, `Int`), then all you have to do is to add `CerealRepresentable` conformance to your `RawRepresentable` type and you're done.
+For example this `RawRepresentable` types:
+
+```swift
+enum Gender: Int {
+    case Female
+    case Male
+}
+
+struct EmployeeResponsibilites : OptionSetType {
+    let rawValue: Int
+
+    static let None           = OptionSet(rawValue: 0)
+    static let CleanWorkplace = OptionSet(rawValue: 1 << 0)
+    static let OpenWindow     = OptionSet(rawValue: 1 << 1)
+    static let BringCofee     = OptionSet(rawValue: 1 << 2)
+}
+```
+
+may be easily encoded and decoded by just adding `CerealRepresentable` conformance:
+
+```swift
+extension Gender: CerealRepresentable {}
+extension EmployeeResponsibilites: CerealRepresentable {}
+```
+
+And encode/decode may looks something like this:
+```swift
+struct Employee {
+    var gender: Gender = .Female
+    var responsibilities: EmployeeResponsibilites = [.CleanWorkplace, .OpenWindow]
+    init() { }
+}
+
+extension Employee: CerealType {
+    private struct Keys {
+        static let gender = "gender"
+        static let responsibility = "responsibility"
+    }
+
+    init(decoder: CerealDecoder) throws {
+        gender = try decoder.decode(Keys.gender) ?? .Female
+        responsibility = try decoder.decode(Keys.responsibility) ?? .None
+    }
+
+    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+        try cereal.encode(gender, forKey: Keys.gender)
+        try cereal.encode(responsibility, forKey: Keys.responsibility)
+    }
 }
 ```
 
