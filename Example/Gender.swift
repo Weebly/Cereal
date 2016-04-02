@@ -12,17 +12,3 @@ enum Gender: Int {
     case Female
     case Male
 }
-
-extension Gender: CerealType {
-    private struct Keys {
-        static let root = "gender"
-    }
-
-    init(decoder: CerealDecoder) throws {
-        self.init(rawValue: try decoder.decode(Keys.root) ?? Gender.Female.rawValue)!
-    }
-
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
-        try cereal.encode(rawValue, forKey: Keys.root)
-    }
-}

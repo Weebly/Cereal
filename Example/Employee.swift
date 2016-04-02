@@ -16,6 +16,8 @@ struct Employee {
     init() { }
 }
 
+extension Gender: CerealRepresentable {}
+
 extension Employee: CerealType {
     private struct Keys {
         static let name = "name"
@@ -26,7 +28,7 @@ extension Employee: CerealType {
     init(decoder: CerealDecoder) throws {
         name = try decoder.decode(Keys.name) ?? ""
         age = try decoder.decode(Keys.age) ?? 0
-        gender = try decoder.decodeCereal(Keys.gender) ?? .Female
+        gender = try decoder.decode(Keys.gender) ?? .Female
     }
 
     func encodeWithCereal(inout cereal: CerealEncoder) throws {
