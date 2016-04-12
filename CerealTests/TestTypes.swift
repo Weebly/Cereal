@@ -217,3 +217,9 @@ struct TestSetType : OptionSetType {
 }
 
 extension TestSetType: CerealRepresentable { }
+extension TestSetType: Hashable {
+    var hashValue: Int {
+        return self.rawValue.hashValue
+    }
+
+}

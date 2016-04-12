@@ -1366,6 +1366,38 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
+    // MARK: [RawRepresentable: XXX]
+
+    func testToString_withStringEnumToIntDictionary() {
+        do {
+            var subject = CerealEncoder()
+            try subject.encode([TestEnum.TestCase1: 1, TestEnum.TestCase2: 2], forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,39:"))
+            XCTAssertTrue(result.containsSubstring("s,9:TestCase1:i,1:1"))
+            XCTAssertTrue(result.containsSubstring("s,9:TestCase2:i,1:2"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
+    func testToString_withIntOptionSetToIntDictionary() {
+        do {
+            let options1: TestSetType = [TestSetType.FirstOption, TestSetType.SecondOption]
+            let options2: TestSetType = [TestSetType.ThirdOption]
+            let saveDict: [TestSetType: Int] = [options1: 1, options2: 2]
+
+            var subject = CerealEncoder()
+            try subject.encode(saveDict, forKey: "wat")
+            let result = subject.toString()
+            XCTAssertTrue(result.hasPrefix("k,3:wat:m,23:"))
+            XCTAssertTrue(result.containsSubstring("i,1:3:i,1:1"))
+            XCTAssertTrue(result.containsSubstring("i,1:4:i,1:2"))
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     // MARK: - Dictionaries of Arrays
 
     // MARK: [Bool: [XXX]]

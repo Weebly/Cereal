@@ -51,18 +51,6 @@ public struct CerealEncoder {
     }
 
     /**
-     Encodes an object conforming to `RawRepresentable` and `CerealRepresentable` (enums, OptionSetType etc) 
-     whose RawValue conforms to `CerealRepresentable` under `key`.
-
-     - parameter     item:    The object being encoded.
-     - parameter     key:     The key the object should be encoded under.
-     */
-    public mutating func encode<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(item: ItemType?, forKey key: String) throws {
-        guard let unwrapped = item else { return }
-        items[key] = try encodeItem(unwrapped.rawValue)
-    }
-
-    /**
     Encodes an object conforming to `IdentifyingCerealType` under `key`.
 
     - parameter     item:    The object being encoded.
@@ -461,6 +449,7 @@ public struct CerealEncoder {
     }
 
     // MARK: Dictionaries of Arrays
+
     private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> String {
         var encodedDictionaryItems = [String]()
 
@@ -485,8 +474,455 @@ public struct CerealEncoder {
         }
 
         let combined = encodedDictionaryItems.joinWithSeparator(":")
+        
+        return "m,\(combined.characters.count):\(combined)"
+    }
+}
+
+// MARK: - RawRepresentable overrides -
+
+extension CerealEncoder {
+
+    // MARK: - Single items
+
+    /**
+     Encodes an object conforming to `RawRepresentable` and `CerealRepresentable` (enums, OptionSetType etc)
+     whose RawValue conforms to `CerealRepresentable` under `key`.
+
+     - parameter     item:    The object being encoded.
+     - parameter     key:     The key the object should be encoded under.
+     */
+    public mutating func encode<ItemType: protocol<RawRepresentable, CerealRepresentable> where ItemType.RawValue: CerealRepresentable>(item: ItemType?, forKey key: String) throws {
+        guard let unwrapped = item else { return }
+        items[key] = try encodeItem(unwrapped)
+    }
+
+    // MARK: - Arrays
+
+    /**
+     Encodes an array of objects conforming to `CerealRepresentable` object under `key`.
+
+     - parameter     items:   The objects being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encode<ItemType: protocol<RawRepresentable, CerealRepresentable> where ItemType.RawValue: CerealRepresentable>(items: [ItemType]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
+    }
+
+    // MARK: Arrays of Dictionaries
+
+    /**
+     Encodes an array of dictionaries where the key and value conform to `CerealRepresentable` object under `key`.
+
+     - parameter     items:   The dictionaries being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
+    }
+
+    /**
+     Encodes an array of dictionaries where the key and value conform to `CerealRepresentable` object under `key`.
+
+     - parameter     items:   The dictionaries being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
+    }
+
+    /**
+     Encodes an array of dictionaries where the keys conform to `CerealRepresentable` and values conform to `IdentifyingCerealType` object under `key`.
+
+     - parameter     items:   The dictionaries being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: IdentifyingCerealType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
+    }
+
+    // MARK: - Dictionaries
+
+    /**
+     Encodes a dictionary of keys and values conforming to `CerealRepresentable` object under `key`.
+
+     - parameter     items:   The dictionary being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
+    }
+
+    /**
+     Encodes a dictionary of keys and values conforming to `CerealRepresentable` object under `key`.
+
+     - parameter     items:   The dictionary being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
+    }
+
+    /**
+     Encodes a dictionary of keys conforming to `CerealRepresentable` and values conforming to `IdentifyingCerealType` object under `key`.
+
+     - parameter     items:   The dictionary being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeIdentifyingItems(unwrapped)
+    }
+
+    // MARK: Dictionaries of Arrays
+
+    /**
+     Encodes a dictionary of keys and arrays of values conforming to `CerealRepresentable` object under `key`.
+
+     - parameter     items:   The dictionary being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
+    }
+    /**
+     Encodes a dictionary of keys and arrays of values conforming to `CerealRepresentable` object under `key`.
+
+     - parameter     items:   The dictionary being encoded.
+     - parameter     key:     The key the objects should be encoded under.
+     */
+    public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeItems(unwrapped)
+    }
+
+    /**
+     Encodes a dictionary of keys conforming to `CerealRepresentable` and arrays of values conforming to `IdentifyingCerealType` object under `key`.
+
+     - parameter     items:   The dictionary being encoded.
+     - parameter     key     The key the objects should be encoded under.
+     */
+    public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [IdentifyingCerealType]]?, forKey key: String) throws {
+        guard let unwrapped = items else { return }
+        self.items[key] = try encodeIdentifyingItems(unwrapped)
+    }
+
+    // MARK: - Root encoding
+
+    // These methods are convenience methods that allow users to quickly encode their object into what they will be stored as.
+
+    // MARK: Basic items
+
+    /**
+     Encodes an object conforming to `CerealRepresentable` and returns an `NSData` object representing it.
+
+     - parameter     item:    The object being encoded.
+     - returns:      The object encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemType: protocol<RawRepresentable, CerealRepresentable> where ItemType.RawValue: CerealRepresentable>(root: ItemType) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encode(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    // MARK: Arrays
+
+    /**
+     Encodes an array of objects conforming to `CerealRepresentable` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemType: protocol<RawRepresentable, CerealRepresentable> where ItemType.RawValue: CerealRepresentable>(root: [ItemType]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encode(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    // MARK: Arrays of Dictionaries
+    
+    /**
+     Encodes an array of dictionaries of keys and values conforming to `CerealRepresentable` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(root: [[ItemKeyType: ItemValueType]]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encode(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    /**
+     Encodes an array of dictionaries of keys and values conforming to `CerealRepresentable` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(root: [[ItemKeyType: ItemValueType]]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encode(root, forKey: rootKey)
+        return encoder.toData()
+    }
+    
+    /**
+     Encodes an array of dictionaries of keys conforming to `CerealRepresentable` and values conforming to `IdentifyingCerealType` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(root: [[ItemKeyType: IdentifyingCerealType]]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    // MARK: Dictionaries
+
+    /**
+     Encodes a dictionary of keys and values conforming to `CerealRepresentable` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(root: [ItemKeyType: ItemValueType]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encode(root, forKey: rootKey)
+        return encoder.toData()
+    }
+    /**
+     Encodes a dictionary of keys and values conforming to `CerealRepresentable` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(root: [ItemKeyType: ItemValueType]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encode(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    /**
+     Encodes a dictionary of keys conforming to `CerealRepresentable` and values conform to `IdentifyingCerealType` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(root: [ItemKeyType: IdentifyingCerealType]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    // MARK: Dictionaries of Arrays
+
+    /**
+     Encodes a dictionary of keys and array of values conforming to `CerealRepresentable` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encode(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    /**
+     Encodes a dictionary of keys and array of values conforming to `CerealRepresentable` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encode(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    /**
+     Encodes a dictionary of keys of keys conforming to `CerealRepresentable` and array values conforming to `IdentifyingCerealType` and returns an `NSData` object representing it.
+
+     - parameter     item:    The objects being encoded.
+     - returns:      The objects encoded as an `NSData`
+     */
+    public static func dataWithRootItem<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(root: [ItemKeyType: [IdentifyingCerealType]]) throws -> NSData {
+        var encoder = CerealEncoder()
+        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        return encoder.toData()
+    }
+
+    // MARK: - Encoding
+
+    // MARK: Basic
+
+    private func encodeItem<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(item: ItemType) throws -> String {
+        return try self.encodeItem(item.rawValue)
+    }
+
+    // MARK: Arrays of Dictionaries
+
+    private func encodeItems<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(items: [ItemType]) throws -> String {
+        var encodedArrayItems = [String]()
+
+        for obj in items {
+            encodedArrayItems.append(try encodeItem(obj))
+        }
+
+        let combined = encodedArrayItems.joinWithSeparator(":")
+
+        return "a,\(combined.characters.count):\(combined)"
+    }
+}
+
+// MARK: - RawRepresentable private functions overrides -
+
+private extension CerealEncoder {
+
+    // MARK: Arrays of Dictionaries
+
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]) throws-> String {
+        var encodedArrayItems = [String]()
+
+        for obj in items {
+            encodedArrayItems.append(try encodeItems(obj))
+        }
+
+        let combined = encodedArrayItems.joinWithSeparator(":")
+
+        return "a,\(combined.characters.count):\(combined)"
+    }
+
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]) throws-> String {
+        var encodedArrayItems = [String]()
+
+        for obj in items {
+            encodedArrayItems.append(try encodeItems(obj))
+        }
+
+        let combined = encodedArrayItems.joinWithSeparator(":")
+
+        return "a,\(combined.characters.count):\(combined)"
+    }
+
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: IdentifyingCerealType]]) throws-> String {
+        var encodedArrayItems = [String]()
+
+        for obj in items {
+            encodedArrayItems.append(try encodeItems(obj))
+        }
+
+        let combined = encodedArrayItems.joinWithSeparator(":")
+
+        return "a,\(combined.characters.count):\(combined)"
+    }
+
+    // MARK: Dictionaries
+
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]) throws -> String {
+        var encodedDictionaryItems = [String]()
+
+        for (key, value) in items {
+            let encodedKey = try encodeItem(key)
+            let encodedValue = try encodeItem(value)
+            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+        }
+
+        let combined = encodedDictionaryItems.joinWithSeparator(":")
 
         return "m,\(combined.characters.count):\(combined)"
     }
 
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]) throws -> String {
+        var encodedDictionaryItems = [String]()
+
+        for (key, value) in items {
+            let encodedKey = try encodeItem(key)
+            let encodedValue = try encodeItem(value)
+            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+        }
+
+        let combined = encodedDictionaryItems.joinWithSeparator(":")
+
+        return "m,\(combined.characters.count):\(combined)"
+    }
+
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]) throws -> String {
+        var encodedDictionaryItems = [String]()
+
+        for (key, value) in items {
+            let encodedKey = try encodeItem(key)
+            let encodedValue = try encodeItem(value)
+            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+        }
+
+        let combined = encodedDictionaryItems.joinWithSeparator(":")
+
+        return "m,\(combined.characters.count):\(combined)"
+    }
+
+    private func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]) throws -> String {
+        var encodedDictionaryItems = [String]()
+
+        for (key, value) in items {
+            let encodedKey = try encodeItem(key)
+            let encodedValue = try encodeItem(value)
+            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+        }
+
+        let combined = encodedDictionaryItems.joinWithSeparator(":")
+
+        return "m,\(combined.characters.count):\(combined)"
+    }
+
+    // MARK: Dictionaries of Arrays
+
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> String {
+        var encodedDictionaryItems = [String]()
+
+        for (key, value) in items {
+            let encodedKey = try encodeItem(key)
+            let encodedValue = try encodeItems(value)
+            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+        }
+
+        let combined = encodedDictionaryItems.joinWithSeparator(":")
+
+        return "m,\(combined.characters.count):\(combined)"
+    }
+
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> String {
+        var encodedDictionaryItems = [String]()
+
+        for (key, value) in items {
+            let encodedKey = try encodeItem(key)
+            let encodedValue = try encodeItems(value)
+            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+        }
+
+        let combined = encodedDictionaryItems.joinWithSeparator(":")
+
+        return "m,\(combined.characters.count):\(combined)"
+    }
+
+    private func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [IdentifyingCerealType]]) throws -> String {
+        var encodedDictionaryItems = [String]()
+
+        for (key, value) in items {
+            let encodedKey = try encodeItem(key)
+            let encodedValue = try encodeIdentifyingItems(value)
+            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+        }
+
+        let combined = encodedDictionaryItems.joinWithSeparator(":")
+
+        return "m,\(combined.characters.count):\(combined)"
+    }
 }
