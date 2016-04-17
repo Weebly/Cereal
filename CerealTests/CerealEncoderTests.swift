@@ -602,4 +602,52 @@ class CerealEncoderTests: XCTestCase {
             XCTFail("Encoding failed due to error: \(error)")
         }
     }
+
+    func testTLV() {
+        let tlv = CerealTLVValueRecord(int: 32)
+        let bytes = tlv.rawBytes()
+        let tlv2 = CerealTLVValueRecord(bytes: bytes)
+
+        XCTAssertNotNil(tlv2)
+        XCTAssertEqual(tlv2?.int!, 32)
+
+        let tlv3 = CerealTLVValueRecord(bytes: bytes + [0, 4, 5, 6])
+        XCTAssertNotNil(tlv3)
+        XCTAssertEqual(tlv3?.int!, 32)
+
+        let tlvString = CerealTLVValueRecord(string: "Hello, world!")
+        let stringBytes = tlvString.rawBytes()
+        let tlvString2 = CerealTLVValueRecord(bytes: stringBytes)
+
+        XCTAssertNotNil(tlvString2)
+        XCTAssertEqual(tlvString2?.string!, "Hello, world!")
+    }
+
+    func testTLVArray() {
+        let tlv = CerealTLVValueRecord(int: 32)
+        let tlv2 = CerealTLVValueRecord(string: "Hello, world!")
+        let arrayTLV = CerealTLVArrayRecord(records: [tlv, tlv2])
+
+        let arrayBytes = arrayTLV.rawBytes()
+        let arrayTLV2 = CerealTLVArrayRecord(bytes: [0, 1, 2] + arrayBytes + [4, 5, 6], startOffset: 3)
+
+        XCTAssertNotNil(arrayTLV2)
+        XCTAssertEqual(arrayTLV2?.records[1].string!, "Hello, world!")
+    }
+
+    func testTLVDictionary() {
+        let tlvKey1 = CerealTLVValueRecord(int: 32)
+        let tlvKey2 = CerealTLVValueRecord(float: 3.2)
+        let tlvValue = CerealTLVValueRecord(string: "Hello, world!")
+        let keyValueTLV1 = CerealTLVKeyValueRecord(key: tlvKey1, value: tlvValue)
+        let keyValueTLV2 = CerealTLVKeyValueRecord(key: tlvKey2, value: tlvValue)
+
+        let dictionaryTLV = CerealTLVDictionaryRecord(records: [keyValueTLV1, keyValueTLV2])
+
+        let dictionaryBytes = dictionaryTLV.rawBytes()
+        let dictionaryTLV2 = CerealTLVDictionaryRecord(bytes: [0, 1, 2] + dictionaryBytes + [4, 5, 6], startOffset: 3)
+
+        XCTAssertNotNil(dictionaryTLV2)
+        XCTAssertEqual(dictionaryTLV2?.records[1].value.string!, "Hello, world!")
+    }
 }
