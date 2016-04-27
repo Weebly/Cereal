@@ -12,29 +12,21 @@ import Foundation
     A CerealEncoder handles encoding items into a format that can be stored in a simple format, such as NSData or String.
 */
 public struct CerealEncoder {
-    private var items = [String: String]()
+    private var items: [CoderTreeValue] = []
 
     /**
     Initializes a `CerealEncoder` to store encoded data.
     */
-    public init() { }
-
-    /// Returns all the encoded items as a `String` object.
-    public func toString() -> String {
-        var encodedItems = [String]()
-
-        for (key, item) in items {
-            encodedItems.append("k,\(key.characters.count):\(key):\(item)")
-        }
-
-        let joined = encodedItems.joinWithSeparator(":")
-
-        return joined
+    public init(capacity: Int = 20) {
+        items.reserveCapacity(capacity)
     }
 
     /// Returns all of the encoded items as an `NSData` object.
     public func toData() -> NSData {
-        return toString().dataUsingEncoding(NSUTF8StringEncoding)!
+        var bytes = [UInt8]()
+        bytes.append(CerealCoderTreeValueType.SubTree.rawValue)
+        bytes += countCapacityBytes(self.items)
+        return NSData(bytes: bytes, length: bytes.count)
     }
 
     // MARK: - Single items
@@ -47,7 +39,7 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemType: CerealRepresentable>(item: ItemType?, forKey key: String) throws {
         guard let unwrapped = item else { return }
-        items[key] = try encodeItem(unwrapped)
+        items.append(.PairValue(.StringValue(key), try encodeItem(unwrapped)))
     }
 
     /**
@@ -58,7 +50,7 @@ public struct CerealEncoder {
     */
     public mutating func encode(item: IdentifyingCerealType?, forKey key: String) throws {
         guard let unwrapped = item else { return }
-        self.items[key] = try encodeItem(unwrapped)
+        items.append(.PairValue(.StringValue(key), try encodeItem(unwrapped)))
     }
 
     // MARK: - Arrays
@@ -71,7 +63,7 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemType: CerealRepresentable>(items: [ItemType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -82,7 +74,7 @@ public struct CerealEncoder {
     */
     public mutating func encodeIdentifyingItems(items: [IdentifyingCerealType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeIdentifyingItems(unwrapped)))
     }
 
     // MARK: Arrays of Dictionaries
@@ -95,7 +87,7 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -106,7 +98,7 @@ public struct CerealEncoder {
     */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [[ItemKeyType: IdentifyingCerealType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     // MARK: - Dictionaries
@@ -119,7 +111,7 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -130,7 +122,7 @@ public struct CerealEncoder {
     */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: IdentifyingCerealType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     // MARK: Dictionaries of Arrays
@@ -143,7 +135,7 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -154,7 +146,7 @@ public struct CerealEncoder {
     */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: [IdentifyingCerealType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeIdentifyingItems(unwrapped)))
     }
 
     // MARK: - Root encoding
@@ -295,187 +287,168 @@ public struct CerealEncoder {
 
     // MARK: Basic
 
-    private func encodeItem<ItemType: CerealRepresentable>(item: ItemType) throws -> String {
+    private func encodeItem<ItemType: CerealRepresentable>(item: ItemType) throws -> CoderTreeValue {
         
         switch item {
             
         case let value as Int :
-            return "i,\(String(value).characters.count):\(value)"
+            return .IntValue(value)
             
         case let value as Int64 :
-            return "z,\(String(value).characters.count):\(value)"
+            return .Int64Value(value)
             
         case let value as String:
-            return "s,\(value.characters.count):\(value)"
+            return .StringValue(value)
             
         case let value as Double :
-            return "d,\(String(value).characters.count):\(value)"
+            return .DoubleValue(value)
             
         case let value as Float :
-            return "f,\(String(value).characters.count):\(value)"
+            return .FloatValue(value)
             
         case let value as Bool :
-            return "b,1:\(value ? "t" : "f")"
+            return .BoolValue(value)
             
         case let value as NSDate :
-            let interval = value.timeIntervalSinceReferenceDate
-            return "T,\(String(interval).characters.count):\(interval)"
+            return .NSDateValue(value)
         
         case let value as NSURL :
-            let absoluteString = value.absoluteString
-            return "u,\(absoluteString.characters.count):\(absoluteString)"
+            return .NSURLValue(value)
             
         case let value as IdentifyingCerealType :
             return try encodeItem(value)
             
         case let value as CerealType :
-            
-            var cereal = CerealEncoder()
+            let capacity = value.numberOfEntries()
+            var cereal = CerealEncoder(capacity: capacity)
             try value.encodeWithCereal(&cereal)
-            let s = cereal.toString()
-            
-            let len = s.characters.count
-            return "c,\(len):\(s)"
+            return .SubTree(cereal.items)
             
         default: throw CerealError.UnsupportedCerealRepresentable("Item \(item) not supported)")
         }
     }
 
-    private func encodeItem(item: IdentifyingCerealType) throws -> String {
+    private func encodeItem(item: IdentifyingCerealType) throws -> CoderTreeValue {
         var cereal = CerealEncoder()
         try item.encodeWithCereal(&cereal)
-        let s = cereal.toString()
         let ident = item.dynamicType.initializationIdentifier
-        let identLen = ident.characters.count
-        let identLenLen = String(identLen).characters.count
-        let encodedLength = s.characters.count
-        let length = encodedLength + identLen + identLenLen + 2 // For the , and :
 
-        return "p,\(length):\(identLen):\(ident):\(s)"
+        return .IdentifyingTree(ident, cereal.items)
     }
 
     // MARK: Arrays of Dictionaries
 
-    private func encodeItems<ItemType: CerealRepresentable>(items: [ItemType]) throws -> String {
-        var encodedArrayItems = [String]()
+    private func encodeItems<ItemType: CerealRepresentable>(items: [ItemType]) throws -> CoderTreeValue {
+        var encodedArrayItems = [CoderTreeValue]()
+        encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
             encodedArrayItems.append(try encodeItem(obj))
         }
 
-        let combined = encodedArrayItems.joinWithSeparator(":")
-
-        return "a,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedArrayItems)
     }
 
-    private func encodeIdentifyingItems(items: [IdentifyingCerealType]) throws -> String {
-        var encodedArrayItems = [String]()
+    private func encodeIdentifyingItems(items: [IdentifyingCerealType]) throws -> CoderTreeValue {
+        var encodedArrayItems = [CoderTreeValue]()
+        encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
             encodedArrayItems.append(try encodeItem(obj))
         }
 
-        let combined = encodedArrayItems.joinWithSeparator(":")
-
-        return "a,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedArrayItems)
     }
 
-    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]) throws-> String {
-        var encodedArrayItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]) throws-> CoderTreeValue {
+        var encodedArrayItems = [CoderTreeValue]()
+        encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
             encodedArrayItems.append(try encodeItems(obj))
         }
 
-        let combined = encodedArrayItems.joinWithSeparator(":")
-
-        return "a,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedArrayItems)
     }
 
-    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [[ItemKeyType: IdentifyingCerealType]]) throws-> String {
-        var encodedArrayItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [[ItemKeyType: IdentifyingCerealType]]) throws-> CoderTreeValue {
+        var encodedArrayItems = [CoderTreeValue]()
+        encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
             encodedArrayItems.append(try encodeItems(obj))
         }
 
-        let combined = encodedArrayItems.joinWithSeparator(":")
-
-        return "a,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedArrayItems)
     }
 
     // MARK: Dictionaries
 
-    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: ItemValueType]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: ItemValueType]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItem(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
-    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: IdentifyingCerealType]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: IdentifyingCerealType]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItem(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
-    private func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: IdentifyingCerealType]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: IdentifyingCerealType]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItem(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
     // MARK: Dictionaries of Arrays
 
-    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItems(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
-    private func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: [IdentifyingCerealType]]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: [IdentifyingCerealType]]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeIdentifyingItems(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-        
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 }
 
@@ -494,7 +467,7 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemType: protocol<RawRepresentable, CerealRepresentable> where ItemType.RawValue: CerealRepresentable>(item: ItemType?, forKey key: String) throws {
         guard let unwrapped = item else { return }
-        items[key] = try encodeItem(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItem(unwrapped)))
     }
 
     // MARK: - Arrays
@@ -507,7 +480,7 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemType: protocol<RawRepresentable, CerealRepresentable> where ItemType.RawValue: CerealRepresentable>(items: [ItemType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     // MARK: Arrays of Dictionaries
@@ -520,7 +493,7 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -531,7 +504,7 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -542,7 +515,7 @@ extension CerealEncoder {
      */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: IdentifyingCerealType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     // MARK: - Dictionaries
@@ -555,7 +528,7 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -566,7 +539,7 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -577,7 +550,7 @@ extension CerealEncoder {
      */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeIdentifyingItems(unwrapped)))
     }
 
     // MARK: Dictionaries of Arrays
@@ -590,7 +563,7 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
     /**
      Encodes a dictionary of keys and arrays of values conforming to `CerealRepresentable` object under `key`.
@@ -600,7 +573,7 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
     }
 
     /**
@@ -611,7 +584,7 @@ extension CerealEncoder {
      */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [IdentifyingCerealType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items[key] = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), try encodeIdentifyingItems(unwrapped)))
     }
 
     // MARK: - Root encoding
@@ -763,22 +736,21 @@ extension CerealEncoder {
 
     // MARK: Basic
 
-    private func encodeItem<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(item: ItemType) throws -> String {
+    private func encodeItem<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(item: ItemType) throws -> CoderTreeValue {
         return try self.encodeItem(item.rawValue)
     }
 
     // MARK: Arrays of Dictionaries
 
-    private func encodeItems<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(items: [ItemType]) throws -> String {
-        var encodedArrayItems = [String]()
+    private func encodeItems<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(items: [ItemType]) throws -> CoderTreeValue {
+        var encodedArrayItems = [CoderTreeValue]()
+        encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
             encodedArrayItems.append(try encodeItem(obj))
         }
 
-        let combined = encodedArrayItems.joinWithSeparator(":")
-
-        return "a,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedArrayItems)
     }
 }
 
@@ -788,141 +760,131 @@ private extension CerealEncoder {
 
     // MARK: Arrays of Dictionaries
 
-    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]) throws-> String {
-        var encodedArrayItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]) throws-> CoderTreeValue {
+        var encodedArrayItems = [CoderTreeValue]()
+        encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
             encodedArrayItems.append(try encodeItems(obj))
         }
 
-        let combined = encodedArrayItems.joinWithSeparator(":")
-
-        return "a,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedArrayItems)
     }
 
-    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]) throws-> String {
-        var encodedArrayItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]) throws-> CoderTreeValue {
+        var encodedArrayItems = [CoderTreeValue]()
+        encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
             encodedArrayItems.append(try encodeItems(obj))
         }
 
-        let combined = encodedArrayItems.joinWithSeparator(":")
-
-        return "a,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedArrayItems)
     }
 
-    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: IdentifyingCerealType]]) throws-> String {
-        var encodedArrayItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: IdentifyingCerealType]]) throws-> CoderTreeValue {
+        var encodedArrayItems = [CoderTreeValue]()
+        encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
             encodedArrayItems.append(try encodeItems(obj))
         }
 
-        let combined = encodedArrayItems.joinWithSeparator(":")
-
-        return "a,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedArrayItems)
     }
 
     // MARK: Dictionaries
 
-    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItem(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
-    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItem(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
-    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItem(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
-    private func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItem(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
     // MARK: Dictionaries of Arrays
 
-    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItems(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
-    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeItems(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 
-    private func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [IdentifyingCerealType]]) throws -> String {
-        var encodedDictionaryItems = [String]()
+    private func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [IdentifyingCerealType]]) throws -> CoderTreeValue {
+        var encodedDictionaryItems = [CoderTreeValue]()
+        encodedDictionaryItems.reserveCapacity(items.count)
 
         for (key, value) in items {
             let encodedKey = try encodeItem(key)
             let encodedValue = try encodeIdentifyingItems(value)
-            encodedDictionaryItems.append("\(encodedKey):\(encodedValue)")
+            encodedDictionaryItems.append(.PairValue(encodedKey, encodedValue))
         }
 
-        let combined = encodedDictionaryItems.joinWithSeparator(":")
-
-        return "m,\(combined.characters.count):\(combined)"
+        return .ArrayValue(encodedDictionaryItems)
     }
 }
