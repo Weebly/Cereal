@@ -8,13 +8,35 @@
 
 import Foundation
 
+private struct MapHolder {
+    let type: Any.Type
+    let map: [String: Int]
+}
+private var typesIndexMap = [MapHolder]()
+
 /**
     A CerealDecoder handles decoding items that were encoded by a `CerealEncoder`.
 */
 public struct CerealDecoder {
 
-    private var items: [String: CoderTreeValue]
+    private var items: [CoderTreeValue]
+    private let reverseRange: StrideThrough<Int>
+    private let indexMap: [String: Int]?
 
+    private func itemForKey(key: String) -> CoderTreeValue? {
+        if items.count > 100 { // it appears that on small amount of items, a simmple array enumeration is faster than a dictionary lookup
+            if let index = indexMap?[key], case let .PairValue(_, value) = items[index] {
+                return value
+            }
+        }
+        for index in reverseRange {
+            guard case let .PairValue(keyValue, value) = items[index], case let .StringValue(itemKey) = keyValue else { continue }
+            if itemKey == key {
+                return value
+            }
+        }
+        return nil
+    }
     /**
     Initializes a `CerealDecoder` with the data contained in data.
     
@@ -25,30 +47,30 @@ public struct CerealDecoder {
         guard let tree = CoderTreeValue(bytes: bytes) else { throw CerealError.RootItemNotFound }
         self.init(tree: tree)
     }
-
-    private static func unpackItems(items: [CoderTreeValue]) -> [String: CoderTreeValue] {
-        var result = Dictionary<String, CoderTreeValue>(minimumCapacity: items.count)
-        for item in items {
-            if case let .PairValue(keyValue, value) = item, case let .StringValue(key) = keyValue {
-                result[key] = value
-            }
-        }
-        return result
-    }
     
     private init(tree: CoderTreeValue) {
         switch tree {
         case let .SubTree(array):
-            items = CerealDecoder.unpackItems(array)
+            items = array
+            let count = array.count - 1
+            reverseRange = count.stride(through: 0, by: -1)
         case let .IdentifyingTree(_, array):
-            items = CerealDecoder.unpackItems(array)
+            items = array
+            let count = array.count - 1
+            reverseRange = count.stride(through: 0, by: -1)
         default:
-            items = [:]
+            items = []
+            reverseRange = 0.stride(through: 0, by: -1)
             break
         }
+
+        indexMap = nil
     }
-    private init(items: [CoderTreeValue]) {
-        self.items = CerealDecoder.unpackItems(items)
+    private init(items: [CoderTreeValue], map: [String: Int]) {
+        self.items = items
+        let count = items.count - 1
+        reverseRange = count.stride(through: 0, by: -1)
+        indexMap = map
     }
 
     // MARK: - Decoding
@@ -65,7 +87,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedType: CerealRepresentable>(key: String) throws -> DecodedType? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -81,7 +103,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedType: CerealType>(key: String) throws -> DecodedType? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -100,7 +122,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCereal(key: String) throws -> IdentifyingCerealType? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -123,7 +145,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedType: CerealRepresentable>(key: String) throws -> [DecodedType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -143,7 +165,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode(key: String) throws -> [CerealRepresentable]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -158,7 +180,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedType: CerealType>(key: String) throws -> [DecodedType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -174,7 +196,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCerealArray(key: String) throws -> [IdentifyingCerealType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -197,7 +219,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -224,7 +246,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -251,7 +273,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -272,7 +294,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealPair<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -300,7 +322,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCerealArray<DecodedKeyType: protocol<CerealRepresentable, Hashable>>(key: String) throws -> [[DecodedKeyType: IdentifyingCerealType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -324,7 +346,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealToIdentifyingCerealArray<DecodedKeyType: protocol<CerealType, Hashable>>(key: String) throws -> [[DecodedKeyType: IdentifyingCerealType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -350,7 +372,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -368,7 +390,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedKeyType: protocol<CerealRepresentable, Hashable>>(key: String) throws -> [DecodedKeyType: CerealRepresentable]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -389,7 +411,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -410,7 +432,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -428,7 +450,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCerealDictionary<DecodedKeyType: protocol<CerealRepresentable, Hashable>>(key: String) throws -> [DecodedKeyType: IdentifyingCerealType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -442,7 +464,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealPair<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -460,7 +482,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealToIdentifyingCerealDictionary<DecodedKeyType: protocol<CerealType, Hashable>>(key: String) throws -> [DecodedKeyType: IdentifyingCerealType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -483,7 +505,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decode<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -512,7 +534,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealRepresentable, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -541,7 +563,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCereal<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealRepresentable>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -564,7 +586,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealPair<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: CerealType>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -594,7 +616,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeIdentifyingCerealDictionary<DecodedKeyType: protocol<CerealRepresentable, Hashable>>(key: String) throws -> [DecodedKeyType: [IdentifyingCerealType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -620,7 +642,7 @@ public struct CerealDecoder {
     - returns:      The instantiated object, or nil if no object was at the specified key.
     */
     public func decodeCerealToIdentifyingCerealDictionary<DecodedKeyType: protocol<CerealType, Hashable>>(key: String) throws -> [DecodedKeyType: [IdentifyingCerealType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1022,14 +1044,48 @@ public struct CerealDecoder {
         return decodedResult
     }
 
+    private static func propertiesIndexMapForType(type: Any.Type, value: CoderTreeValue) -> [String: Int] {
+        for holder in typesIndexMap {
+            if holder.type == type {
+                return holder.map
+            }
+        }
+
+        func buildIndexMap(items: [CoderTreeValue]) -> [String: Int] {
+            var indexMap = [String: Int]()
+            for (index,item) in items.enumerate() {
+                guard case let .PairValue(keyValue, _) = item, case let .StringValue(itemKey) = keyValue else { continue }
+                indexMap[itemKey] = index
+            }
+
+            return indexMap
+        }
+
+        switch value {
+        case let .IdentifyingTree(_, items):
+            let map = buildIndexMap(items)
+            typesIndexMap.append(MapHolder(type: type, map: map))
+            return map
+
+        case let .SubTree(items):
+            let map = buildIndexMap(items)
+            typesIndexMap.append(MapHolder(type: type, map: map))
+            return map
+        default:
+            return [:]
+        }
+    }
+
     /// Used for CerealType where we have type data from the compiler
     private static func instantiateCereal<DecodedType: CerealType>(value: CoderTreeValue) throws -> DecodedType {
+        let map = CerealDecoder.propertiesIndexMapForType(DecodedType.self, value: value)
+
         let cereal: CerealDecoder
         switch value {
         case let .IdentifyingTree(_, items):
-            cereal = CerealDecoder(items: items)
+            cereal = CerealDecoder(items: items, map: map)
         case let .SubTree(items):
-            cereal = CerealDecoder(items: items)
+            cereal = CerealDecoder(items: items, map: map)
         default:
             throw CerealError.InvalidEncoding("Invalid type found: \(value)")
         }
@@ -1043,7 +1099,10 @@ public struct CerealDecoder {
         }
 
         let type = try identifyingCerealTypeWithIdentifier(identifier)
-        let cereal = CerealDecoder(items: items)
+
+        let map = CerealDecoder.propertiesIndexMapForType(type.self, value: value)
+
+        let cereal = CerealDecoder(items: items, map: map)
         return try type.init(decoder: cereal)
     }
 
@@ -1219,7 +1278,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedType: protocol<RawRepresentable, CerealRepresentable> where DecodedType.RawValue: CerealRepresentable>(key: String) throws -> DecodedType? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -1243,7 +1302,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedType: protocol<RawRepresentable, CerealRepresentable> where DecodedType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -1266,7 +1325,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1293,7 +1352,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: protocol<RawRepresentable, CerealRepresentable> where DecodedKeyType.RawValue: CerealRepresentable, DecodedValueType.RawValue: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1320,7 +1379,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decodeCereal<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: CerealType where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1347,7 +1406,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decodeCereal<DecodedKeyType: protocol<CerealType, Hashable>, DecodedValueType: protocol<RawRepresentable, CerealRepresentable> where DecodedValueType.RawValue: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1373,7 +1432,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -1390,7 +1449,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: protocol<RawRepresentable, CerealRepresentable> where DecodedKeyType.RawValue: CerealRepresentable, DecodedValueType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -1408,7 +1467,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: CerealRepresentable]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -1429,7 +1488,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decodeCereal<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: CerealType where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: DecodedValueType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -1447,7 +1506,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decodeIdentifyingCerealDictionary<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: IdentifyingCerealType]? {
-        guard let data = items[key] else {
+        guard let data = self.itemForKey(key) else {
             return nil
         }
 
@@ -1470,7 +1529,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: CerealRepresentable where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1499,7 +1558,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decode<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: protocol<RawRepresentable, CerealRepresentable> where DecodedKeyType.RawValue: CerealRepresentable, DecodedValueType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1528,7 +1587,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decodeCereal<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, DecodedValueType: CerealType where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: [DecodedValueType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1558,7 +1617,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decodeIdentifyingCerealDictionary<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [DecodedKeyType: [IdentifyingCerealType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
@@ -1661,7 +1720,7 @@ extension CerealDecoder {
      - returns:      The instantiated object, or nil if no object was at the specified key.
      */
     public func decodeIdentifyingCerealArray<DecodedKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where DecodedKeyType.RawValue: CerealRepresentable>(key: String) throws -> [[DecodedKeyType: IdentifyingCerealType]]? {
-        guard let data = items[key], case let .ArrayValue(items) = data else {
+        guard let data = self.itemForKey(key), case let .ArrayValue(items) = data else {
             return nil
         }
 
