@@ -28,22 +28,22 @@ indirect enum CoderTreeValue {
 
 enum CerealCoderTreeValueType: UInt8 {
     case String = 1
-    case Int
-    case Int64
-    case Double
-    case Float
-    case Bool
-    case NSDate
-    case NSURL
+    case Int = 2
+    case Int64 = 3
+    case Double = 4
+    case Float = 5
+    case Bool = 6
+    case NSDate = 7
+    case NSURL = 8
 
-    case Pair
-    case Array
-    case SubTree
-    case IdentifyingTree
+    case Pair = 9
+    case Array = 10
+    case SubTree = 11
+    case IdentifyingTree = 12
 }
 
 protocol CerealByteConvertible {
-    init?(bytes: [UInt8], startOffset: Int)
+    init?(bytes: [UInt8])
     func bytes() -> [UInt8]
 }
 
@@ -83,10 +83,10 @@ private func countCapacityBytes(array: [CoderTreeValue], inout stringMap: [Strin
         item.writeToBuffer(&result, stringMap: &stringMap)
     }
 
-    return toByteArray(array.count) + toByteArray(result.count) + result
+    return toByteArray(result.count) + toByteArray(array.count) + result
 }
 
-// MARK: extensions
+// MARK: encoding extensions
 
 private extension String {
     func writeToBuffer(inout buffer: [UInt8], inout stringMap: [String: [UInt8]]) {
