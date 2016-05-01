@@ -10,6 +10,7 @@ import Foundation
 
 // MARK: Types
 
+/// Recursive tree enum that represents data being encoded/decoded
 internal indirect enum CoderTreeValue {
     case StringValue(String)
     case IntValue(Int)
@@ -26,6 +27,7 @@ internal indirect enum CoderTreeValue {
     case IdentifyingTree(String,[CoderTreeValue])
 }
 
+/// Byte header to identify CoderTreeValue in a byte array
 internal enum CerealCoderTreeValueType: UInt8 {
     case String = 1
     case Int = 2
@@ -44,25 +46,29 @@ internal enum CerealCoderTreeValueType: UInt8 {
 
 // MARK: Helpers
 
-private func toByteArray<T>(value: T) -> [UInt8] {
+/// function takes a value of type `Type` and returns a byte array representation
+private func toByteArray<Type>(value: Type) -> [UInt8] {
     var unsafeValue = value
     return withUnsafePointer(&unsafeValue) {
-        Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>($0), count: sizeof(T)))
+        Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>($0), count: sizeof(Type)))
     }
 }
 
-private func fromByteArray<T>(value: [UInt8], _: T.Type) -> T {
+/// function takes an array of bytes and returns a value of type `Type`
+private func fromByteArray<Type>(value: [UInt8], _: Type.Type) -> Type {
     return value.withUnsafeBufferPointer {
-        return UnsafePointer<T>($0.baseAddress).memory
+        return UnsafePointer<Type>($0.baseAddress).memory
     }
 }
 
-private func countValue<T>(from: [UInt8]) -> T {
+/// function reads an array of bytes and returns an integer value (Int, Int64 etc)
+private func bytesToInteger<Type where Type: IntegerType>(from: [UInt8]) -> Type {
     return from.withUnsafeBufferPointer({
-        UnsafePointer<T>($0.baseAddress).memory
+        UnsafePointer<Type>($0.baseAddress).memory
     })
 }
 
+/// function returns a number of .StringValue entries inside an array of CoderTreeValue (including subtrees)
 private func stringEntriesCount(array: [CoderTreeValue]) -> Int {
     var result = 0
     for item in array {
@@ -71,12 +77,17 @@ private func stringEntriesCount(array: [CoderTreeValue]) -> Int {
     return result
 }
 
+/// function returns a byte array in format [length_in_bytes] + [number of array items] + [bytes of CoderTreeValue array]
+/// this allows a decoder to set a capacity for an array of CoderTreeValue beign decoded from bytes
 private func countCapacityBytes(array: [CoderTreeValue]) -> [UInt8] {
     var stringMap = Dictionary<String, [UInt8]>(minimumCapacity: stringEntriesCount(array))
 
     return countCapacityBytes(array, stringMap: &stringMap)
 }
 
+/// function returns a byte array in format [length_in_bytes] + [number of array items] + [bytes of CoderTreeValue array]
+/// this allows a decoder to set a capacity for an array of CoderTreeValue beign decoded from bytes
+/// - note: stringMap dictionary is used to improve string encoding speed, see `String.writeToBuffer`
 private func countCapacityBytes(array: [CoderTreeValue], inout stringMap: [String: [UInt8]]) -> [UInt8] {
     var result = [UInt8]()
 
@@ -91,6 +102,7 @@ private func countCapacityBytes(array: [CoderTreeValue], inout stringMap: [Strin
 
 private extension String {
     func writeToBuffer(inout buffer: [UInt8], inout stringMap: [String: [UInt8]]) {
+        // if the string was already decoded, getting from a dictionary is a cheaper operation than getting utf8 view
         if let bytes = stringMap[self] {
             buffer.appendContentsOf(bytes)
             return
@@ -241,8 +253,8 @@ private extension CoderTreeValue {
     static func readInt(inout bytes: [UInt8], inout offset: Int) -> Int? {
         guard bytes.count > offset + sizeof(Int) else { return nil }
 
-        let bytesForCount: [UInt8] = Array(bytes[offset..<offset + sizeof(Int)])
-        let value: Int = countValue(bytesForCount)
+        let bytesForInt: [UInt8] = Array(bytes[offset..<offset + sizeof(Int)])
+        let value: Int = bytesToInteger(bytesForInt)
 
         offset += sizeof(Int)
 
