@@ -47,22 +47,6 @@ public enum CerealError: ErrorType {
     case InvalidDataContent
 }
 
-enum CerealTypeIdentifier: String {
-    case Bool = "b"
-    case String = "s"
-    case Int = "i"
-    case Int64 = "z"
-    case Double = "d"
-    case Float = "f"
-    case Date = "t" // Left for backwards compatibility
-    case PreciseDate = "T"
-    case URL = "u"
-    case Array = "a"
-    case Dictionary = "m"
-    case Cereal = "c"
-    case IdentifyingCereal = "p"
-}
-
 /**
 Register a type for runtime lookup. If you are decoding types that conform to `IdentifyingCerealType`, and are
 encoding them using a non-generic encoding and decoding method, you must register it. At runtime the type

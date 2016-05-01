@@ -1013,7 +1013,7 @@ public struct CerealDecoder {
     }
 
     // MARK: - Instantiators
-    // Instantiators take a String and type information, either through a CerealTypeIdentifier or a Generic, and instantiate the object
+    // Instantiators take a CoderTreeValue, optionally through a Generic, and instantiate the object
     // being asked for
 
     /// Used for primitive or identifying cereal values
@@ -1740,7 +1740,7 @@ extension CerealDecoder {
 
 private extension CerealDecoder {
     // MARK: - Instantiators
-    // Instantiators take a String and type information, either through a CerealTypeIdentifier or a Generic, and instantiate the object
+    // Instantiators take a CoderTreeValue, optionally through a Generic, and instantiate the object
     // being asked for
 
     /// Used for primitive or identifying cereal values
