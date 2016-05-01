@@ -42,6 +42,9 @@ public enum CerealError: ErrorType {
 
     /// Thrown if a root item is attempted to be decoded that doesn't exist.
     case RootItemNotFound
+
+    /// Thrown if a decoder couldn't be decoded from the specified data
+    case InvalidDataContent
 }
 
 enum CerealTypeIdentifier: String {
