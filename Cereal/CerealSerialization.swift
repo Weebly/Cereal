@@ -153,7 +153,7 @@ private extension CoderTreeValue {
 
             case let .IdentifyingTree(key, items):
                 buffer.append(CerealCoderTreeValueType.IdentifyingTree.rawValue)
-                key.writeToBuffer(&buffer, stringMap: &stringMap)
+                CoderTreeValue.StringValue(key).writeToBuffer(&buffer, stringMap: &stringMap)
                 buffer.appendContentsOf(countCapacityBytes(items, stringMap: &stringMap))
         }
     }
@@ -251,13 +251,18 @@ private extension CoderTreeValue {
             return
         }
 
+        var identifier: CoderTreeValue? = nil
+        if type == .IdentifyingTree {
+            identifier = CoderTreeValue(bytes: &bytes, offset: &offset)
+        }
+
         guard let count = CoderTreeValue.readInt(&bytes, offset: &offset) else { return nil }
 
         guard bytes.count >= offset + count else { return nil }
 
         let capacity: Int
 
-        if [CerealCoderTreeValueType.Array, CerealCoderTreeValueType.SubTree].contains(type) {
+        if [CerealCoderTreeValueType.Array, CerealCoderTreeValueType.SubTree, CerealCoderTreeValueType.IdentifyingTree].contains(type) {
             guard let capacityValue = CoderTreeValue.readInt(&bytes, offset: &offset) else { return nil }
             capacity = capacityValue
         } else {
@@ -321,14 +326,10 @@ private extension CoderTreeValue {
                 }
 
             case .IdentifyingTree:
-                let valueBytes = Array(bytes[startIndex..<endIndex])
-
-                guard let identifier = String(bytes: valueBytes, encoding:  NSUTF8StringEncoding) else { return nil }
-                offset = endIndex
-
+                guard let id = identifier, case let .StringValue(string) = id else { return nil }
                 guard let array = CoderTreeValue.readArray(&bytes, offset: &offset, capacity: capacity, endOffset: endIndex) else { return nil }
 
-                self = .IdentifyingTree(identifier, array)
+                self = .IdentifyingTree(string, array)
                 return
 
             default:
