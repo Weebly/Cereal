@@ -249,6 +249,48 @@ extension CoderTreeValue {
 
 // MARK: decoding extensions
 
+private extension String {
+    // http://stackoverflow.com/a/34100319/1254172 with a generic change
+    init<T where T: CollectionType, T.Generator.Element == UInt8>(utf8stream: T) {
+        var result = ""
+        result.reserveCapacity(utf8stream.underestimateCount())
+        var utf8stream = utf8stream.generate()
+        var codepoint:UInt32 = 0
+        while let byte = utf8stream.next() where byte != 0x00 {
+            codepoint = UInt32(byte)
+            var extraBytes = 0
+            if byte & 0b11100000 == 0b11000000 {
+                extraBytes = 1
+                codepoint &= 0b00011111
+            }
+            else if byte & 0b11110000 == 0b11100000 {
+                extraBytes = 2
+                codepoint &= 0b00001111
+            }
+            else if byte & 0b11111000 == 0b11110000 {
+                extraBytes = 3
+                codepoint &= 0b00000111
+            }
+            else if byte & 0b11111100 == 0b11111000 {
+                extraBytes = 4
+                codepoint &= 0b00000011
+            }
+            else if byte & 0b11111110 == 0b11111100 {
+                extraBytes = 5
+                codepoint &= 0b00000001
+            }
+            for _ in 0..<extraBytes {
+                if let additionalByte = utf8stream.next() {
+                    codepoint <<= 6
+                    codepoint |= UInt32(additionalByte & 0b00111111)
+                }
+            }
+            result.append(UnicodeScalar(codepoint))
+        }
+        self = result
+    }
+}
+
 private extension CoderTreeValue {
     static func readInt(inout bytes: [UInt8], inout offset: Int) -> Int? {
         guard bytes.count > offset + sizeof(Int) else { return nil }
@@ -311,9 +353,9 @@ private extension CoderTreeValue {
 
         switch type {
             case .String, .NSURL:
-                let valueBytes = Array(bytes[startIndex..<endIndex])
+                let valueBytes = bytes[startIndex..<endIndex]
+                let string = String(utf8stream: valueBytes)
 
-                guard let string = String(bytes: valueBytes, encoding:  NSUTF8StringEncoding) else { return nil }
                 if type == .String {
                     self = .StringValue(string)
                 } else {
