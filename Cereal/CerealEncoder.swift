@@ -8,6 +8,12 @@
 
 import Foundation
 
+private struct TypeCapacity {
+    let type: Any.Type
+    let capacity: Int
+}
+private var capacities = [TypeCapacity]()
+
 /**
     A CerealEncoder handles encoding items into a format that can be stored in a simple format, such as NSData or String.
 */
@@ -318,9 +324,17 @@ public struct CerealEncoder {
             return try encodeItem(value)
             
         case let value as CerealType :
-            let capacity = value.numberOfEntries()
-            var cereal = CerealEncoder(capacity: capacity)
+            var capacity: Int? = nil
+            for item in capacities where item.type == value.dynamicType {
+                capacity = item.capacity
+                break;
+            }
+            var cereal = CerealEncoder(capacity: capacity ?? 20)
             try value.encodeWithCereal(&cereal)
+
+            if capacity == nil {
+                capacities.append(TypeCapacity(type: value.dynamicType, capacity: cereal.items.count))
+            }
             return .SubTree(cereal.items)
             
         default: throw CerealError.UnsupportedCerealRepresentable("Item \(item) not supported)")
@@ -328,10 +342,18 @@ public struct CerealEncoder {
     }
 
     private func encodeItem(item: IdentifyingCerealType) throws -> CoderTreeValue {
-        var cereal = CerealEncoder()
+        var capacity: Int? = nil
+        for item in capacities where item.type == item.dynamicType {
+            capacity = item.capacity
+            break;
+        }
+        var cereal = CerealEncoder(capacity: capacity ?? 20)
         try item.encodeWithCereal(&cereal)
         let ident = item.dynamicType.initializationIdentifier
 
+        if capacity == nil {
+            capacities.append(TypeCapacity(type: item.dynamicType, capacity: cereal.items.count))
+        }
         return .IdentifyingTree(ident, cereal.items)
     }
 

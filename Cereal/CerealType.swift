@@ -19,12 +19,6 @@ A `CerealType` is a type that can be encoded and decoded using any of Cereal's g
 public protocol CerealType: CerealRepresentable {
 
     /**
-     To improve encode speed, return the number of entries the entity is about to encode in `encodeWithCereal` method.
-     This will allow `CerealEncoder` to reserve more memory and not loosing perfomance on memory reallocations
-    */
-    func numberOfEntries() -> Int
-
-    /**
     Initializes with a `CerealDecoder`. All the required instantiation data will live within the
     decoder, and is generally from the `encodeWithCereal(_: CerealEncoder)` method that is also part of this protocol.
     
