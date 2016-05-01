@@ -8,11 +8,11 @@
 
 import Foundation
 
-private struct MapHolder {
+private struct TypeIndexMap {
     let type: Any.Type
     let map: [String: Int]
 }
-private var typesIndexMap = [MapHolder]()
+private var indexMaps = [TypeIndexMap]()
 
 /**
     A CerealDecoder handles decoding items that were encoded by a `CerealEncoder`.
@@ -1044,14 +1044,17 @@ public struct CerealDecoder {
         return decodedResult
     }
 
+    /// Helper method to improve decoding speed for large objects:
+    /// method returns index map to read value for key without enumerating through all the items
     private static func propertiesIndexMapForType(type: Any.Type, value: CoderTreeValue) -> [String: Int] {
-        for holder in typesIndexMap {
-            if holder.type == type {
-                return holder.map
+        for mapInfo in indexMaps {
+            if mapInfo.type == type {
+                return mapInfo.map
             }
         }
 
         func buildIndexMap(items: [CoderTreeValue]) -> [String: Int] {
+            // assuming the array of decoded values always contains constant number of entries
             var indexMap = [String: Int]()
             for (index,item) in items.enumerate() {
                 guard case let .PairValue(keyValue, _) = item, case let .StringValue(itemKey) = keyValue else { continue }
@@ -1064,12 +1067,12 @@ public struct CerealDecoder {
         switch value {
         case let .IdentifyingTree(_, items):
             let map = buildIndexMap(items)
-            typesIndexMap.append(MapHolder(type: type, map: map))
+            indexMaps.append(TypeIndexMap(type: type, map: map))
             return map
 
         case let .SubTree(items):
             let map = buildIndexMap(items)
-            typesIndexMap.append(MapHolder(type: type, map: map))
+            indexMaps.append(TypeIndexMap(type: type, map: map))
             return map
         default:
             return [:]
