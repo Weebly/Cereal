@@ -176,14 +176,19 @@ private extension CoderTreeValue {
         switch self {
         case let .IntValue(int):
             buffer.append(CerealCoderTreeValueType.Int.rawValue)
-            buffer.appendContentsOf(toByteArray(int))
+            var array = toByteArray(int)
+            array.insertContentsOf(toByteArray(array.count), at: 0)
+            buffer.appendContentsOf(array)
 
         case let .Int64Value(int64):
             buffer.append(CerealCoderTreeValueType.Int64.rawValue)
-            buffer.appendContentsOf(toByteArray(int64))
+            var array = toByteArray(int64)
+            array.insertContentsOf(toByteArray(array.count), at: 0)
+            buffer.appendContentsOf(array)
 
         case let .BoolValue(bool):
             buffer.append(CerealCoderTreeValueType.Bool.rawValue)
+            buffer.append(1)
             buffer.append(bool ? 1 : 0)
 
         default:
@@ -195,16 +200,22 @@ private extension CoderTreeValue {
         switch self {
         case let .DoubleValue(double):
             buffer.append(CerealCoderTreeValueType.Double.rawValue)
-            buffer.appendContentsOf(toByteArray(double))
+            var array = toByteArray(double)
+            array.insertContentsOf(toByteArray(array.count), at: 0)
+            buffer.appendContentsOf(array)
 
         case let .FloatValue(float):
             buffer.append(CerealCoderTreeValueType.Float.rawValue)
-            buffer.appendContentsOf(toByteArray(float))
+            var array = toByteArray(float)
+            array.insertContentsOf(toByteArray(array.count), at: 0)
+            buffer.appendContentsOf(array)
 
         case let .NSDateValue(date):
             let interval = date.timeIntervalSinceReferenceDate
             buffer.append(CerealCoderTreeValueType.NSDate.rawValue)
-            buffer.appendContentsOf(toByteArray(interval))
+            var array = toByteArray(interval)
+            array.insertContentsOf(toByteArray(array.count), at: 0)
+            buffer.appendContentsOf(array)
 
         default:
             break
