@@ -43,8 +43,7 @@ public struct CerealDecoder {
     - parameter    data:   The encoded data to decode from.
     */
     public init(data: NSData) throws {
-        let bytes = Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>(data.bytes), count: data.length))
-        guard let tree = CoderTreeValue(bytes: bytes) else { throw CerealError.RootItemNotFound }
+        guard let tree = CoderTreeValue(data: data) else { throw CerealError.RootItemNotFound }
         self.init(tree: tree)
     }
     

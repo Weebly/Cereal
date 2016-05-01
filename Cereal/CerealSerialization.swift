@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: Types
 
-indirect enum CoderTreeValue {
+internal indirect enum CoderTreeValue {
     case StringValue(String)
     case IntValue(Int)
     case Int64Value(Int64)
@@ -26,7 +26,7 @@ indirect enum CoderTreeValue {
     case IdentifyingTree(String,[CoderTreeValue])
 }
 
-enum CerealCoderTreeValueType: UInt8 {
+internal enum CerealCoderTreeValueType: UInt8 {
     case String = 1
     case Int = 2
     case Int64 = 3
@@ -40,17 +40,6 @@ enum CerealCoderTreeValueType: UInt8 {
     case Array = 10
     case SubTree = 11
     case IdentifyingTree = 12
-}
-
-protocol CerealByteConvertible {
-    init?(bytes: [UInt8])
-    func bytes() -> [UInt8]
-}
-
-func countCapacityBytes(array: [CoderTreeValue]) -> [UInt8] {
-    var stringMap = Dictionary<String, [UInt8]>(minimumCapacity: stringEntriesCount(array))
-
-    return countCapacityBytes(array, stringMap: &stringMap)
 }
 
 // MARK: Helpers
@@ -80,6 +69,12 @@ private func stringEntriesCount(array: [CoderTreeValue]) -> Int {
         result += item.numberOfStringEntries()
     }
     return result
+}
+
+private func countCapacityBytes(array: [CoderTreeValue]) -> [UInt8] {
+    var stringMap = Dictionary<String, [UInt8]>(minimumCapacity: stringEntriesCount(array))
+
+    return countCapacityBytes(array, stringMap: &stringMap)
 }
 
 private func countCapacityBytes(array: [CoderTreeValue], inout stringMap: [String: [UInt8]]) -> [UInt8] {
@@ -223,6 +218,23 @@ private extension CoderTreeValue {
     }
 }
 
+extension CoderTreeValue {
+    func toData() -> NSData {
+        let bytes = self.bytes()
+
+        return NSData(bytes: bytes, length: bytes.count)
+    }
+    func bytes() -> [UInt8] {
+        var result = [UInt8]()
+        result.reserveCapacity(20)
+
+        var stringMap = Dictionary<String, [UInt8]>(minimumCapacity: self.numberOfStringEntries())
+
+        self.writeToBuffer(&result, stringMap: &stringMap)
+        return result
+    }
+}
+
 // MARK: decoding extensions
 
 private extension CoderTreeValue {
@@ -351,19 +363,18 @@ private extension CoderTreeValue {
     }
 }
 
-extension CoderTreeValue: CerealByteConvertible {
+extension CoderTreeValue {
     init?(bytes: [UInt8]) {
         var bytes = bytes
         var offset = 0
         self.init(bytes: &bytes, offset: &offset)
     }
-    func bytes() -> [UInt8] {
-        var result = [UInt8]()
-        result.reserveCapacity(20)
+    init?(data: NSData) {
+        let bytes = Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>(data.bytes), count: data.length))
+        guard let result = CoderTreeValue(bytes: bytes) else {
+            return nil
+        }
 
-        var stringMap = Dictionary<String, [UInt8]>(minimumCapacity: self.numberOfStringEntries())
-
-        self.writeToBuffer(&result, stringMap: &stringMap)
-        return result
+        self = result
     }
 }

@@ -29,9 +29,7 @@ public struct CerealEncoder {
 
     /// Returns all of the encoded items as an `NSData` object.
     public func toData() -> NSData {
-        let bytes = [CerealCoderTreeValueType.SubTree.rawValue] + countCapacityBytes(self.items)
-
-        return NSData(bytes: bytes, length: bytes.count)
+        return CoderTreeValue.SubTree(items).toData()
     }
 
     // MARK: - Single items
