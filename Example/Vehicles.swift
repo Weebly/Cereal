@@ -38,9 +38,6 @@ struct Car: Vehicle {
 
     static let initializationIdentifier = "car"
 
-    func numberOfEntries() -> Int {
-        return 3
-    }
     init(decoder: CerealDecoder) throws {
         guard let make: String = try decoder.decode(SharedKeys.make) else { throw VehicleError.MissingData }
         self.make = make
@@ -80,9 +77,6 @@ struct Train: Vehicle {
 
     static let initializationIdentifier = "train"
 
-    func numberOfEntries() -> Int {
-        return 3
-    }
     init(decoder: CerealDecoder) throws {
         guard let make: String = try decoder.decode(SharedKeys.make) else { throw VehicleError.MissingData }
         self.make = make

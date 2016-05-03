@@ -25,10 +25,6 @@ extension Employee: CerealType {
         static let gender = "gender"
     }
 
-    func numberOfEntries() -> Int {
-        return 3
-    }
-
     init(decoder: CerealDecoder) throws {
         name = try decoder.decode(Keys.name) ?? ""
         age = try decoder.decode(Keys.age) ?? 0
