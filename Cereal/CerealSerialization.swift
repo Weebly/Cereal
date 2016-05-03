@@ -251,7 +251,7 @@ extension CoderTreeValue {
 
 private extension String {
     // http://stackoverflow.com/a/34100319/1254172 with a generic change
-    init<T where T: CollectionType, T.Generator.Element == UInt8>(utf8stream: T) {
+    init<ByteSequence where ByteSequence: CollectionType, ByteSequence.Generator.Element == UInt8>(utf8stream: ByteSequence) {
         var result = ""
         result.reserveCapacity(utf8stream.underestimateCount())
         var utf8stream = utf8stream.generate()
