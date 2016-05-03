@@ -42,7 +42,9 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemType: CerealRepresentable>(item: ItemType?, forKey key: String) throws {
         guard let unwrapped = item else { return }
-        items.append(.PairValue(.StringValue(key), try encodeItem(unwrapped)))
+        //have to get throwing value first, due to bug in the compiler: https://bugs.swift.org/browse/SR-696
+        let value = try encodeItem(unwrapped)
+        items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -53,7 +55,8 @@ public struct CerealEncoder {
     */
     public mutating func encode(item: IdentifyingCerealType?, forKey key: String) throws {
         guard let unwrapped = item else { return }
-        items.append(.PairValue(.StringValue(key), try encodeItem(unwrapped)))
+        let value = try encodeItem(unwrapped)
+        items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: - Arrays
@@ -66,7 +69,8 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemType: CerealRepresentable>(items: [ItemType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -77,7 +81,8 @@ public struct CerealEncoder {
     */
     public mutating func encodeIdentifyingItems(items: [IdentifyingCerealType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeIdentifyingItems(unwrapped)))
+        let value = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: Arrays of Dictionaries
@@ -90,7 +95,8 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -101,7 +107,8 @@ public struct CerealEncoder {
     */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [[ItemKeyType: IdentifyingCerealType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: - Dictionaries
@@ -114,7 +121,8 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -125,7 +133,8 @@ public struct CerealEncoder {
     */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: IdentifyingCerealType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: Dictionaries of Arrays
@@ -138,7 +147,8 @@ public struct CerealEncoder {
     */
     public mutating func encode<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -149,7 +159,8 @@ public struct CerealEncoder {
     */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<CerealRepresentable, Hashable>>(items: [ItemKeyType: [IdentifyingCerealType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeIdentifyingItems(unwrapped)))
+        let value = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: - Root encoding
@@ -362,7 +373,8 @@ public struct CerealEncoder {
         encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
-            encodedArrayItems.append(try encodeItem(obj))
+            let item = try encodeItem(obj)
+            encodedArrayItems.append(item)
         }
 
         return .ArrayValue(encodedArrayItems)
@@ -373,7 +385,8 @@ public struct CerealEncoder {
         encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
-            encodedArrayItems.append(try encodeItem(obj))
+            let item = try encodeItem(obj)
+            encodedArrayItems.append(item)
         }
 
         return .ArrayValue(encodedArrayItems)
@@ -384,7 +397,8 @@ public struct CerealEncoder {
         encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
-            encodedArrayItems.append(try encodeItems(obj))
+            let item = try encodeItems(obj)
+            encodedArrayItems.append(item)
         }
 
         return .ArrayValue(encodedArrayItems)
@@ -395,7 +409,8 @@ public struct CerealEncoder {
         encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
-            encodedArrayItems.append(try encodeItems(obj))
+            let item = try encodeItems(obj)
+            encodedArrayItems.append(item)
         }
 
         return .ArrayValue(encodedArrayItems)
@@ -486,7 +501,8 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemType: protocol<RawRepresentable, CerealRepresentable> where ItemType.RawValue: CerealRepresentable>(item: ItemType?, forKey key: String) throws {
         guard let unwrapped = item else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItem(unwrapped)))
+        let value = try encodeItem(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: - Arrays
@@ -499,7 +515,8 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemType: protocol<RawRepresentable, CerealRepresentable> where ItemType.RawValue: CerealRepresentable>(items: [ItemType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: Arrays of Dictionaries
@@ -512,7 +529,8 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -523,7 +541,8 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [[ItemKeyType: ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -534,7 +553,8 @@ extension CerealEncoder {
      */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [[ItemKeyType: IdentifyingCerealType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: - Dictionaries
@@ -547,7 +567,8 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -558,7 +579,8 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: ItemValueType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -569,7 +591,8 @@ extension CerealEncoder {
      */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: IdentifyingCerealType]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeIdentifyingItems(unwrapped)))
+        let value = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: Dictionaries of Arrays
@@ -582,7 +605,8 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
     /**
      Encodes a dictionary of keys and arrays of values conforming to `CerealRepresentable` object under `key`.
@@ -592,7 +616,8 @@ extension CerealEncoder {
      */
     public mutating func encode<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable>, ItemValueType: protocol<RawRepresentable, CerealRepresentable> where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable>(items: [ItemKeyType: [ItemValueType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeItems(unwrapped)))
+        let value = try encodeItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     /**
@@ -603,7 +628,8 @@ extension CerealEncoder {
      */
     public mutating func encodeIdentifyingItems<ItemKeyType: protocol<RawRepresentable, CerealRepresentable, Hashable> where ItemKeyType.RawValue: CerealRepresentable>(items: [ItemKeyType: [IdentifyingCerealType]]?, forKey key: String) throws {
         guard let unwrapped = items else { return }
-        self.items.append(.PairValue(.StringValue(key), try encodeIdentifyingItems(unwrapped)))
+        let value = try encodeIdentifyingItems(unwrapped)
+        self.items.append(.PairValue(.StringValue(key), value))
     }
 
     // MARK: - Root encoding
@@ -766,7 +792,8 @@ extension CerealEncoder {
         encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
-            encodedArrayItems.append(try encodeItem(obj))
+            let item = try encodeItem(obj)
+            encodedArrayItems.append(item)
         }
 
         return .ArrayValue(encodedArrayItems)
@@ -784,7 +811,8 @@ private extension CerealEncoder {
         encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
-            encodedArrayItems.append(try encodeItems(obj))
+            let item = try encodeItems(obj)
+            encodedArrayItems.append(item)
         }
 
         return .ArrayValue(encodedArrayItems)
@@ -806,7 +834,8 @@ private extension CerealEncoder {
         encodedArrayItems.reserveCapacity(items.count)
 
         for obj in items {
-            encodedArrayItems.append(try encodeItems(obj))
+            let item = try encodeItems(obj)
+            encodedArrayItems.append(item)
         }
 
         return .ArrayValue(encodedArrayItems)
