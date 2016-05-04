@@ -195,7 +195,7 @@ private extension CoderTreeValue {
 
         case let .BoolValue(bool):
             buffer.append(CerealCoderTreeValueType.Bool.rawValue)
-            buffer.append(1)
+            buffer.appendContentsOf(toByteArray(1))
             buffer.append(bool ? 1 : 0)
 
         default:
