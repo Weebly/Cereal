@@ -18,7 +18,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingEmptyEncodingData_isOkay() {
         do {
-            _ = try CerealDecoder(encodedString: "")
+            _ = try CerealDecoder(encodedBytes: [11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
         } catch {
             XCTFail("Couldn't decode an empty string")
         }
@@ -28,7 +28,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingString() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:s,5:hello")
+            let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let result: String = try subject.decode("test") ?? ""
             XCTAssertEqual(result, "hello")
         } catch let error {
@@ -38,7 +38,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingEmptyString() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:s,0:")
+            let subject = try CerealDecoder(encodedBytes: [11,23,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,0,0,0,0,0,0,0,0])
             let result: String = try subject.decode("test") ?? "derp"
             XCTAssertEqual(result, "")
         } catch let error {
@@ -48,7 +48,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingBool() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,5:btest:b,1:t")
+            let subject = try CerealDecoder(encodedBytes: [11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,98,116,101,115,116,6,1,0,0,0,0,0,0,0,1])
             let resultBool: Bool = try subject.decode("btest") ?? false
             XCTAssertEqual(resultBool, true)
         } catch let error {
@@ -58,7 +58,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingInt() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,5:itest:i,5:10000")
+            let subject = try CerealDecoder(encodedBytes: [11,32,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,105,116,101,115,116,2,8,0,0,0,0,0,0,0,16,39,0,0,0,0,0,0])
             let resultInt: Int = try subject.decode("itest") ?? 0
             XCTAssertEqual(resultInt, 10000)
         } catch let error {
@@ -68,7 +68,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingInt64() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,5:itest:z,10:1000000000")
+            let subject = try CerealDecoder(encodedBytes: [11,32,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,105,116,101,115,116,3,8,0,0,0,0,0,0,0,0,202,154,59,0,0,0,0])
             let resultInt: Int64 = try subject.decode("itest") ?? 0
             XCTAssertEqual(resultInt, 1000000000)
         } catch let error {
@@ -78,7 +78,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingDouble() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,5:dtest:d,7:123.456")
+            let subject = try CerealDecoder(encodedBytes: [11,32,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,100,116,101,115,116,4,8,0,0,0,0,0,0,0,119,190,159,26,47,221,94,64])
             let resultDouble: Double = try subject.decode("dtest") ?? 0.0
             XCTAssertEqual(resultDouble, 123.456)
         } catch let error {
@@ -88,7 +88,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingFloat() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,5:ftest:f,7:123.456")
+            let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,102,116,101,115,116,5,4,0,0,0,0,0,0,0,121,233,246,66])
             let resultFloat: Float = try subject.decode("ftest") ?? 0.0
             XCTAssertEqual(resultFloat, 123.456)
         } catch let error {
@@ -98,7 +98,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingDate() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,5:dtest:t,4:10.0")
+            let subject = try CerealDecoder(encodedBytes: [11,32,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,100,116,101,115,116,7,8,0,0,0,0,0,0,0,0,0,0,59,228,39,205,193])
             let resultDate: NSDate = try subject.decode("dtest") ?? NSDate()
             XCTAssertEqual(resultDate, NSDate(timeIntervalSince1970: 10.0))
         } catch let error {
@@ -109,8 +109,9 @@ class CerealDecoderTests: XCTestCase {
     func testDecodingPreciseDate() {
         do {
             let date = NSDate(timeIntervalSinceReferenceDate: NSTimeInterval(String(72169399.35149699))!)
-            let dateString = String(date.timeIntervalSinceReferenceDate)
-            let subject = try CerealDecoder(encodedString: "k,5:dtest:T,\(dateString.characters.count):\(dateString)")
+            let interval = date.timeIntervalSinceReferenceDate
+            let bytes = [11,32,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,100,116,101,115,116, 7,8,0,0,0,0,0,0,0] + toByteArray(interval)
+            let subject = try CerealDecoder(encodedBytes: bytes)
             let resultDate: NSDate = try subject.decode("dtest") ?? NSDate()
             XCTAssertEqual(resultDate, NSDate(timeIntervalSinceReferenceDate: 72169399.35149699))
         } catch let error {
@@ -121,8 +122,10 @@ class CerealDecoderTests: XCTestCase {
     func testDecodingCurrentDate() {
         do {
             let date = NSDate()
-            let dateString = String(date.timeIntervalSinceReferenceDate)
-            let subject = try CerealDecoder(encodedString: "k,5:dtest:T,\(dateString.characters.count):\(dateString)")
+            let interval = date.timeIntervalSinceReferenceDate
+            let bytes = [11,32,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,100,116,101,115,116, 7,8,0,0,0,0,0,0,0] + toByteArray(interval)
+
+            let subject = try CerealDecoder(encodedBytes: bytes)
             let resultDate: NSDate = try subject.decode("dtest") ?? NSDate()
             XCTAssertEqual(resultDate, date)
         } catch let error {
@@ -132,7 +135,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingDate_withNegativeInterval() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,5:dtest:t,5:-10.0")
+            let subject = try CerealDecoder(encodedBytes: [11,32,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,100,116,101,115,116,7,8,0,0,0,0,0,0,0,0,0,0,69,228,39,205,193])
             let resultDate: NSDate = try subject.decode("dtest") ?? NSDate()
             XCTAssertEqual(resultDate, NSDate(timeIntervalSince1970: -10.0))
         } catch let error {
@@ -142,7 +145,7 @@ class CerealDecoderTests: XCTestCase {
     
     func testDecodingURL() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,5:dtest:u,18:http://testing.com")
+            let subject = try CerealDecoder(encodedBytes: [11,42,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,100,116,101,115,116,8,18,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,105,110,103,46,99,111,109])
             let resultURL: NSURL = try subject.decode("dtest") ?? NSURL()
             XCTAssertEqual(resultURL, NSURL(string: "http://testing.com"))
         } catch let error {
@@ -152,7 +155,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingMultiplePrimitives() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:s,5:hello:k,5:itest:i,5:10000")
+            let subject = try CerealDecoder(encodedBytes: [11,60,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111,9,1,5,0,0,0,0,0,0,0,105,116,101,115,116,2,8,0,0,0,0,0,0,0,16,39,0,0,0,0,0,0])
             let result: String = try subject.decode("test") ?? ""
             let resultInt: Int = try subject.decode("itest") ?? 0
             XCTAssertEqual(result, "hello")
@@ -166,7 +169,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingStringEnum() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,8:enumtest:s,9:TestCase2")
+            let subject = try CerealDecoder(encodedBytes: [11,36,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,8,0,0,0,0,0,0,0,101,110,117,109,116,101,115,116,1,9,0,0,0,0,0,0,0,84,101,115,116,67,97,115,101,50])
             let resultEnum: TestEnum = try subject.decode("enumtest") ?? .TestCase1
             XCTAssertEqual(resultEnum, TestEnum.TestCase2)
         } catch let error {
@@ -176,7 +179,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecodingIntOptionSet() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,13:optionsettest:i,1:3")
+            let subject = try CerealDecoder(encodedBytes: [11,40,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,13,0,0,0,0,0,0,0,111,112,116,105,111,110,115,101,116,116,101,115,116,2,8,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0])
             let resultOptions: TestSetType = try subject.decode("optionsettest") ?? []
             XCTAssertEqual(resultOptions, [TestSetType.FirstOption, TestSetType.SecondOption])
         } catch let error {
@@ -188,7 +191,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecoding_withCereal() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:c,15:k,3:foo:s,3:bar")
+            let subject = try CerealDecoder(encodedBytes: [11,56,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114])
             if let result: TestCerealType = try subject.decodeCereal("test") {
                 XCTAssertEqual(result.foo, "bar")
             } else {
@@ -201,7 +204,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecoding_withMultipleCerealItems() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:c,15:k,3:foo:s,3:bar:k,4:jest:c,15:k,3:foo:s,3:baz")
+            let subject = try CerealDecoder(encodedBytes: [11,112,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,9,1,4,0,0,0,0,0,0,0,106,101,115,116,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122])
             if let result: TestCerealType = try subject.decodeCereal("test") {
                 XCTAssertEqual(result.foo, "bar")
             } else {
@@ -220,7 +223,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecoding_withGenericCereal() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,6:custom:c,24:k,3:foo:a,11:i,1:5:i,1:2")
+            let subject = try CerealDecoder(encodedBytes: [11,97,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,6,0,0,0,0,0,0,0,99,117,115,116,111,109,11,64,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0])
             if let stack: Stack<Int> = try subject.decodeCereal("custom") {
                 XCTAssertEqual(stack.items, [5,2])
             } else {
@@ -233,7 +236,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecoding_withCereal_usingUnusedKey_returnsNil() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:c,15:k,3:foo:s,3:bar")
+            let subject = try CerealDecoder(encodedBytes: [11,56,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114])
             let result: TestCerealType? = try subject.decodeCereal("testage")
             XCTAssert(result == nil)
         } catch let error {
@@ -244,7 +247,7 @@ class CerealDecoderTests: XCTestCase {
     func testDecoding_withIdentifyingCereal_forProtocol() {
         Cereal.register(TestIdentifyingCerealType.self)
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:p,22:4:tict:k,3:foo:s,3:bar")
+            let subject = try CerealDecoder(encodedBytes: [11,69,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114])
             if let result = try subject.decodeIdentifyingCereal("test") as? Fooable {
                 XCTAssertEqual(result.foo, "bar")
             } else {
@@ -259,7 +262,7 @@ class CerealDecoderTests: XCTestCase {
         Cereal.register(BarBag<MyBar>.self)
         Cereal.register(MyBar.self)
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:p,52:12:MyBar-barbag:k,3:bar:p,23:5:MyBar:k,3:bar:s,3:baz")
+            let subject = try CerealDecoder(encodedBytes: [11,121,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,12,1,12,0,0,0,0,0,0,0,77,121,66,97,114,45,98,97,114,98,97,103,69,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,98,97,114,12,1,5,0,0,0,0,0,0,0,77,121,66,97,114,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,98,97,114,1,3,0,0,0,0,0,0,0,98,97,122])
             if let result = try subject.decodeIdentifyingCereal("test") as? BarBag<MyBar> {
                 XCTAssertEqual(result.theBar.bar, "baz")
             } else {
@@ -274,7 +277,29 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecoding_withInvalidStart_raisesExpectedError() {
         do {
-            let subject = try CerealDecoder(encodedString: ",4:test:s,5:hello")
+            let subject = try CerealDecoder(encodedBytes: [10,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
+            XCTFail("Expected an error, but instantiated decoder: \(subject)")
+        } catch CerealError.InvalidDataContent {
+            // Test passes if this block is hit
+        } catch let error {
+            XCTFail("An incorrect error was thrown: \(error)")
+        }
+    }
+
+    func testDecoding_withIncorrectDataContent_raisesExpectedError() {
+        do {
+            let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
+            XCTFail("Expected an error, but instantiated decoder: \(subject)")
+        } catch CerealError.InvalidDataContent {
+            // Test passes if this block is hit
+        } catch let error {
+            XCTFail("An incorrect error was thrown: \(error)")
+        }
+    }
+
+    func testDecoding_withIncorrectType_raisesExpectedError() {
+        do {
+            let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,2,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let s: String? = try subject.decode("test")
             XCTFail("Expected an error, but decoded: \(s)")
         } catch CerealError.InvalidEncoding {
@@ -284,45 +309,9 @@ class CerealDecoderTests: XCTestCase {
         }
     }
 
-    func testDecoding_withoutKeyEnd_raisesExpectedError() {
+    func testDecoding_withInvalidDecodeType_raisesExpectedError() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4;test;s,5;hello")
-            let s: String? = try subject.decode("test")
-            XCTFail("Expected an error, but decoded: \(s)")
-        } catch CerealError.InvalidEncoding {
-            // Test passes if this block is hit
-        } catch {
-            XCTFail("An incorrect error was thrown")
-        }
-    }
-
-    func testDecoding_withIncorrectKeyLengthValue_raisesExpectedError() {
-        do {
-            let subject = try CerealDecoder(encodedString: "k,four:test:s,5:hello")
-            let s: String? = try subject.decode("test")
-            XCTFail("Expected an error, but decoded: \(s)")
-        } catch CerealError.UnsupportedKeyLengthValue {
-            // Test passes if this block is hit
-        } catch {
-            XCTFail("An incorrect error was thrown")
-        }
-    }
-
-    func testDecoding_withIncorrectTypeIdentifier_raisesExpectedError() {
-        do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:9,5:hello")
-            let s: String? = try subject.decode("test")
-            XCTFail("Expected an error, but decoded: \(s)")
-        } catch CerealError.InvalidEncoding {
-            // Test passes if this block is hit
-        } catch {
-            XCTFail("An incorrect error was thrown")
-        }
-    }
-
-    func testDecoding_withInvalidDeferredType_raisesExpectedError() {
-        do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:a,5:hello")
+            let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: TestCerealType? = try subject.decodeCereal("test")
             XCTFail("Expected an error, but decoded: \(object)")
         } catch CerealError.InvalidEncoding {
@@ -334,7 +323,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecoding_withCustomType_usingArrayEncoded_raisesExpectedError() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:a,9:s,5:hello")
+            let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: TestCerealType? = try subject.decodeCereal("test")
             XCTFail("Expected an error, but decoded: \(object)")
         } catch CerealError.InvalidEncoding {
@@ -346,7 +335,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecoding_withArrayEncoded_usingInvalidType_raisesExpectedError() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:a,9:s,5:hello")
+            let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: [Int]? = try subject.decode("test")
             XCTFail("Expected an error, but decoded: \(object)")
         } catch CerealError.InvalidEncoding {
@@ -358,7 +347,7 @@ class CerealDecoderTests: XCTestCase {
 
     func testDecoding_withArrayEncoded_usingUnexpectedCerealType_raisesExpectedError() {
         do {
-            let subject = try CerealDecoder(encodedString: "k,4:test:a,9:9,5:hello")
+            let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: [Int]? = try subject.decode("test")
             XCTFail("Expected an error, but decoded: \(object)")
         } catch CerealError.InvalidEncoding {
@@ -705,5 +694,4 @@ class CerealDecoderTests: XCTestCase {
             XCTFail("Encoding failed due to error: \(error)")
         }
     }
-
 }

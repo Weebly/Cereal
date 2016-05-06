@@ -66,3 +66,10 @@ extension Array where Element: Comparable {
         return self[self.indices].containsSubArray(array[array.indices])
     }
 }
+
+func toByteArray<Type>(value: Type) -> [UInt8] {
+    var unsafeValue = value
+    return withUnsafePointer(&unsafeValue) {
+        Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>($0), count: sizeof(Type)))
+    }
+}
