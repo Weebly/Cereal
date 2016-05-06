@@ -44,6 +44,7 @@ public struct CerealDecoder {
     */
     public init(data: NSData) throws {
         guard let tree = CoderTreeValue(data: data) else { throw CerealError.InvalidDataContent }
+        guard case .SubTree(_) = tree else { throw CerealError.InvalidDataContent }
         self.init(tree: tree)
     }
     

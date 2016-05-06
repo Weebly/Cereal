@@ -22,6 +22,13 @@ extension CerealEncoder {
     }
 }
 
+extension CerealDecoder {
+    init(encodedBytes: [UInt8]) throws {
+        let data = NSData(bytes: encodedBytes, length: encodedBytes.count)
+        try self.init(data: data)
+    }
+}
+
 extension ArraySlice where Element: Comparable {
     func hasArrayPrefix(array: ArraySlice<Element>) -> Bool {
         guard self.count >= array.count else { return false }
