@@ -171,7 +171,7 @@ class CerealEncoderTests: XCTestCase {
         do {
             try subject.encode(true, forKey: "mybool")
             let result = subject.toBytes()
-            XCTAssertEqual(result, [11,19,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,6,0,0,0,0,0,0,0,109,121,98,111,111,108,6,1,1])
+            XCTAssertEqual(result, [11,26,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,6,0,0,0,0,0,0,0,109,121,98,111,111,108,6,1,0,0,0,0,0,0,0,1])
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -182,7 +182,7 @@ class CerealEncoderTests: XCTestCase {
         do {
             try subject.encode(false, forKey: "mybool")
             let result = subject.toBytes()
-            XCTAssertEqual(result, [11,19,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,6,0,0,0,0,0,0,0,109,121,98,111,111,108,6,1,0])
+            XCTAssertEqual(result, [11,26,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,6,0,0,0,0,0,0,0,109,121,98,111,111,108,6,1,0,0,0,0,0,0,0,0])
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }

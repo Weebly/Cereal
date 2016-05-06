@@ -24,9 +24,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([first: true, second: false], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,52,64,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,36,64,6,1,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,52,64,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,36,64,6,1,0,0,0,0,0,0,0,1]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -167,9 +167,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = NSURL(string: "http://test1.com")!
             try subject.encode([first: true, second: false], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,87,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,57,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,8,15,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,46,99,111,109,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,8,16,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,49,46,99,111,109,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,101,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,71,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,8,15,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,46,99,111,109,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,8,16,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,49,46,99,111,109,6,1,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -312,9 +312,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([false: true, true: false], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,44,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,14,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -325,9 +325,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([true: 1, false: 3], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,2,8,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,2,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,2,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -338,9 +338,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([true: 1, false: 123456789012345678] as [Bool: Int64], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,3,8,0,0,0,0,0,0,0,78,243,48,166,75,155,182,1]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,3,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,78,243,48,166,75,155,182,1]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,3,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -351,9 +351,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([false: "hello", true: "world"], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,66,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,36,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,1,5,0,0,0,0,0,0,0,104,101,108,108,111]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,1,5,0,0,0,0,0,0,0,119,111,114,108,100]))
+            XCTAssertTrue(result.hasArrayPrefix([11,80,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,50,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,1,5,0,0,0,0,0,0,0,104,101,108,108,111]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,1,5,0,0,0,0,0,0,0,119,111,114,108,100]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -364,9 +364,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([false: 1.3, true: 3.14] as [Bool: Float], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,64,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,5,4,0,0,0,0,0,0,0,102,102,166,63]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,5,4,0,0,0,0,0,0,0,195,245,72,64]))
+            XCTAssertTrue(result.hasArrayPrefix([11,78,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,48,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,0,102,102,166,63]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,5,4,0,0,0,0,0,0,0,195,245,72,64]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -377,9 +377,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([true: 2.3, false: 1.14], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,4,8,0,0,0,0,0,0,0,61,10,215,163,112,61,242,63]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,4,8,0,0,0,0,0,0,0,102,102,102,102,102,102,2,64]))
+            XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,4,8,0,0,0,0,0,0,0,61,10,215,163,112,61,242,63]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,4,8,0,0,0,0,0,0,0,102,102,102,102,102,102,2,64]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -392,9 +392,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([true: first, false: second], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,52,64]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,36,64]))
+            XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,52,64]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,36,64]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -407,9 +407,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = TestCerealType(foo: "baz")
             try subject.encode([true: first, false: second], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,122,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,92,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114]))
+            XCTAssertTrue(result.hasArrayPrefix([11,136,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,106,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -422,9 +422,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = TestIdentifyingCerealType(foo: "baz")
             try subject.encodeIdentifyingItems([true: first, false: second], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,148,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,118,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114]))
+            XCTAssertTrue(result.hasArrayPrefix([11,162,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,132,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -437,9 +437,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = TestIdentifyingCerealType(foo: "baz")
             try subject.encodeIdentifyingItems([true: first, false: second], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,148,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,118,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114]))
+            XCTAssertTrue(result.hasArrayPrefix([11,162,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,132,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -452,9 +452,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([0: true, 2: false], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,2,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,2,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,1,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,2,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,2,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -592,9 +592,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([0: true, 123456789012345678: false] as [Int64: Bool], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,3,8,0,0,0,0,0,0,0,78,243,48,166,75,155,182,1,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,3,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,1,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,3,8,0,0,0,0,0,0,0,78,243,48,166,75,155,182,1,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,3,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -718,9 +718,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode(["foo": true, "bar": true], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,62,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,32,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,1,3,0,0,0,0,0,0,0,98,97,114,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,1,3,0,0,0,0,0,0,0,102,111,111,6,1,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,76,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,46,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,1,3,0,0,0,0,0,0,0,98,97,114,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,1,3,0,0,0,0,0,0,0,102,111,111,6,1,0,0,0,0,0,0,0,1]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -843,9 +843,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([1.0: false, 1.1: false] as [Float: Bool], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,64,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,0,0,128,63,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,205,204,140,63,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,78,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,48,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,0,0,128,63,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,205,204,140,63,6,1,0,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -968,9 +968,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([1.0: false, 1.1: true], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,72,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,42,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,4,8,0,0,0,0,0,0,0,0,0,0,0,0,0,240,63,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,4,8,0,0,0,0,0,0,0,154,153,153,153,153,153,241,63,6,1,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,4,8,0,0,0,0,0,0,0,0,0,0,0,0,0,240,63,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,4,8,0,0,0,0,0,0,0,154,153,153,153,153,153,241,63,6,1,0,0,0,0,0,0,0,1]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1095,9 +1095,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = TestCerealType(foo: "baz")
             try subject.encode([first: true, second: false], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,122,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,92,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,6,1,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,136,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,106,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,6,1,0,0,0,0,0,0,0,1]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1240,9 +1240,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = TestIdentifyingCerealType(foo: "baz")
             try subject.encode([first: true, second: true], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,148,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,118,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,6,1,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,162,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,132,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,6,1,0,0,0,0,0,0,0,1]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1415,9 +1415,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([true: [true, false], false: [true, true]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,84,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,54,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,126,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,96,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1428,9 +1428,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([true: [1, 2], false: [3, 4]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,140,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,154,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,124,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1441,9 +1441,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([false: [1, 2], true: [3, 123456789012345678]] as [Bool: [Int64]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,140,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,78,243,48,166,75,155,182,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,154,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,124,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,3,8,0,0,0,0,0,0,0,78,243,48,166,75,155,182,1]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1454,9 +1454,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([true: ["a", "b"], false: ["c", "d"]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,112,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,82,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,99,1,1,0,0,0,0,0,0,0,100]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,97,1,1,0,0,0,0,0,0,0,98]))
+            XCTAssertTrue(result.hasArrayPrefix([11,126,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,96,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,99,1,1,0,0,0,0,0,0,0,100]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,97,1,1,0,0,0,0,0,0,0,98]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1467,9 +1467,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([true: [1.3, 1.4], false: [3.14, 4.14]] as [Bool: [Float]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,124,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,94,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,10,26,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,0,195,245,72,64,5,4,0,0,0,0,0,0,0,225,122,132,64]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,10,26,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,0,102,102,166,63,5,4,0,0,0,0,0,0,0,51,51,179,63]))
+            XCTAssertTrue(result.hasArrayPrefix([11,138,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,108,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,10,26,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,0,195,245,72,64,5,4,0,0,0,0,0,0,0,225,122,132,64]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,10,26,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,5,4,0,0,0,0,0,0,0,102,102,166,63,5,4,0,0,0,0,0,0,0,51,51,179,63]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1480,9 +1480,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([true: [1.3, 1.4], false: [3.14, 4.14]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,140,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,4,8,0,0,0,0,0,0,0,31,133,235,81,184,30,9,64,4,8,0,0,0,0,0,0,0,143,194,245,40,92,143,16,64]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,4,8,0,0,0,0,0,0,0,205,204,204,204,204,204,244,63,4,8,0,0,0,0,0,0,0,102,102,102,102,102,102,246,63]))
+            XCTAssertTrue(result.hasArrayPrefix([11,154,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,124,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,4,8,0,0,0,0,0,0,0,31,133,235,81,184,30,9,64,4,8,0,0,0,0,0,0,0,143,194,245,40,92,143,16,64]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,10,34,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,4,8,0,0,0,0,0,0,0,205,204,204,204,204,204,244,63,4,8,0,0,0,0,0,0,0,102,102,102,102,102,102,246,63]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1497,9 +1497,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let fourth = TestCerealType(foo: "oof")
             try subject.encode([true: [first, second], false: [third, fourth]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,240,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,210,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,10,84,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,102,111,111,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,111,111,102]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,10,84,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
+            XCTAssertTrue(result.hasArrayPrefix([11,254,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,224,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,10,84,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,102,111,111,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,111,111,102]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,10,84,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1514,13 +1514,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let fourth = TestIdentifyingCerealType(foo: "oof")
             try subject.encode([false: [first, second], true: [third, fourth]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,36,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,6,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,0,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
-                                                   9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
-                                                   9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
-            XCTAssertTrue(result.containsSubArray([9,6,1,1,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
-                                                   9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,102,111,111,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
-                                                   9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,111,111,102]))
+            XCTAssertTrue(result.hasArrayPrefix([11,50,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,20,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,0,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,122]))
+            XCTAssertTrue(result.containsSubArray([9,6,1,0,0,0,0,0,0,0,1,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,102,111,111,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,111,111,102]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1533,9 +1529,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([0: [true, false], 2: [true, true]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,112,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,82,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,2,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,2,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,140,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,2,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,2,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1658,9 +1654,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([0: [false, false], 2: [true, true]] as [Int64: [Bool]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,112,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,82,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,3,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,3,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,140,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,3,8,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,3,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1781,9 +1777,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode(["foo": [true, false], "bar": [false, true]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,102,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,72,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,1,3,0,0,0,0,0,0,0,98,97,114,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,1,3,0,0,0,0,0,0,0,102,111,111,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,130,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,100,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,1,3,0,0,0,0,0,0,0,98,97,114,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,1,3,0,0,0,0,0,0,0,102,111,111,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -1901,9 +1897,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([0.1: [true, false], 0.2: [true, false]] as [Float: [Bool]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,104,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,74,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,205,204,204,61,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,205,204,76,62,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,132,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,102,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,205,204,204,61,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,205,204,76,62,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -2024,9 +2020,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             var subject = CerealEncoder()
             try subject.encode([0.1: [true, false], 0.2: [true, false]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,112,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,82,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,4,8,0,0,0,0,0,0,0,154,153,153,153,153,153,185,63,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,4,8,0,0,0,0,0,0,0,154,153,153,153,153,153,201,63,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,0]))
+            XCTAssertTrue(result.hasArrayPrefix([11,140,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,110,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,4,8,0,0,0,0,0,0,0,154,153,153,153,153,153,185,63,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,4,8,0,0,0,0,0,0,0,154,153,153,153,153,153,201,63,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -2150,9 +2146,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = TestCerealType(foo: "foo")
             try subject.encode([first: [true, false], second: [true, false]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,161,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,131,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,11,24,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,2,0,0,0,0,0,0,0,104,105,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,0]))
-            XCTAssertTrue(result.containsSubArray([9,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,102,111,111,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,189,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,159,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,11,24,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,2,0,0,0,0,0,0,0,104,105,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,11,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,102,111,111,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -2294,11 +2290,9 @@ class CerealEncoderDictionaryTests: XCTestCase {
             let second = TestIdentifyingCerealType(foo: "foo")
             try subject.encode([first: [true, true], second: [false, false]], forKey: "wat")
             let result = subject.toBytes()
-            XCTAssertTrue(result.hasArrayPrefix([11,187,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,157,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
-            XCTAssertTrue(result.containsSubArray([9,12,1,4,0,0,0,0,0,0,0,116,105,99,116,24,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,
-                                                   2,0,0,0,0,0,0,0,104,105,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,1,6,1,1]))
-            XCTAssertTrue(result.containsSubArray([9,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,
-                                                   3,0,0,0,0,0,0,0,102,111,111,10,6,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,6,1]))
+            XCTAssertTrue(result.hasArrayPrefix([11,215,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,185,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
+            XCTAssertTrue(result.containsSubArray([9,12,1,4,0,0,0,0,0,0,0,116,105,99,116,24,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,2,0,0,0,0,0,0,0,104,105,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,1,6,1,0,0,0,0,0,0,0,1]))
+            XCTAssertTrue(result.containsSubArray([9,12,1,4,0,0,0,0,0,0,0,116,105,99,116,25,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,102,111,111,10,20,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0,0,6,1,0,0,0,0,0,0,0]))
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
