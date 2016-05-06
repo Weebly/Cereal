@@ -1036,8 +1036,8 @@ public struct CerealDecoder {
                 return try instantiateIdentifyingCereal(value)
         }
     }
-    private static func instantiate<T: CerealRepresentable>(value: CoderTreeValue) throws -> T {
-        guard let decodedResult: T = try CerealDecoder.instantiate(value) as? T else {
+    private static func instantiate<DecodedType: CerealRepresentable>(value: CoderTreeValue) throws -> DecodedType {
+        guard let decodedResult: DecodedType = try CerealDecoder.instantiate(value) as? DecodedType else {
             throw CerealError.InvalidEncoding("Failed to decode value \(value)")
         }
 
@@ -1746,8 +1746,8 @@ private extension CerealDecoder {
 
     /// Used for primitive or identifying cereal values
 
-    private static func instantiate<T: RawRepresentable where T: CerealRepresentable, T.RawValue: CerealRepresentable>(value: CoderTreeValue) throws -> T {
-        guard let rawValue = try CerealDecoder.instantiate(value) as? T.RawValue, let decodedResult = T(rawValue: rawValue) else {
+    private static func instantiate<DecodedType: RawRepresentable where DecodedType: CerealRepresentable, DecodedType.RawValue: CerealRepresentable>(value: CoderTreeValue) throws -> DecodedType {
+        guard let rawValue = try CerealDecoder.instantiate(value) as? DecodedType.RawValue, let decodedResult = DecodedType(rawValue: rawValue) else {
             throw CerealError.InvalidEncoding("Failed to decode value \(value)")
         }
 
