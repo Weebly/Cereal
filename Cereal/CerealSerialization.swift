@@ -293,7 +293,7 @@ private extension String {
 
 private extension CoderTreeValue {
     static func readInt(inout bytes: [UInt8], inout offset: Int) -> Int? {
-        guard bytes.count > offset + sizeof(Int) else { return nil }
+        guard bytes.count >= offset + sizeof(Int) else { return nil }
 
         let bytesForInt: [UInt8] = Array(bytes[offset..<offset + sizeof(Int)])
         let value: Int = bytesToInteger(bytesForInt)

@@ -91,7 +91,8 @@ public struct CerealDecoder {
             return nil
         }
 
-        return try CerealDecoder.instantiate(data) as? DecodedType
+        let result: DecodedType = try CerealDecoder.instantiate(data)
+        return result
     }
 
     /**
@@ -253,7 +254,8 @@ public struct CerealDecoder {
         var decodedItems = [[DecodedKeyType: DecodedValueType]]()
         decodedItems.reserveCapacity(items.count)
         for item in items {
-            decodedItems.append(try CerealDecoder.parseDictionaryValue(item))
+            let value: [DecodedKeyType: DecodedValueType] = try CerealDecoder.parseCerealDictionaryValue(item)
+            decodedItems.append(value)
         }
 
         return decodedItems
