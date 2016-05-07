@@ -7,32 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A2A04831BBC6D84003D4739 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A61BED01B86265D004BCC08 /* ArrayExtensions.swift */; settings = {ASSET_TAGS = (); }; };
-		1A2A04841BBC6D87003D4739 /* Cereal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08121B62D678003FA41B /* Cereal.swift */; settings = {ASSET_TAGS = (); }; };
-		1A2A04851BBC6D8D003D4739 /* CerealDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DA1B6FB94000BDC73A /* CerealDecoder.swift */; settings = {ASSET_TAGS = (); }; };
-		1A2A04861BBC6D8D003D4739 /* CerealEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DC1B6FB9B700BDC73A /* CerealEncoder.swift */; settings = {ASSET_TAGS = (); }; };
-		1A2A04871BBC6D8D003D4739 /* CerealRepresentableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08141B62D682003FA41B /* CerealRepresentableTypes.swift */; settings = {ASSET_TAGS = (); }; };
-		1A2A04881BBC6D8D003D4739 /* CerealType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08101B628E4D003FA41B /* CerealType.swift */; settings = {ASSET_TAGS = (); }; };
-		1A2A04891BBC6D8D003D4739 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08161B62D6E1003FA41B /* StringExtensions.swift */; settings = {ASSET_TAGS = (); }; };
+		1A2A04831BBC6D84003D4739 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A61BED01B86265D004BCC08 /* ArrayExtensions.swift */; };
+		1A2A04841BBC6D87003D4739 /* Cereal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08121B62D678003FA41B /* Cereal.swift */; };
+		1A2A04851BBC6D8D003D4739 /* CerealDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DA1B6FB94000BDC73A /* CerealDecoder.swift */; };
+		1A2A04861BBC6D8D003D4739 /* CerealEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DC1B6FB9B700BDC73A /* CerealEncoder.swift */; };
+		1A2A04871BBC6D8D003D4739 /* CerealRepresentableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08141B62D682003FA41B /* CerealRepresentableTypes.swift */; };
+		1A2A04881BBC6D8D003D4739 /* CerealType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08101B628E4D003FA41B /* CerealType.swift */; };
+		1A2A04891BBC6D8D003D4739 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08161B62D6E1003FA41B /* StringExtensions.swift */; };
 		1A2A048A1BBC6EFF003D4739 /* Cereal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABE07F61B628E27003FA41B /* Cereal.framework */; };
 		1A2A048B1BBC6EFF003D4739 /* Cereal.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1ABE07F61B628E27003FA41B /* Cereal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1A2A048F1BBC6F3A003D4739 /* Cereal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A6112AC1BBC58EB0026471F /* Cereal.framework */; };
 		1A2A04901BBC6F3A003D4739 /* Cereal.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1A6112AC1BBC58EB0026471F /* Cereal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		1A2A04921BBC6F79003D4739 /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F31BBADB960060F7F0 /* Employee.swift */; settings = {ASSET_TAGS = (); }; };
-		1A2A04931BBC6F79003D4739 /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F51BBADBC40060F7F0 /* Gender.swift */; settings = {ASSET_TAGS = (); }; };
+		1A2A04921BBC6F79003D4739 /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F31BBADB960060F7F0 /* Employee.swift */; };
+		1A2A04931BBC6F79003D4739 /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F51BBADBC40060F7F0 /* Gender.swift */; };
 		1A3386DF1BBADB2C0060F7F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386DE1BBADB2C0060F7F0 /* AppDelegate.swift */; };
 		1A3386E11BBADB2C0060F7F0 /* EmployeeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386E01BBADB2C0060F7F0 /* EmployeeListViewController.swift */; };
 		1A3386E61BBADB2C0060F7F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A3386E41BBADB2C0060F7F0 /* Main.storyboard */; };
 		1A3386E81BBADB2C0060F7F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A3386E71BBADB2C0060F7F0 /* Assets.xcassets */; };
 		1A3386EB1BBADB2C0060F7F0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A3386E91BBADB2C0060F7F0 /* LaunchScreen.storyboard */; };
-		1A3386F41BBADB960060F7F0 /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F31BBADB960060F7F0 /* Employee.swift */; settings = {ASSET_TAGS = (); }; };
-		1A3386F61BBADBC40060F7F0 /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F51BBADBC40060F7F0 /* Gender.swift */; settings = {ASSET_TAGS = (); }; };
-		1A3386F81BBAE7100060F7F0 /* EditEmployeeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F71BBAE70F0060F7F0 /* EditEmployeeViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		1A6112721BBC29ED0026471F /* VehicleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112711BBC29ED0026471F /* VehicleListViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		1A6112741BBC2A050026471F /* Vehicles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112731BBC2A050026471F /* Vehicles.swift */; settings = {ASSET_TAGS = (); }; };
-		1A6112761BBC2D970026471F /* ItemEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112751BBC2D970026471F /* ItemEdit.swift */; settings = {ASSET_TAGS = (); }; };
-		1A6112781BBC315E0026471F /* EditCarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112771BBC315E0026471F /* EditCarViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		1A61127A1BBC31890026471F /* EditTrainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112791BBC31890026471F /* EditTrainViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		1A3386F41BBADB960060F7F0 /* Employee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F31BBADB960060F7F0 /* Employee.swift */; };
+		1A3386F61BBADBC40060F7F0 /* Gender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F51BBADBC40060F7F0 /* Gender.swift */; };
+		1A3386F81BBAE7100060F7F0 /* EditEmployeeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3386F71BBAE70F0060F7F0 /* EditEmployeeViewController.swift */; };
+		1A6112721BBC29ED0026471F /* VehicleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112711BBC29ED0026471F /* VehicleListViewController.swift */; };
+		1A6112741BBC2A050026471F /* Vehicles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112731BBC2A050026471F /* Vehicles.swift */; };
+		1A6112761BBC2D970026471F /* ItemEdit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112751BBC2D970026471F /* ItemEdit.swift */; };
+		1A6112781BBC315E0026471F /* EditCarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112771BBC315E0026471F /* EditCarViewController.swift */; };
+		1A61127A1BBC31890026471F /* EditTrainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6112791BBC31890026471F /* EditTrainViewController.swift */; };
 		1A6112811BBC500A0026471F /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A61127F1BBC500A0026471F /* Interface.storyboard */; };
 		1A6112831BBC500A0026471F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A6112821BBC500A0026471F /* Assets.xcassets */; };
 		1A61128A1BBC500A0026471F /* WatchExample Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1A6112891BBC500A0026471F /* WatchExample Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -45,8 +45,8 @@
 		1A73CE361B7BA5B4006AC7FC /* AssertionHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A73CE351B7BA5B4006AC7FC /* AssertionHelpers.swift */; };
 		1A7C604A1B8B614800B24B88 /* CerealEncoderArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7C60491B8B614800B24B88 /* CerealEncoderArrayTests.swift */; };
 		1A7C604C1B8B615300B24B88 /* CerealEncoderDictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7C604B1B8B615300B24B88 /* CerealEncoderDictionaryTests.swift */; };
-		1A853A3A1BC8651A00B176BB /* DictionaryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A853A391BC8651A00B176BB /* DictionaryExtensions.swift */; settings = {ASSET_TAGS = (); }; };
-		1A853A431BCC0FDB00B176BB /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A853A421BCC0FDB00B176BB /* Utilities.swift */; settings = {ASSET_TAGS = (); }; };
+		1A853A3A1BC8651A00B176BB /* DictionaryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A853A391BC8651A00B176BB /* DictionaryExtensions.swift */; };
+		1A853A431BCC0FDB00B176BB /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A853A421BCC0FDB00B176BB /* Utilities.swift */; };
 		1AAD59DB1B6FB94000BDC73A /* CerealDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DA1B6FB94000BDC73A /* CerealDecoder.swift */; };
 		1AAD59DD1B6FB9B700BDC73A /* CerealEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DC1B6FB9B700BDC73A /* CerealEncoder.swift */; };
 		1AAD59DF1B6FD81800BDC73A /* CerealEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DE1B6FD81800BDC73A /* CerealEncoderTests.swift */; };
@@ -60,6 +60,16 @@
 		1ABE08171B62D6E1003FA41B /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08161B62D6E1003FA41B /* StringExtensions.swift */; };
 		1AD08C9E1B7FE46800C87191 /* CerealDecoderArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD08C9D1B7FE46800C87191 /* CerealDecoderArrayTests.swift */; };
 		1AD08CA01B7FE4F700C87191 /* CerealDecoderDictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD08C9F1B7FE4F700C87191 /* CerealDecoderDictionaryTests.swift */; };
+		538158951CDD976400CF6987 /* Cereal-OSX.h in Headers */ = {isa = PBXBuildFile; fileRef = 538158941CDD976400CF6987 /* Cereal-OSX.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		538158961CDD978B00CF6987 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A61BED01B86265D004BCC08 /* ArrayExtensions.swift */; };
+		538158971CDD978B00CF6987 /* Cereal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08121B62D678003FA41B /* Cereal.swift */; };
+		538158981CDD978B00CF6987 /* CerealDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DA1B6FB94000BDC73A /* CerealDecoder.swift */; };
+		538158991CDD978B00CF6987 /* CerealEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD59DC1B6FB9B700BDC73A /* CerealEncoder.swift */; };
+		5381589A1CDD978B00CF6987 /* CerealRepresentableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08141B62D682003FA41B /* CerealRepresentableTypes.swift */; };
+		5381589B1CDD978B00CF6987 /* CerealType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08101B628E4D003FA41B /* CerealType.swift */; };
+		5381589C1CDD978B00CF6987 /* DictionaryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A853A391BC8651A00B176BB /* DictionaryExtensions.swift */; };
+		5381589D1CDD978B00CF6987 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08161B62D6E1003FA41B /* StringExtensions.swift */; };
+		5381589E1CDD978B00CF6987 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A853A421BCC0FDB00B176BB /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -205,6 +215,8 @@
 		1ABE08161B62D6E1003FA41B /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		1AD08C9D1B7FE46800C87191 /* CerealDecoderArrayTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CerealDecoderArrayTests.swift; sourceTree = "<group>"; };
 		1AD08C9F1B7FE4F700C87191 /* CerealDecoderDictionaryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CerealDecoderDictionaryTests.swift; sourceTree = "<group>"; };
+		538158941CDD976400CF6987 /* Cereal-OSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Cereal-OSX.h"; sourceTree = "<group>"; };
+		53FC3E311CDD952F00BF730E /* Cereal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cereal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +255,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ABE08011B628E27003FA41B /* Cereal.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FC3E2D1CDD952F00BF730E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +342,7 @@
 				1A61127D1BBC500A0026471F /* WatchExample.app */,
 				1A6112891BBC500A0026471F /* WatchExample Extension.appex */,
 				1A6112AC1BBC58EB0026471F /* Cereal.framework */,
+				53FC3E311CDD952F00BF730E /* Cereal.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -332,6 +352,7 @@
 			children = (
 				1A61BED01B86265D004BCC08 /* ArrayExtensions.swift */,
 				1ABE07F91B628E27003FA41B /* Cereal.h */,
+				538158941CDD976400CF6987 /* Cereal-OSX.h */,
 				1ABE08121B62D678003FA41B /* Cereal.swift */,
 				1AAD59DA1B6FB94000BDC73A /* CerealDecoder.swift */,
 				1AAD59DC1B6FB9B700BDC73A /* CerealEncoder.swift */,
@@ -377,6 +398,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ABE07FA1B628E27003FA41B /* Cereal.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FC3E2E1CDD952F00BF730E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				538158951CDD976400CF6987 /* Cereal-OSX.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -495,6 +524,24 @@
 			productReference = 1ABE08001B628E27003FA41B /* CerealTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		53FC3E301CDD952F00BF730E /* Cereal-OSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53FC3E381CDD952F00BF730E /* Build configuration list for PBXNativeTarget "Cereal-OSX" */;
+			buildPhases = (
+				53FC3E2C1CDD952F00BF730E /* Sources */,
+				53FC3E2D1CDD952F00BF730E /* Frameworks */,
+				53FC3E2E1CDD952F00BF730E /* Headers */,
+				53FC3E2F1CDD952F00BF730E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cereal-OSX";
+			productName = "Cereal-OSX";
+			productReference = 53FC3E311CDD952F00BF730E /* Cereal.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -523,6 +570,9 @@
 					1ABE07FF1B628E27003FA41B = {
 						CreatedOnToolsVersion = 7.0;
 					};
+					53FC3E301CDD952F00BF730E = {
+						CreatedOnToolsVersion = 7.3;
+					};
 				};
 			};
 			buildConfigurationList = 1ABE07F01B628E27003FA41B /* Build configuration list for PBXProject "Cereal" */;
@@ -544,6 +594,7 @@
 				1A3386DB1BBADB2C0060F7F0 /* Example */,
 				1A61127C1BBC500A0026471F /* WatchExample */,
 				1A6112881BBC500A0026471F /* WatchExample Extension */,
+				53FC3E301CDD952F00BF730E /* Cereal-OSX */,
 			);
 		};
 /* End PBXProject section */
@@ -591,6 +642,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1ABE07FE1B628E27003FA41B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FC3E2F1CDD952F00BF730E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -670,6 +728,22 @@
 				1AAD59DF1B6FD81800BDC73A /* CerealEncoderTests.swift in Sources */,
 				1A7C604A1B8B614800B24B88 /* CerealEncoderArrayTests.swift in Sources */,
 				1AAD59E31B6FD84E00BDC73A /* TestTypes.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FC3E2C1CDD952F00BF730E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				538158961CDD978B00CF6987 /* ArrayExtensions.swift in Sources */,
+				538158971CDD978B00CF6987 /* Cereal.swift in Sources */,
+				538158981CDD978B00CF6987 /* CerealDecoder.swift in Sources */,
+				538158991CDD978B00CF6987 /* CerealEncoder.swift in Sources */,
+				5381589A1CDD978B00CF6987 /* CerealRepresentableTypes.swift in Sources */,
+				5381589B1CDD978B00CF6987 /* CerealType.swift in Sources */,
+				5381589C1CDD978B00CF6987 /* DictionaryExtensions.swift in Sources */,
+				5381589D1CDD978B00CF6987 /* StringExtensions.swift in Sources */,
+				5381589E1CDD978B00CF6987 /* Utilities.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1017,6 +1091,50 @@
 			};
 			name = Release;
 		};
+		53FC3E361CDD952F00BF730E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = Cereal/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoanaut.Cereal;
+				PRODUCT_NAME = Cereal;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		53FC3E371CDD952F00BF730E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = Cereal/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoanaut.Cereal;
+				PRODUCT_NAME = Cereal;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1079,6 +1197,15 @@
 			buildConfigurations = (
 				1ABE080E1B628E27003FA41B /* Debug */,
 				1ABE080F1B628E27003FA41B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53FC3E381CDD952F00BF730E /* Build configuration list for PBXNativeTarget "Cereal-OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53FC3E361CDD952F00BF730E /* Debug */,
+				53FC3E371CDD952F00BF730E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
