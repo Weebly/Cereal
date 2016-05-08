@@ -357,6 +357,23 @@ class CerealDecoderTests: XCTestCase {
         }
     }
 
+    // MARK: Value rewrite
+
+    func testDecoding_withValueRewrite() {
+        do {
+            var encoder = CerealEncoder()
+            try encoder.encode("string", forKey: "string")
+            try encoder.encode("string-new-value", forKey: "string")
+
+            let decoder = try CerealDecoder(data: encoder.toData())
+            let subject: String = try decoder.decode("string") ?? ""
+
+            XCTAssertEqual(subject, "string-new-value")
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     // MARK: - Root Items
 
     func testRootItemWithData_forPrimitive_returnsCorrectData() {
