@@ -338,7 +338,7 @@ class CerealDecoderTests: XCTestCase {
             let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: [Int]? = try subject.decode("test")
             XCTFail("Expected an error, but decoded: \(object)")
-        } catch CerealError.InvalidEncoding {
+        } catch CerealError.TypeMismatch {
             // Test passes if this block is hit
         } catch {
             XCTFail("An incorrect error was thrown")
@@ -350,7 +350,7 @@ class CerealDecoderTests: XCTestCase {
             let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: [Int]? = try subject.decode("test")
             XCTFail("Expected an error, but decoded: \(object)")
-        } catch CerealError.InvalidEncoding {
+        } catch CerealError.TypeMismatch {
             // Test passes if this block is hit
         } catch {
             XCTFail("An incorrect error was thrown")
