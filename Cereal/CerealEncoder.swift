@@ -782,7 +782,7 @@ extension CerealEncoder {
     // MARK: Basic
 
     private func encodeItem<ItemType: RawRepresentable where ItemType: CerealRepresentable, ItemType.RawValue: CerealRepresentable>(item: ItemType) throws -> CoderTreeValue {
-        return try self.encodeItem(item.rawValue)
+        return try encodeItem(item.rawValue)
     }
 
     // MARK: Arrays of Dictionaries
