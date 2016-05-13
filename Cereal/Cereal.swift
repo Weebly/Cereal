@@ -36,6 +36,9 @@ public enum CerealError: ErrorType {
 
     /// Thrown if a decoder couldn't be decoded from the specified data
     case InvalidDataContent
+
+    /// Thrown when expected to be decoded from another type
+    case TypeMismatch(String)
 }
 
 /**
