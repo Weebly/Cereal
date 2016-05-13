@@ -72,7 +72,7 @@ private func bytesToInteger<Type where Type: IntegerType>(from: [UInt8]) -> Type
 private func stringEntriesCount(array: [CoderTreeValue]) -> Int {
     var result = 0
     for item in array {
-        result += item.numberOfStringEntries()
+        result += item.numberOfStringEntries
     }
     return result
 }
@@ -116,7 +116,7 @@ private extension String {
 }
 
 private extension CoderTreeValue {
-    func numberOfStringEntries() -> Int {
+    var numberOfStringEntries: Int {
         switch self {
         case .StringValue, .NSURLValue:
             return 1
@@ -240,7 +240,7 @@ extension CoderTreeValue {
         var result = [UInt8]()
         result.reserveCapacity(20)
 
-        var stringMap = Dictionary<String, [UInt8]>(minimumCapacity: self.numberOfStringEntries())
+        var stringMap = Dictionary<String, [UInt8]>(minimumCapacity: self.numberOfStringEntries)
 
         self.writeToBuffer(&result, stringMap: &stringMap)
         return result
