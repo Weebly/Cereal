@@ -17,6 +17,7 @@ public protocol CerealRepresentable { }
 A `CerealType` is a type that can be encoded and decoded using any of Cereal's generic encode and decode methods.
 */
 public protocol CerealType: CerealRepresentable {
+
     /**
     Initializes with a `CerealDecoder`. All the required instantiation data will live within the
     decoder, and is generally from the `encodeWithCereal(_: CerealEncoder)` method that is also part of this protocol.

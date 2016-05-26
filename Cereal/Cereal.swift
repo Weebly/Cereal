@@ -17,15 +17,6 @@ public enum CerealError: ErrorType {
     */
     case InvalidEncoding(String)
 
-    /// Thrown when the structure of an encoded item is incorrect.
-    case UnsupportedKeyLengthValue
-
-    /// Thrown when the structure of an encoded item is incorrect.
-    case ValueLengthEndNotFound
-
-    /// Thrown when the structure of an encoded item is incorrect.
-    case UnsupportedValueLengthValue
-
     /**
     Thrown if an item is attempted to be encoded as a `CerealRepresentable` but isn't an handled by Cereal internally.
     You should never conform a type to `CerealRepresentable`; only its subprotocols `CerealType` and 
@@ -42,22 +33,12 @@ public enum CerealError: ErrorType {
 
     /// Thrown if a root item is attempted to be decoded that doesn't exist.
     case RootItemNotFound
-}
 
-enum CerealTypeIdentifier: String {
-    case Bool = "b"
-    case String = "s"
-    case Int = "i"
-    case Int64 = "z"
-    case Double = "d"
-    case Float = "f"
-    case Date = "t" // Left for backwards compatibility
-    case PreciseDate = "T"
-    case URL = "u"
-    case Array = "a"
-    case Dictionary = "m"
-    case Cereal = "c"
-    case IdentifyingCereal = "p"
+    /// Thrown if a decoder couldn't be decoded from the specified data
+    case InvalidDataContent
+
+    /// Thrown when expected to be decoded from another type
+    case TypeMismatch(String)
 }
 
 /**
