@@ -1,5 +1,9 @@
 CHANGELOG
 
+2.0
+---------
+Move to binary TLVs over String, vastly improving the decoding and encoding speed. Thanks @Sega-Zero!
+
 1.3
 ---------
 Swift 2.2 cleanup
