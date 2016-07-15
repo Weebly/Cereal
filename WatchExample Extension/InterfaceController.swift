@@ -24,7 +24,7 @@ class InterfaceController: WKInterfaceController {
         super.awakeWithContext(context)
 
         configureTable()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "employeesUpdatedRemotely:", name: "EmployeeListUpdated", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(InterfaceController.employeesUpdatedRemotely(_:)), name: "EmployeeListUpdated", object: nil)
     }
 
     override func willActivate() {
