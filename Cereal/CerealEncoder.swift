@@ -8,11 +8,52 @@
 
 import Foundation
 
-private struct TypeCapacity {
-    let type: Any.Type
-    let capacity: Int
+private class CapacitiesHolder {
+    private struct TypeCapacity {
+        let type: Any.Type
+        let capacity: Int
+    }
+
+    private var capacities = [TypeCapacity]()
+    private static let capacityReadQueue = dispatch_queue_create("Cereal Queue", DISPATCH_QUEUE_SERIAL)
+    private static let specificKey: UnsafePointer<Void> = CapacitiesHolder.assignSpesificKey(capacityReadQueue)
+
+    private static func assignSpesificKey(queue: dispatch_queue_t) -> UnsafePointer<Void> {
+        let opPtr = Unmanaged <dispatch_queue_t>.passUnretained(queue).toOpaque()
+        let result = UnsafeMutablePointer<Void>(opPtr)
+        dispatch_queue_set_specific(queue, result, result, nil)
+
+        return UnsafePointer<Void>(result)
+    }
+
+    private func sync(block: () -> ()) {
+        if dispatch_get_specific(CapacitiesHolder.specificKey) != nil {
+            block()
+        } else {
+            dispatch_sync(CapacitiesHolder.capacityReadQueue, block)
+        }
+    }
+
+    func capacity(forType type: Any.Type) -> Int? {
+        var result: Int? = nil
+        self.sync {
+            for item in self.capacities where item.type == type.dynamicType {
+                result = item.capacity
+                break
+            }
+        }
+
+        return result
+    }
+
+    func save(capacity capacity: Int, forType: Any.Type) {
+        self.sync {
+            self.capacities.append(TypeCapacity(type: forType.dynamicType, capacity: capacity))
+        }
+    }
 }
-private var capacities = [TypeCapacity]()
+
+private let capacitiesHolder = CapacitiesHolder()
 
 /**
     A CerealEncoder handles encoding items into a format that can be stored in a simple format, such as NSData or String.
@@ -333,16 +374,12 @@ public struct CerealEncoder {
             return try encodeItem(value)
             
         case let value as CerealType :
-            var capacity: Int? = nil
-            for item in capacities where item.type == value.dynamicType {
-                capacity = item.capacity
-                break;
-            }
+            let capacity = capacitiesHolder.capacity(forType: value.dynamicType)
             var cereal = CerealEncoder(capacity: capacity ?? 20)
             try value.encodeWithCereal(&cereal)
 
             if capacity == nil {
-                capacities.append(TypeCapacity(type: value.dynamicType, capacity: cereal.items.count))
+                capacitiesHolder.save(capacity: cereal.items.count, forType: value.dynamicType)
             }
             return .SubTree(cereal.items)
             
@@ -351,17 +388,14 @@ public struct CerealEncoder {
     }
 
     private func encodeItem(item: IdentifyingCerealType) throws -> CoderTreeValue {
-        var capacity: Int? = nil
-        for item in capacities where item.type == item.dynamicType {
-            capacity = item.capacity
-            break;
-        }
+        let capacity = capacitiesHolder.capacity(forType: item.dynamicType)
+
         var cereal = CerealEncoder(capacity: capacity ?? 20)
         try item.encodeWithCereal(&cereal)
         let ident = item.dynamicType.initializationIdentifier
 
         if capacity == nil {
-            capacities.append(TypeCapacity(type: item.dynamicType, capacity: cereal.items.count))
+            capacitiesHolder.save(capacity: cereal.items.count, forType: item.dynamicType)
         }
         return .IdentifyingTree(ident, cereal.items)
     }
