@@ -95,7 +95,12 @@ private func countCapacityBytes(array: [CoderTreeValue], inout stringMap: [Strin
         item.writeToBuffer(&result, stringMap: &stringMap)
     }
 
-    return toByteArray(result.count) + toByteArray(array.count) + result
+    let count = toByteArray(result.count)
+    let capacity = toByteArray(array.count)
+
+    result.insertContentsOf(capacity, at: 0)
+    result.insertContentsOf(count, at: 0)
+    return result
 }
 
 // MARK: encoding extensions
