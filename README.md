@@ -2,6 +2,8 @@ Cereal is a serialization framework built for Swift. Its intended as a substitut
 advanced Swift features. With NSCoding, you cannot encode or decode a Swift struct, enum, or generic class. Cereal
 solves this issue through deferred decoding with generics, and a protocol that doesn't depend on NSObjectProtocol.
 
+Please note that the data stored in Cereal 2.0 is different from Cereal 1.3, and while the API is the same they are not compatible. Do not expect data written by 1.3 to be readable by 2.0.
+
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 
@@ -37,7 +39,7 @@ both your watchOS target and iOS target, you'll need to use 0.39 to resolve a bu
 For basic integration, add this to your Podfile:
 
 ```
-pod 'Cereal', '~> 1.3'
+pod 'Cereal', '~> 2.0'
 ```
 
 ### Multiple Targets
@@ -46,7 +48,7 @@ If you want to incorporate Cereal with your watchOS target and your iOS target, 
 
 ```ruby
 def shared_pods 
-  pod 'Cereal', '~> 1.3'
+  pod 'Cereal', '~> 2.0'
 end
 
 target :"iOS App Target" do
