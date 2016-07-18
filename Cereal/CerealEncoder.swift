@@ -334,7 +334,11 @@ public struct CerealEncoder {
             return "T,\(String(interval).characters.count):\(interval)"
         
         case let value as NSURL :
-            let absoluteString = value.absoluteString
+            #if swift(>=2.3)
+                let absoluteString = value.absoluteString ?? ""
+            #else
+                let absoluteString = value.absoluteString
+            #endif
             return "u,\(absoluteString.characters.count):\(absoluteString)"
             
         case let value as IdentifyingCerealType :
