@@ -36,7 +36,7 @@ both your watchOS target and iOS target, you'll need to use 0.39 to resolve a bu
 For basic integration, add this to your Podfile:
 
 ```
-pod 'Cereal', '~> 1.3'
+pod 'Cereal', '~> 1.4'
 ```
 
 ### Multiple Targets
@@ -45,7 +45,7 @@ If you want to incorporate Cereal with your watchOS target and your iOS target, 
 
 ```ruby
 def shared_pods 
-  pod 'Cereal', '~> 1.3'
+  pod 'Cereal', '~> 1.4'
 end
 
 target :"iOS App Target" do
@@ -64,7 +64,7 @@ end
 Carthage is a decentralized dependency manager. Add the following to your Cartfile to build Cereal:
 
 ```
-github "Weebly/Cereal" ~> 1.3.0
+github "Weebly/Cereal" ~> 1.4.0
 ```
 
 ## Manually
