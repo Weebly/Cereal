@@ -12,14 +12,14 @@ struct TestCerealType: CerealType {
     var foo: String
 
     init(decoder: CerealDecoder) throws {
-        foo = try decoder.decode("foo") ?? ""
+        foo = try decoder.decode(key: "foo") ?? ""
     }
 
     init(foo: String) {
         self.foo = foo
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(foo, forKey: "foo")
     }
 }
@@ -38,7 +38,7 @@ struct OptionalTestCerealType: CerealType {
     var foo: String?
 
     init(decoder: CerealDecoder) throws {
-        foo = try decoder.decode("foo")
+        foo = try decoder.decode(key: "foo")
     }
 
     init(foo: String?) {
@@ -47,7 +47,7 @@ struct OptionalTestCerealType: CerealType {
 
     init() { }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         if let f = foo {
             try cereal.encode(f, forKey: "foo")
         }
@@ -59,8 +59,8 @@ struct TestMultiCerealType: CerealType {
     var bar: String
 
     init(decoder: CerealDecoder) throws {
-        foo = try decoder.decode("foo") ?? ""
-        bar = try decoder.decode("bar") ?? ""
+        foo = try decoder.decode(key: "foo") ?? ""
+        bar = try decoder.decode(key: "bar") ?? ""
     }
 
     init(foo: String, bar: String) {
@@ -68,7 +68,7 @@ struct TestMultiCerealType: CerealType {
         self.bar = bar
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(foo, forKey: "foo")
         try cereal.encode(bar, forKey: "bar")
     }
@@ -78,18 +78,18 @@ struct Stack<Element: CerealRepresentable>: CerealType {
     var items: [Element]
 
     init(decoder: CerealDecoder) throws {
-        items = try decoder.decode("foo") ?? []
+        items = try decoder.decode(key: "foo") ?? []
     }
 
     init() {
         items = [Element]()
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(items, forKey: "foo")
     }
 
-    mutating func push(element: Element) {
+    mutating func push(_ element: Element) {
         items.append(element)
     }
 }
@@ -98,7 +98,7 @@ struct TestIdentifyingCerealType: Fooable {
     var foo: String
 
     init(decoder: CerealDecoder) throws {
-        foo = try decoder.decode("foo") ?? ""
+        foo = try decoder.decode(key: "foo") ?? ""
     }
 
     init(foo: String) {
@@ -109,7 +109,7 @@ struct TestIdentifyingCerealType: Fooable {
         return foo.hashValue
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(foo, forKey: "foo")
     }
 
@@ -136,14 +136,14 @@ struct MyBar: Barable {
     var bar: String
 
     init(decoder: CerealDecoder) throws {
-        bar = try decoder.decode("bar") ?? ""
+        bar = try decoder.decode(key: "bar") ?? ""
     }
 
     init(bar: String) {
         self.bar = bar
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(bar, forKey: "bar")
     }
 
@@ -162,14 +162,14 @@ struct BarBag<Bar: Barable>: IdentifyingCerealType {
     var theBar: Bar
 
     init(decoder: CerealDecoder) throws {
-        if let value = try decoder.decodeIdentifyingCereal("bar") as? Bar {
+        if let value = try decoder.decodeIdentifyingCereal(key: "bar") as? Bar {
             theBar = value
         } else {
-            throw CerealError.InvalidEncoding("Not able to decode")
+            throw CerealError.invalidEncoding("Not able to decode")
         }
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(theBar, forKey: "bar")
     }
 
@@ -186,10 +186,10 @@ struct MyBaz: Bazable {
     var baz: String
 
     init(decoder: CerealDecoder) throws {
-        baz = try decoder.decode("baz") ?? ""
+        baz = try decoder.decode(key: "baz") ?? ""
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(baz, forKey: "baz")
     }
 
@@ -198,7 +198,7 @@ struct MyBaz: Bazable {
 
 // Extending objects with CerealRepresentable is not supported, so this will be used to test
 // that if it is, the correct error is used.
-extension NSData: CerealRepresentable { }
+extension Data: CerealRepresentable { }
 
 enum TestEnum: String {
     case TestCase1
@@ -207,7 +207,7 @@ enum TestEnum: String {
 
 extension TestEnum: CerealRepresentable { }
 
-struct TestSetType : OptionSetType {
+struct TestSetType : OptionSet {
     let rawValue: Int
 
     static let None         = TestSetType(rawValue: 0)

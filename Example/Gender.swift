@@ -9,20 +9,20 @@
 import Cereal
 
 enum Gender: Int {
-    case Female
-    case Male
+    case female
+    case male
 }
 
 extension Gender: CerealType {
-    private struct Keys {
+    fileprivate struct Keys {
         static let root = "gender"
     }
 
     init(decoder: CerealDecoder) throws {
-        self.init(rawValue: try decoder.decode(Keys.root) ?? Gender.Female.rawValue)!
+        self.init(rawValue: try decoder.decode(key: Keys.root) ?? Gender.female.rawValue)!
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(rawValue, forKey: Keys.root)
     }
 }

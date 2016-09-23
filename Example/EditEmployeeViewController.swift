@@ -9,7 +9,7 @@
 import UIKit
 
 protocol EditEmployeeViewControllerDelegate: class {
-    func editEmployeeViewController(editEmployeeViewController: EditEmployeeViewController, didSaveEmployee employee: Employee)
+    func editEmployeeViewController(_ editEmployeeViewController: EditEmployeeViewController, didSaveEmployee employee: Employee)
 }
 
 class EditEmployeeViewController: UIViewController {
@@ -30,20 +30,20 @@ class EditEmployeeViewController: UIViewController {
 
     @IBAction func savePressed() {
         delegate?.editEmployeeViewController(self, didSaveEmployee: employee)
-        performSegueWithIdentifier("UnwindToEmployeeList", sender: self)
+        performSegue(withIdentifier: "UnwindToEmployeeList", sender: self)
     }
 
-    @IBAction func nameValueChanged(textField: UITextField) {
+    @IBAction func nameValueChanged(_ textField: UITextField) {
         employee.name = textField.text ?? ""
     }
 
-    @IBAction func ageStepperChanged(stepper: UIStepper) {
+    @IBAction func ageStepperChanged(_ stepper: UIStepper) {
         let age = Int(stepper.value)
         employee.age = age
         ageLabel.text = String(age)
     }
 
-    @IBAction func genderChanged(control: UISegmentedControl) {
+    @IBAction func genderChanged(_ control: UISegmentedControl) {
         employee.gender = Gender(rawValue: control.selectedSegmentIndex)!
     }
 }

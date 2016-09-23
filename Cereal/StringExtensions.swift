@@ -7,7 +7,7 @@
 //
 
 extension String {
-    func firstOccuranceOfString(scanString: String, fromIndex: Index) -> Index? {
-        return rangeOfString(scanString, options: [], range: fromIndex ..< endIndex, locale: nil)?.startIndex
+    func firstOccuranceOfString(_ scanString: String, fromIndex: Index) -> Index? {
+        return range(of: scanString, options: [], range: fromIndex ..< endIndex, locale: nil)?.lowerBound
     }
 }

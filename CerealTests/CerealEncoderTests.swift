@@ -136,9 +136,9 @@ class CerealEncoderTests: XCTestCase {
             try subject.encode("test", forKey: "string")
             let result = subject.toString()
             var expected = "k,3:int:i,1:5"
-            XCTAssert(result.rangeOfString(expected) != nil, "String '\(result)' did not contain substring '\(expected)'")
+            XCTAssert(result.range(of: expected) != nil, "String '\(result)' did not contain substring '\(expected)'")
             expected = "k,6:string:s,4:test"
-            XCTAssert(result.rangeOfString(expected) != nil, "String '\(result)' did not contain substring '\(expected)'")
+            XCTAssert(result.range(of: expected) != nil, "String '\(result)' did not contain substring '\(expected)'")
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
         }
@@ -256,7 +256,7 @@ class CerealEncoderTests: XCTestCase {
     func testToString_withDate() {
         var subject = CerealEncoder()
         do {
-            try subject.encode(NSDate(timeIntervalSinceReferenceDate: 5), forKey: "mydate")
+            try subject.encode(Date(timeIntervalSinceReferenceDate: 5), forKey: "mydate")
             let result = subject.toString()
             XCTAssertEqual(result, "k,6:mydate:T,3:5.0")
         } catch let error {
@@ -267,7 +267,7 @@ class CerealEncoderTests: XCTestCase {
     func testToString_withDateWithNegativeIntervalSince1970() {
         var subject = CerealEncoder()
         do {
-            try subject.encode(NSDate(timeIntervalSinceReferenceDate: -5), forKey: "mydate")
+            try subject.encode(Date(timeIntervalSinceReferenceDate: -5), forKey: "mydate")
             let result = subject.toString()
             XCTAssertEqual(result, "k,6:mydate:T,4:-5.0")
         } catch let error {
@@ -275,12 +275,12 @@ class CerealEncoderTests: XCTestCase {
         }
     }
     
-    // MARK: NSURL
+    // MARK: URL
     
     func testToString_withURL() {
         var subject = CerealEncoder()
         do {
-            try subject.encode(NSURL(string: "http://test.com"), forKey: "myurl")
+            try subject.encode(URL(string: "http://test.com"), forKey: "myurl")
             let result = subject.toString()
             XCTAssertEqual(result, "k,5:myurl:u,15:http://test.com")
         } catch let error {
@@ -388,7 +388,7 @@ class CerealEncoderTests: XCTestCase {
         do {
             try subject.encode(["one","two","three"], forKey: "string")
             let result = subject.toData()
-            let expected = ("k,6:string:a,25:s,3:one:s,3:two:s,5:three" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!
+            let expected = ("k,6:string:a,25:s,3:one:s,3:two:s,5:three" as String).data(using: .utf8)!
             XCTAssertEqual(result, expected)
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
@@ -399,7 +399,7 @@ class CerealEncoderTests: XCTestCase {
 
     func testDataWithRootItem_forPrimitive_returnsCorrectData() {
         do {
-            let subject = try CerealEncoder.dataWithRootItem("testing")
+            let subject = try CerealEncoder.data(withRootItem: "testing")
             var encoder = CerealEncoder()
             try encoder.encode("testing", forKey: rootKey)
             let expected = encoder.toData()
@@ -412,7 +412,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_forCerealType_returnsCorrectData() {
         do {
             let object = TestCerealType(foo: "test")
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -425,7 +425,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_forProtocoledIdentifyingCerealType_returnsCorrectData() {
         do {
             let object: Fooable = TestIdentifyingCerealType(foo: "baz")
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -437,7 +437,7 @@ class CerealEncoderTests: XCTestCase {
 
     func testDataWithRootItem_withPrimitiveArray_returnsCorrectData() {
         do {
-            let subject = try CerealEncoder.dataWithRootItem(["foo", "bar"])
+            let subject = try CerealEncoder.data(withRootItem: ["foo", "bar"])
             var encoder = CerealEncoder()
             try encoder.encode(["foo", "bar"], forKey: rootKey)
             let expected = encoder.toData()
@@ -450,7 +450,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withCerealTypeArray_returnsCorrectData() {
         do {
             let object = [TestCerealType(foo: "bar"), TestCerealType(foo: "baz")]
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -463,7 +463,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_forProtocoledIdentifyingCerealTypeArray_returnsCorrectData() {
         do {
             let object: [Fooable] = [TestIdentifyingCerealType(foo: "bar"), TestIdentifyingCerealType(foo: "baz")]
-            let subject = try CerealEncoder.dataWithRootItem(object.CER_casted())
+            let subject = try CerealEncoder.data(withRootItem: object.CER_casted())
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(object.CER_casted(), forKey: rootKey)
             let expected = encoder.toData()
@@ -476,7 +476,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withArrayOfPrimitiveToPrimitiveDictionary_returnsCorrectData() {
         do {
             let object = [["Foo": 1], ["Bar": 2]]
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -489,7 +489,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withArrayOfCerealTypeToCerealTypeDictionary_returnsCorrectData() {
         do {
             let object = [[TestCerealType(foo: "bar"): TestCerealType(foo: "baz")], [TestCerealType(foo: "fee"): TestCerealType(foo: "foo")]]
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -502,7 +502,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withArrayOfPrimitiveToProtocoledCerealTypeDictionary_returnsCorrectData() {
         do {
             let object: [[String: Fooable]] = [["Foo": TestIdentifyingCerealType(foo: "bar")], ["Bar": TestIdentifyingCerealType(foo: "baz")]]
-            let subject = try CerealEncoder.dataWithRootItem(deepCast(object))
+            let subject = try CerealEncoder.data(withRootItem: deepCast(object))
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(deepCast(object), forKey: rootKey)
             let expected = encoder.toData()
@@ -515,7 +515,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withPrimitiveDictionary_returnsCorrectData() {
         do {
             let object = ["foo?": true]
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -528,7 +528,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withPrimitiveToCerealTypeDictionary_returnsCorrectData() {
         do {
             let object = ["foo?": TestCerealType(foo: "bar")]
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -541,7 +541,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withCerealTypeToCerealTypeDictionary_returnsCorrectData() {
         do {
             let object = [TestCerealType(foo: "baz"): TestCerealType(foo: "bar")]
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -554,7 +554,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withCerealTypeToProtocoledIdentifyingCerealTypeDictionary_returnsCorrectData() {
         do {
             let object: [String: Fooable] = ["hai": TestIdentifyingCerealType(foo: "bar")]
-            let subject = try CerealEncoder.dataWithRootItem(object.CER_casted() as [String: IdentifyingCerealType])
+            let subject = try CerealEncoder.data(withRootItem: object.CER_casted() as [String: IdentifyingCerealType])
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(object.CER_casted() as [String: IdentifyingCerealType], forKey: rootKey)
             let expected = encoder.toData()
@@ -567,7 +567,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withPrimitiveToPrimitiveArrayDictionary_returnsCorrectData() {
         do {
             let object = ["hai": [1, 2]]
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -580,7 +580,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withCerealTypeToCerealTypeArrayDictionary_returnsCorrectData() {
         do {
             let object = [TestCerealType(foo: "foo"): [TestCerealType(foo: "bar"), TestCerealType(foo: "baz")]]
-            let subject = try CerealEncoder.dataWithRootItem(object)
+            let subject = try CerealEncoder.data(withRootItem: object)
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
             let expected = encoder.toData()
@@ -593,7 +593,7 @@ class CerealEncoderTests: XCTestCase {
     func testDataWithRootItem_withCerealTypeToProtocoledIdentifyingCerealTypeArrayDictionary_returnsCorrectData() {
         do {
             let object: [String: [Fooable]] = ["foo": [TestIdentifyingCerealType(foo: "bar"), TestIdentifyingCerealType(foo: "baz")]]
-            let subject = try CerealEncoder.dataWithRootItem(deepArrayCast(object))
+            let subject = try CerealEncoder.data(withRootItem: deepArrayCast(object))
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(deepArrayCast(object), forKey: rootKey)
             let expected = encoder.toData()

@@ -16,15 +16,15 @@ class EmployeeRowType: NSObject {
 }
 
 class InterfaceController: WKInterfaceController {
-    private var employees = [Employee]()
+    fileprivate var employees = [Employee]()
 
     @IBOutlet var employeesTable: WKInterfaceTable!
 
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(withContext context: Any?) {
+        super.awake(withContext: context)
 
         configureTable()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "employeesUpdatedRemotely:", name: "EmployeeListUpdated", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(InterfaceController.employeesUpdatedRemotely(_:)), name: NSNotification.Name(rawValue: "EmployeeListUpdated"), object: nil)
     }
 
     override func willActivate() {
@@ -32,9 +32,9 @@ class InterfaceController: WKInterfaceController {
         refreshEmployees()
     }
 
-    private func refreshEmployees() {
-        WCSession.defaultSession().sendMessage(["action": "updateEmployees"], replyHandler: { reply in
-            guard let employeeData = reply["employeeList"] as? NSData else { return }
+    fileprivate func refreshEmployees() {
+        WCSession.default().sendMessage(["action": "updateEmployees"], replyHandler: { reply in
+            guard let employeeData = reply["employeeList"] as? Data else { return }
             self.updateEmployeesWithData(employeeData)
         }, errorHandler: { error in
                 NSLog("Failed to update employee list due to error: \(error)")
@@ -42,31 +42,31 @@ class InterfaceController: WKInterfaceController {
 
     }
 
-    private func configureTable() {
+    fileprivate func configureTable() {
         employeesTable.setNumberOfRows(employees.count, withRowType: "employee")
 
-        for (index, employee) in employees.enumerate() {
-            if let row = employeesTable.rowControllerAtIndex(index) as? EmployeeRowType {
+        for (index, employee) in employees.enumerated() {
+            if let row = employeesTable.rowController(at: index) as? EmployeeRowType {
                 row.nameLabel.setText(employee.name)
             }
         }
     }
 
-    private func updateEmployeesWithData(employeeData: NSData) {
+    fileprivate func updateEmployeesWithData(_ employeeData: Data) {
         do {
-            employees = try CerealDecoder.rootCerealItemsWithData(employeeData)
+            employees = try CerealDecoder.rootCerealItems(with: employeeData)
             configureTable()
         } catch let error {
             NSLog("Data was unable to be decoded due to error: \(error)")
         }
     }
 
-    @objc private func employeesUpdatedRemotely(note: NSNotification) {
-        guard let employeeData = note.userInfo?["employeeList"] as? NSData else { return }
+    @objc fileprivate func employeesUpdatedRemotely(_ note: Notification) {
+        guard let employeeData = (note as NSNotification).userInfo?["employeeList"] as? Data else { return }
         updateEmployeesWithData(employeeData)
     }
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 }

@@ -15,17 +15,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    func application(application: UIApplication, willFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         Cereal.register(Car.self)
         Cereal.register(Train.self)
         return true
     }
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         if WCSession.isSupported() {
-            let session = WCSession.defaultSession()
+            let session = WCSession.default()
             session.delegate = self
-            session.activateSession()
+            session.activate()
         }
 
         return true
@@ -33,7 +33,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate: WCSessionDelegate {
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+
+    @available(iOS 9.3, *)
+    public func sessionDidDeactivate(_ session: WCSession) { }
+
+    @available(iOS 9.3, *)
+    public func sessionDidBecomeInactive(_ session: WCSession) { }
+
+    @available(iOS 9.3, *)
+    public func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) { }
+
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         var reply = [String: AnyObject]()
         defer {
             replyHandler(reply)
@@ -44,7 +54,7 @@ extension AppDelegate: WCSessionDelegate {
             return
         }
 
-        guard let storedEmployeeData = NSUserDefaults.standardUserDefaults().objectForKey("employeeList") as? NSData else { return }
-        reply["employeeList"] = storedEmployeeData
+        guard let storedEmployeeData = UserDefaults.standard.object(forKey: "employeeList") as? Data else { return }
+        reply["employeeList"] = storedEmployeeData as AnyObject?
     }
 }

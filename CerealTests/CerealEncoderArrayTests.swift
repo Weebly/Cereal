@@ -91,7 +91,7 @@ class CerealEncoderArrayTests: XCTestCase {
 
     func testToString_withDateArray() {
         do {
-            try subject.encode([NSDate(timeIntervalSinceReferenceDate: 10.0),NSDate(timeIntervalSinceReferenceDate: 11.0),NSDate(timeIntervalSinceReferenceDate: 20.0)], forKey: "date")
+            try subject.encode([Date(timeIntervalSinceReferenceDate: 10.0),Date(timeIntervalSinceReferenceDate: 11.0),Date(timeIntervalSinceReferenceDate: 20.0)], forKey: "date")
             let result = subject.toString()
             let expected = "k,4:date:a,26:T,4:10.0:T,4:11.0:T,4:20.0"
             XCTAssertEqual(result, expected)
@@ -102,7 +102,7 @@ class CerealEncoderArrayTests: XCTestCase {
     
     func testToString_withURLArray() {
         do {
-            try subject.encode([NSURL(string: "http://test.com")!,NSURL(string: "http://test1.com")!,NSURL(string: "http://test2.com")!], forKey: "urls")
+            try subject.encode([URL(string: "http://test.com")!,URL(string: "http://test1.com")!,URL(string: "http://test2.com")!], forKey: "urls")
             let result = subject.toString()
             let expected = "k,4:urls:a,64:u,15:http://test.com:u,16:http://test1.com:u,16:http://test2.com"
             XCTAssertEqual(result, expected)
@@ -113,9 +113,9 @@ class CerealEncoderArrayTests: XCTestCase {
 
     func testToString_withUnsupportedCerealRepresentable_returnsCorrectError() {
         do {
-            try subject.encode(NSData(), forKey: "string")
+            try subject.encode(Data(), forKey: "string")
             XCTFail("Exepcted an error to be thrown")
-        } catch CerealError.UnsupportedCerealRepresentable {
+        } catch CerealError.unsupportedCerealRepresentable {
             // The test passes if this block is executed
         } catch {
             XCTFail("The expected type of error was not thrown")

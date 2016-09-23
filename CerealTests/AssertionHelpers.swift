@@ -9,7 +9,7 @@
 import Foundation
 
 extension String {
-    func containsSubstring(substring: String) -> Bool {
-        return rangeOfString(substring) != nil
+    func containsSubstring(_ substring: String) -> Bool {
+        return range(of: substring) != nil
     }
 }

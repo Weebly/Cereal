@@ -12,7 +12,7 @@ import WatchConnectivity
 
 class EmployeeListViewController: UITableViewController {
     var employees = [Employee]()
-    private var employeeEdit: ItemEdit?
+    fileprivate var employeeEdit: ItemEdit?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,26 +20,26 @@ class EmployeeListViewController: UITableViewController {
         loadStoredEmployees()
 
         // Do any additional setup after loading the view, typically from a nib.
-        navigationItem.leftBarButtonItem = self.editButtonItem()
+        navigationItem.leftBarButtonItem = self.editButtonItem
     }
 
-    private func loadStoredEmployees() {
-        guard let storedEmployeeData = NSUserDefaults.standardUserDefaults().objectForKey("employeeList") as? NSData else { return }
+    fileprivate func loadStoredEmployees() {
+        guard let storedEmployeeData = UserDefaults.standard.object(forKey: "employeeList") as? Data else { return }
         do {
-            employees = try CerealDecoder.rootCerealItemsWithData(storedEmployeeData)
+            employees = try CerealDecoder.rootCerealItems(with: storedEmployeeData)
         } catch let error {
             NSLog("Couldn't decode employees due to error: \(error)")
         }
     }
 
-    private func storeEmployees() {
+    fileprivate func storeEmployees() {
         do {
-            let data = try CerealEncoder.dataWithRootItem(employees)
-            NSUserDefaults.standardUserDefaults().setObject(data, forKey: "employeeList")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            let data = try CerealEncoder.data(withRootItem: employees)
+            UserDefaults.standard.set(data, forKey: "employeeList")
+            UserDefaults.standard.synchronize()
 
-            if WCSession.isSupported() && WCSession.defaultSession().reachable {
-                WCSession.defaultSession().sendMessage(["action": "employeesUpdated", "employeeList": data], replyHandler: nil, errorHandler: { error in
+            if WCSession.isSupported() && WCSession.default().isReachable {
+                WCSession.default().sendMessage(["action": "employeesUpdated", "employeeList": data], replyHandler: nil, errorHandler: { error in
                     NSLog("Couldn't update watch app due to error: \(error)")
                 })
             }
@@ -50,78 +50,78 @@ class EmployeeListViewController: UITableViewController {
 
     // MARK: - Segues
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         enum SegueType: String {
             case CreateEmployee = "createEmployee"
             case EditEmployee = "editEmployee"
         }
 
-        guard let segueIdentifier = segue.identifier, segueType = SegueType(rawValue: segueIdentifier) else { return }
+        guard let segueIdentifier = segue.identifier, let segueType = SegueType(rawValue: segueIdentifier) else { return }
 
         switch segueType {
         case .CreateEmployee:
-            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! EditEmployeeViewController
+            let controller = (segue.destination as! UINavigationController).topViewController as! EditEmployeeViewController
             controller.employee = Employee()
             controller.delegate = self
             controller.title = "Add Employee"
-            employeeEdit = .Creating
+            employeeEdit = .creating
         case .EditEmployee:
-            guard let cell = sender as? UITableViewCell, indexPath = tableView.indexPathForCell(cell) else { fatalError() }
-            let controller = segue.destinationViewController as! EditEmployeeViewController
-            controller.employee = employees[indexPath.row]
+            guard let cell = sender as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) else { fatalError() }
+            let controller = segue.destination as! EditEmployeeViewController
+            controller.employee = employees[(indexPath as NSIndexPath).row]
             controller.delegate = self
             controller.navigationItem.leftBarButtonItem = nil
             controller.title = "Update Employee"
-            employeeEdit = .Editing(indexPath)
+            employeeEdit = .editing(indexPath)
         }
     }
 
     // MARK: - Table View
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return employees.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        let employee = employees[indexPath.row]
-        let genderString = employee.gender == .Male ? "👨🏻" : "👩🏻"
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let employee = employees[(indexPath as NSIndexPath).row]
+        let genderString = employee.gender == .male ? "👨🏻" : "👩🏻"
 
         cell.textLabel!.text = "\(employee.name), \(String(employee.age))yo \(genderString)"
         return cell
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            employees.removeAtIndex(indexPath.row)
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            employees.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
             storeEmployees()
         }
     }
 
-    @IBAction func unwindToEmployeeList(segue: UIStoryboardSegue) { }
+    @IBAction func unwindToEmployeeList(_ segue: UIStoryboardSegue) { }
 
 }
 
 extension EmployeeListViewController: EditEmployeeViewControllerDelegate {
-    func editEmployeeViewController(editEmployeeViewController: EditEmployeeViewController, didSaveEmployee employee: Employee) {
+    func editEmployeeViewController(_ editEmployeeViewController: EditEmployeeViewController, didSaveEmployee employee: Employee) {
         guard let employeeEdit = employeeEdit else { return }
 
         switch employeeEdit {
-        case .Creating:
+        case .creating:
             employees.append(employee)
-            tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: employees.count - 1, inSection: 0)], withRowAnimation: .Fade)
-        case .Editing(let indexPath):
+            tableView.insertRows(at: [IndexPath(row: employees.count - 1, section: 0)], with: .fade)
+        case .editing(let indexPath):
             employees[indexPath.row] = employee
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            tableView.reloadRows(at: [indexPath], with: .fade)
         }
 
         storeEmployees()

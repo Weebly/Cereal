@@ -14,5 +14,5 @@ extension Int64: CerealRepresentable { }
 extension Double: CerealRepresentable { }
 extension Float: CerealRepresentable { }
 extension Bool: CerealRepresentable { }
-extension NSDate: CerealRepresentable { }
-extension NSURL: CerealRepresentable { }
+extension Date: CerealRepresentable { }
+extension URL: CerealRepresentable { }
