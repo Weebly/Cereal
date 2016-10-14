@@ -198,7 +198,7 @@ struct MyBaz: Bazable {
 
 // Extending objects with CerealRepresentable is not supported, so this will be used to test
 // that if it is, the correct error is used.
-extension NSData: CerealRepresentable { }
+extension NSHashTable: CerealRepresentable { }
 
 enum TestEnum: String {
     case TestCase1

@@ -113,8 +113,8 @@ class CerealEncoderArrayTests: XCTestCase {
 
     func testToBytes_withUnsupportedCerealRepresentable_returnsCorrectError() {
         do {
-            try subject.encode(NSData(), forKey: "string")
-            XCTFail("Exepcted an error to be thrown")
+            try subject.encode(NSHashTable(), forKey: "string")
+            XCTFail("Expected an error to be thrown")
         } catch CerealError.UnsupportedCerealRepresentable {
             // The test passes if this block is executed
         } catch {
