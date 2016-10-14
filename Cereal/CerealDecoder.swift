@@ -1066,6 +1066,7 @@ public struct CerealDecoder {
             case let .BoolValue(val):   return val
             case let .NSDateValue(val): return val
             case let .NSURLValue(val):  return val
+            case let .NSDataValue(val): return val
 
             case .PairValue, .ArrayValue, .SubTree:
                 throw CerealError.InvalidEncoding(".Array / .Cereal / .Dictionary not expected")

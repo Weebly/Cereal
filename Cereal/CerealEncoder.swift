@@ -369,7 +369,10 @@ public struct CerealEncoder {
         
         case let value as NSURL :
             return .NSURLValue(value)
-            
+
+        case let value as NSData :
+            return .NSDataValue(value)
+
         case let value as IdentifyingCerealType :
             return try encodeItem(value)
             

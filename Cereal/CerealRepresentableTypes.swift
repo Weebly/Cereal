@@ -16,3 +16,4 @@ extension Float: CerealRepresentable { }
 extension Bool: CerealRepresentable { }
 extension NSDate: CerealRepresentable { }
 extension NSURL: CerealRepresentable { }
+extension NSData: CerealRepresentable { }
