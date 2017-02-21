@@ -58,6 +58,7 @@
 		1ABE08151B62D682003FA41B /* CerealRepresentableTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE08141B62D682003FA41B /* CerealRepresentableTypes.swift */; };
 		1AD08C9E1B7FE46800C87191 /* CerealDecoderArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD08C9D1B7FE46800C87191 /* CerealDecoderArrayTests.swift */; };
 		1AD08CA01B7FE4F700C87191 /* CerealDecoderDictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD08C9F1B7FE4F700C87191 /* CerealDecoderDictionaryTests.swift */; };
+		CE0DEF791E5CC782007B5AE2 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A853A421BCC0FDB00B176BB /* Utilities.swift */; };
 		CE800DD71CD028BD00D1C546 /* CerealSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE800DD61CD028BD00D1C546 /* CerealSerialization.swift */; };
 		CE800DD81CD028C700D1C546 /* CerealSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE800DD61CD028BD00D1C546 /* CerealSerialization.swift */; };
 /* End PBXBuildFile section */
@@ -632,6 +633,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE0DEF791E5CC782007B5AE2 /* Utilities.swift in Sources */,
 				CE800DD81CD028C700D1C546 /* CerealSerialization.swift in Sources */,
 				1A2A04851BBC6D8D003D4739 /* CerealDecoder.swift in Sources */,
 				1A2A04881BBC6D8D003D4739 /* CerealType.swift in Sources */,
