@@ -12,7 +12,26 @@ private struct TypeIndexMap {
     let type: Any.Type
     let map: [String: Int]
 }
-private var indexMaps = [TypeIndexMap]()
+
+private class TypeIndexMapHolder: SyncHolder<TypeIndexMap> {
+    func typeMap(forType type: Any.Type) -> [String: Int]? {
+        var result: [String: Int]? = nil
+        self.sync {
+            for item in self.values where item.type == type {
+                result = item.map
+                break
+            }
+        }
+
+        return result
+    }
+
+    func save(map map: [String: Int], forType type: Any.Type) {
+        self.appendData(TypeIndexMap(type: type, map: map))
+    }
+}
+
+private let typesHolder = TypeIndexMapHolder()
 
 /**
     A CerealDecoder handles decoding items that were encoded by a `CerealEncoder`.
@@ -1066,6 +1085,7 @@ public struct CerealDecoder {
             case let .BoolValue(val):   return val
             case let .NSDateValue(val): return val
             case let .NSURLValue(val):  return val
+            case let .NSDataValue(val): return val
 
             case .PairValue, .ArrayValue, .SubTree:
                 throw CerealError.InvalidEncoding(".Array / .Cereal / .Dictionary not expected")
@@ -1085,10 +1105,8 @@ public struct CerealDecoder {
     /// Helper method to improve decoding speed for large objects:
     /// method returns index map to read value for key without enumerating through all the items
     private static func propertiesIndexMapForType(type: Any.Type, value: CoderTreeValue) -> [String: Int] {
-        for mapInfo in indexMaps {
-            if mapInfo.type == type {
-                return mapInfo.map
-            }
+        if let map = typesHolder.typeMap(forType: type) {
+            return map
         }
 
         func buildIndexMap(items: [CoderTreeValue]) -> [String: Int] {
@@ -1105,12 +1123,12 @@ public struct CerealDecoder {
         switch value {
         case let .IdentifyingTree(_, items):
             let map = buildIndexMap(items)
-            indexMaps.append(TypeIndexMap(type: type, map: map))
+            typesHolder.save(map: map, forType: type)
             return map
 
         case let .SubTree(items):
             let map = buildIndexMap(items)
-            indexMaps.append(TypeIndexMap(type: type, map: map))
+            typesHolder.save(map: map, forType: type)
             return map
         default:
             return [:]

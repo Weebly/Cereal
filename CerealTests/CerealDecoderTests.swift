@@ -153,6 +153,18 @@ class CerealDecoderTests: XCTestCase {
         }
     }
 
+    func testDecodingNSData() {
+        do {
+            let subject = try CerealDecoder(encodedBytes: [11,32,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,5,0,0,0,0,0,0,0,100,116,101,115,116,13,8,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1])
+            let resultData: NSData = try subject.decode("dtest") ?? NSData()
+            let bytes: [UInt8] = [0, 1, 0, 1, 0, 0, 1, 1]
+            let testData = NSData(bytes: bytes, length: bytes.count)
+            XCTAssertEqual(resultData, testData)
+        } catch let error {
+            XCTFail("Decoding failed due to error: \(error)")
+        }
+    }
+
     func testDecodingMultiplePrimitives() {
         do {
             let subject = try CerealDecoder(encodedBytes: [11,60,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111,9,1,5,0,0,0,0,0,0,0,105,116,101,115,116,2,8,0,0,0,0,0,0,0,16,39,0,0,0,0,0,0])

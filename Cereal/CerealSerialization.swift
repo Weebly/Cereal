@@ -20,6 +20,7 @@ internal indirect enum CoderTreeValue {
     case BoolValue(Bool)
     case NSDateValue(NSDate)
     case NSURLValue(NSURL)
+    case NSDataValue(NSData)
 
     case PairValue(CoderTreeValue, CoderTreeValue)
     case ArrayValue([CoderTreeValue])
@@ -42,6 +43,8 @@ internal enum CerealCoderTreeValueType: UInt8 {
     case Array = 10
     case SubTree = 11
     case IdentifyingTree = 12
+
+    case NSData = 13
 }
 
 // MARK: Helpers
@@ -167,6 +170,12 @@ private extension CoderTreeValue {
                 buffer.append(CerealCoderTreeValueType.IdentifyingTree.rawValue)
                 CoderTreeValue.StringValue(key).writeToBuffer(&buffer, stringMap: &stringMap)
                 buffer.appendContentsOf(countCapacityBytes(items, stringMap: &stringMap))
+
+            case let .NSDataValue(value):
+                var bytes = Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>(value.bytes), count: value.length))
+                buffer.append(CerealCoderTreeValueType.NSData.rawValue)
+                bytes.insertContentsOf(toByteArray(bytes.count), at: 0)
+                buffer.appendContentsOf(bytes)
         }
     }
 
@@ -408,6 +417,12 @@ private extension CoderTreeValue {
 
                 self = .IdentifyingTree(string, array)
                 return
+
+
+            case .NSData:
+                let valueBytes = Array(bytes[startIndex..<endIndex])
+                let data = NSData(bytes: valueBytes, length: valueBytes.count)
+                self = .NSDataValue(data)
 
             default:
                 return nil

@@ -273,6 +273,20 @@ class CerealEncoderTests: XCTestCase {
         }
     }
 
+    // MARK: NSData
+
+    func testToBytes_withNSData() {
+        var subject = CerealEncoder()
+        do {
+            let bytes: [UInt8] = [0, 1, 0, 1, 0, 0, 1, 1]
+            try subject.encode(NSData(bytes: bytes, length: bytes.count), forKey: "mydata")
+            let result = subject.toBytes()
+            XCTAssertEqual(result, [11,33,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,6,0,0,0,0,0,0,0,109,121,100,97,116,97,13,8,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1])
+        } catch let error {
+            XCTFail("Encoding failed due to error: \(error)")
+        }
+    }
+
     // MARK: RawRepresentable
 
     func testToBytes_withStringEnum() {
