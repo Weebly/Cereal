@@ -8,36 +8,16 @@
 
 import Foundation
 
-private class CapacitiesHolder {
-    private struct TypeCapacity {
-        let type: Any.Type
-        let capacity: Int
-    }
+private struct TypeCapacity {
+    let type: Any.Type
+    let capacity: Int
+}
 
-    private var capacities = [TypeCapacity]()
-    private static let capacityReadQueue = dispatch_queue_create("Cereal Queue", DISPATCH_QUEUE_SERIAL)
-    private static let specificKey: UnsafePointer<Void> = CapacitiesHolder.assignSpesificKey(capacityReadQueue)
-
-    private static func assignSpesificKey(queue: dispatch_queue_t) -> UnsafePointer<Void> {
-        let opPtr = Unmanaged <dispatch_queue_t>.passUnretained(queue).toOpaque()
-        let result = UnsafeMutablePointer<Void>(opPtr)
-        dispatch_queue_set_specific(queue, result, result, nil)
-
-        return UnsafePointer<Void>(result)
-    }
-
-    private func sync(block: () -> ()) {
-        if dispatch_get_specific(CapacitiesHolder.specificKey) != nil {
-            block()
-        } else {
-            dispatch_sync(CapacitiesHolder.capacityReadQueue, block)
-        }
-    }
-
+private class CapacitiesHolder: SyncHolder<TypeCapacity> {
     func capacity(forType type: Any.Type) -> Int? {
         var result: Int? = nil
         self.sync {
-            for item in self.capacities where item.type == type.dynamicType {
+            for item in self.values where item.type == type.dynamicType {
                 result = item.capacity
                 break
             }
@@ -47,9 +27,7 @@ private class CapacitiesHolder {
     }
 
     func save(capacity capacity: Int, forType: Any.Type) {
-        self.sync {
-            self.capacities.append(TypeCapacity(type: forType.dynamicType, capacity: capacity))
-        }
+        self.appendData(TypeCapacity(type: forType.dynamicType, capacity: capacity))
     }
 }
 
