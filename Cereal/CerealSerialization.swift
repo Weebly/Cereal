@@ -186,7 +186,7 @@ private extension CoderTreeValue {
             string.writeToBuffer(&buffer, stringMap: &stringMap)
         case let .NSURLValue(url):
             buffer.append(CerealCoderTreeValueType.NSURL.rawValue)
-            url.absoluteString.writeToBuffer(&buffer, stringMap: &stringMap)
+            url.absoluteString?.writeToBuffer(&buffer, stringMap: &stringMap)
 
         default:
             break

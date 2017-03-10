@@ -32,4 +32,11 @@ extension ExtensionDelegate: WCSessionDelegate {
         guard message["action"] as? String == "employeesUpdated", let employeeData = message["employeeList"] as? NSData else { return }
         NSNotificationCenter.defaultCenter().postNotificationName("EmployeeListUpdated", object: nil, userInfo: ["employeeList": employeeData])
     }
+    @available(watchOSApplicationExtension 2.2, *)
+    func session(session: WCSession, activationDidCompleteWithState activationState: WCSessionActivationState, error: NSError?) {
+    }
+    func sessionDidBecomeInactive(session: WCSession) {
+    }
+    func sessionDidDeactivate(session: WCSession) {
+    }
 }
