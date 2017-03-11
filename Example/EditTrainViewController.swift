@@ -9,7 +9,7 @@
 import UIKit
 
 protocol EditTrainViewControllerDelegate: class {
-    func editTrainViewController(editTrainViewController: EditTrainViewController, didSaveTrain train: Train)
+    func editTrainViewController(_ editTrainViewController: EditTrainViewController, didSaveTrain train: Train)
 }
 
 class EditTrainViewController: UIViewController {
@@ -30,10 +30,10 @@ class EditTrainViewController: UIViewController {
 
     @IBAction func savePressed() {
         delegate?.editTrainViewController(self, didSaveTrain: train)
-        performSegueWithIdentifier("UnwindToVehicleList", sender: self)
+        performSegue(withIdentifier: "UnwindToVehicleList", sender: self)
     }
 
-    @IBAction func textValueChanged(textField: UITextField) {
+    @IBAction func textValueChanged(_ textField: UITextField) {
         switch textField {
         case makeTextField: train = Train(make: textField.text ?? "", model: train.model, cars: train.cars)
         case modelTextField: train = Train(make: train.make, model: textField.text ?? "", cars: train.cars)
@@ -41,7 +41,7 @@ class EditTrainViewController: UIViewController {
         }
     }
 
-    @IBAction func cylindersStepperChanged(stepper: UIStepper) {
+    @IBAction func cylindersStepperChanged(_ stepper: UIStepper) {
         let cars = Int(stepper.value)
         train.cars = cars
         carsLabel.text = String(cars)

@@ -9,6 +9,6 @@
 import Foundation
 
 enum ItemEdit {
-    case Creating
-    case Editing(NSIndexPath)
+    case creating
+    case editing(IndexPath)
 }
