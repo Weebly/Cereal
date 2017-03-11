@@ -24,7 +24,7 @@ extension CerealEncoder {
 
 extension CerealDecoder {
     init(encodedBytes: [UInt8]) throws {
-        let data = Data(encodedBytes)// (bytes: encodedBytes, length: encodedBytes.count)
+        let data = Data(encodedBytes)
         try self.init(data: data)
     }
 }
