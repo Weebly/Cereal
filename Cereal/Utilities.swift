@@ -15,7 +15,7 @@ you cannot return a [[Key: IdentifyingCerealType]] to a subprotocol of Identifyi
 - parameter     sequence:   The sequence to be casted
 - returns:      The casted copy
 */
-public func deepCast<KeyType: Hashable, ValueType, CastedType>(sequence: [[KeyType: ValueType]]) -> [[KeyType: CastedType]] {
+public func deepCast<KeyType: Hashable, ValueType, CastedType>(_ sequence: [[KeyType: ValueType]]) -> [[KeyType: CastedType]] {
     return sequence.map {
         return $0.reduce([KeyType: CastedType]()) { memo, object in
             var memo = memo
@@ -32,7 +32,7 @@ you cannot return a [Key: [IdentifyingCerealType]] to a subprotocol of Identifyi
 - parameter     sequence:   The sequence to be casted
 - returns:      The casted copy
 */
-public func deepArrayCast<KeyType: Hashable, ValueType, CastedType>(sequence: [KeyType: [ValueType]]) -> [KeyType: [CastedType]] {
+public func deepArrayCast<KeyType: Hashable, ValueType, CastedType>(_ sequence: [KeyType: [ValueType]]) -> [KeyType: [CastedType]] {
     return sequence.reduce([KeyType: [CastedType]]()) { memo, object in
         var memo = memo
         memo[object.0] = object.1.CER_casted()
@@ -40,22 +40,20 @@ public func deepArrayCast<KeyType: Hashable, ValueType, CastedType>(sequence: [K
     }
 }
 
-private extension dispatch_queue_t {
-    func sync(specificKey: UnsafePointer<Void>?, block: dispatch_block_t) {
-        if let key = specificKey where dispatch_get_specific(key) != nil {
+private extension DispatchQueue {
+    func sync(_ specificKey: DispatchSpecificKey<Void>?, block: ()->()) {
+        if let key = specificKey, DispatchQueue.getSpecific(key: key) != nil {
             block()
         } else {
-            dispatch_sync(self, block)
+            self.sync(execute: block)
         }
     }
 
-    @warn_unused_result
-    func assignSpecificKey() -> UnsafePointer<Void> {
-        let opPtr = Unmanaged <dispatch_queue_t>.passUnretained(self).toOpaque()
-        let result = UnsafeMutablePointer<Void>(opPtr)
-        dispatch_queue_set_specific(self, result, result, nil)
+    func assignSpecificKey() -> DispatchSpecificKey<Void> {
+        let result = DispatchSpecificKey<Void>()
+        self.setSpecific(key: result, value: ())
 
-        return UnsafePointer<Void>(result)
+        return result
     }
 }
 
@@ -63,15 +61,15 @@ private extension dispatch_queue_t {
  Helper wrapper class that provides thread-safe access to a wrapping values 
  */
 internal class SyncHolder<Type> {
-    private(set) var values = [Type]()
+    fileprivate(set) var values = [Type]()
 
-    private let valueReadQueue = dispatch_queue_create("Cereal Queue", DISPATCH_QUEUE_SERIAL)
-    private lazy var specificKey: UnsafePointer<Void> = self.valueReadQueue.assignSpecificKey()
+    fileprivate let valueReadQueue = DispatchQueue(label: "Cereal Queue", attributes: [])
+    fileprivate lazy var specificKey: DispatchSpecificKey<Void> = self.valueReadQueue.assignSpecificKey()
 
-    final func sync(block: () -> ()) {
+    final func sync(_ block: () -> ()) {
         self.valueReadQueue.sync(self.specificKey, block: block)
     }
-    final func appendData(newData: Type) {
+    final func appendData(_ newData: Type) {
         self.sync {
             self.values.append(newData)
         }

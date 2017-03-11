@@ -108,7 +108,7 @@ whenever possible. Here is an example from our example iOS project:
 
 ```swift
 // employees is a [Employee]; Employee is a Swift struct.
-let data = try CerealEncoder.dataWithRootItem(employees) // Returns an NSData object
+let data = try CerealEncoder.dataWithRootItem(employees) // Returns an Data object
 ```
 
 And to decode that data
