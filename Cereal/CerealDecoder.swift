@@ -62,7 +62,7 @@ public struct CerealDecoder {
     - parameter    data:   The encoded data to decode from.
     */
     public init(data: Data) throws {
-        guard let tree = CoderTreeValue(data: data as Data) else { throw CerealError.invalidDataContent }
+        guard let tree = CoderTreeValue(data: data) else { throw CerealError.invalidDataContent }
         guard case .subTree(_) = tree else { throw CerealError.invalidDataContent }
         self.init(tree: tree)
     }
