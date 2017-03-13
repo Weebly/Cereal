@@ -116,7 +116,7 @@ And to decode that data
 
 ```swift
 do {
-    employees = try CerealDecoder.rootCerealItemsWithData(storedEmployeeData)
+    employees = try CerealDecoder.rootCerealItems(with: storedEmployeeData)
 } catch let error {
     NSLog("Couldn't decode employees due to error: \(error)")
 }
