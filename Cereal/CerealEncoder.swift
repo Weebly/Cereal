@@ -194,9 +194,9 @@ public struct CerealEncoder {
     - parameter     item:    The object being encoded.
     - returns:      The object encoded as an `Data`
     */
-    public static func dataWithRootItem<ItemType: CerealRepresentable>(_ root: ItemType) throws -> Data {
+    public static func data<ItemType: CerealRepresentable>(withRoot item: ItemType) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -206,9 +206,9 @@ public struct CerealEncoder {
     - parameter     item:    The object being encoded.
     - returns:      The object encoded as an `Data`
     */
-    public static func dataWithRootItem(_ root: IdentifyingCerealType) throws -> Data {
+    public static func data(withRoot item: IdentifyingCerealType) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -220,9 +220,9 @@ public struct CerealEncoder {
     - parameter     item:    The objects being encoded.
     - returns:      The objects encoded as an `Data`
     */
-    public static func dataWithRootItem<ItemType: CerealRepresentable>(_ root: [ItemType]) throws -> Data {
+    public static func data<ItemType: CerealRepresentable>(withRoot item: [ItemType]) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -232,9 +232,9 @@ public struct CerealEncoder {
     - parameter     item:    The objects being encoded.
     - returns:      The objects encoded as an `Data`
     */
-    public static func dataWithRootItem(_ root: [IdentifyingCerealType]) throws -> Data {
+    public static func data(withRoot item: [IdentifyingCerealType]) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        try encoder.encodeIdentifyingItems(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -246,9 +246,9 @@ public struct CerealEncoder {
     - parameter     item:    The objects being encoded.
     - returns:      The objects encoded as an `Data`
     */
-    public static func dataWithRootItem<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(_ root: [[ItemKeyType: ItemValueType]]) throws -> Data {
+    public static func data<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(withRoot item: [[ItemKeyType: ItemValueType]]) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -258,9 +258,9 @@ public struct CerealEncoder {
     - parameter     item:    The objects being encoded.
     - returns:      The objects encoded as an `Data`
     */
-    public static func dataWithRootItem<ItemKeyType: CerealRepresentable & Hashable>(_ root: [[ItemKeyType: IdentifyingCerealType]]) throws -> Data {
+    public static func data<ItemKeyType: CerealRepresentable & Hashable>(withRoot item: [[ItemKeyType: IdentifyingCerealType]]) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        try encoder.encodeIdentifyingItems(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -272,9 +272,9 @@ public struct CerealEncoder {
     - parameter     item:    The objects being encoded.
     - returns:      The objects encoded as an `Data`
     */
-    public static func dataWithRootItem<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(_ root: [ItemKeyType: ItemValueType]) throws -> Data {
+    public static func data<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(withRoot item: [ItemKeyType: ItemValueType]) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -284,9 +284,9 @@ public struct CerealEncoder {
     - parameter     item:    The objects being encoded.
     - returns:      The objects encoded as an `Data`
     */
-    public static func dataWithRootItem<ItemKeyType: CerealRepresentable & Hashable>(_ root: [ItemKeyType: IdentifyingCerealType]) throws -> Data {
+    public static func data<ItemKeyType: CerealRepresentable & Hashable>(withRoot item: [ItemKeyType: IdentifyingCerealType]) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        try encoder.encodeIdentifyingItems(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -298,9 +298,9 @@ public struct CerealEncoder {
     - parameter     item:    The objects being encoded.
     - returns:      The objects encoded as an `Data`
     */
-    public static func dataWithRootItem<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(_ root: [ItemKeyType: [ItemValueType]]) throws -> Data {
+    public static func data<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(withRoot item: [ItemKeyType: [ItemValueType]]) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -310,9 +310,9 @@ public struct CerealEncoder {
     - parameter     item:    The objects being encoded.
     - returns:      The objects encoded as an `Data`
     */
-    public static func dataWithRootItem<ItemKeyType: CerealRepresentable & Hashable>(_ root: [ItemKeyType: [IdentifyingCerealType]]) throws -> Data {
+    public static func data<ItemKeyType: CerealRepresentable & Hashable>(withRoot item: [ItemKeyType: [IdentifyingCerealType]]) throws -> Data {
         var encoder = CerealEncoder()
-        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        try encoder.encodeIdentifyingItems(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -659,9 +659,9 @@ extension CerealEncoder {
      - parameter     item:    The object being encoded.
      - returns:      The object encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemType: RawRepresentable & CerealRepresentable>(_ root: ItemType) throws -> Data where ItemType.RawValue: CerealRepresentable {
+    public static func data<ItemType: RawRepresentable & CerealRepresentable>(withRoot item: ItemType) throws -> Data where ItemType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -673,9 +673,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemType: RawRepresentable & CerealRepresentable>(_ root: [ItemType]) throws -> Data where ItemType.RawValue: CerealRepresentable {
+    public static func data<ItemType: RawRepresentable & CerealRepresentable>(withRoot item: [ItemType]) throws -> Data where ItemType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -687,9 +687,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(_ root: [[ItemKeyType: ItemValueType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(withRoot item: [[ItemKeyType: ItemValueType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -699,9 +699,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(_ root: [[ItemKeyType: ItemValueType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(withRoot item: [[ItemKeyType: ItemValueType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
     
@@ -711,9 +711,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(_ root: [[ItemKeyType: IdentifyingCerealType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(withRoot item: [[ItemKeyType: IdentifyingCerealType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        try encoder.encodeIdentifyingItems(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -725,9 +725,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(_ root: [ItemKeyType: ItemValueType]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(withRoot item: [ItemKeyType: ItemValueType]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
     /**
@@ -736,9 +736,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(_ root: [ItemKeyType: ItemValueType]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(withRoot item: [ItemKeyType: ItemValueType]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -748,9 +748,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(_ root: [ItemKeyType: IdentifyingCerealType]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(withRoot item: [ItemKeyType: IdentifyingCerealType]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        try encoder.encodeIdentifyingItems(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -762,9 +762,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(_ root: [ItemKeyType: [ItemValueType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(withRoot item: [ItemKeyType: [ItemValueType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -774,9 +774,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(_ root: [ItemKeyType: [ItemValueType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(withRoot item: [ItemKeyType: [ItemValueType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encode(root, forKey: rootKey)
+        try encoder.encode(item, forKey: rootKey)
         return encoder.toData()
     }
 
@@ -786,9 +786,9 @@ extension CerealEncoder {
      - parameter     item:    The objects being encoded.
      - returns:      The objects encoded as an `Data`
      */
-    public static func dataWithRootItem<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(_ root: [ItemKeyType: [IdentifyingCerealType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
+    public static func data<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(withRoot item: [ItemKeyType: [IdentifyingCerealType]]) throws -> Data where ItemKeyType.RawValue: CerealRepresentable {
         var encoder = CerealEncoder()
-        try encoder.encodeIdentifyingItems(root, forKey: rootKey)
+        try encoder.encodeIdentifyingItems(item, forKey: rootKey)
         return encoder.toData()
     }
 
