@@ -392,7 +392,7 @@ class CerealDecoderTests: XCTestCase {
         do {
             var encoder = CerealEncoder()
             try encoder.encode("testing", forKey: rootKey)
-            let subject: String = try CerealDecoder.rootItemWithData(data: encoder.toData())
+            let subject: String = try CerealDecoder.rootItem(with: encoder.toData())
 
             XCTAssertEqual(subject, "testing")
         } catch let error {
@@ -405,7 +405,7 @@ class CerealDecoderTests: XCTestCase {
             let object = TestCerealType(foo: "test")
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: TestCerealType = try CerealDecoder.rootCerealItemWithData(data: encoder.toData())
+            let subject: TestCerealType = try CerealDecoder.rootCerealItem(with: encoder.toData())
             XCTAssertEqual(subject, object)
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
@@ -418,7 +418,7 @@ class CerealDecoderTests: XCTestCase {
             let object: Fooable = TestIdentifyingCerealType(foo: "baz")
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            guard let subject: Fooable = try CerealDecoder.rootIdentifyingCerealItemWithData(data: encoder.toData()) as? Fooable else {
+            guard let subject: Fooable = try CerealDecoder.rootIdentifyingCerealItem(with: encoder.toData()) as? Fooable else {
                 XCTFail("Encoded type did not decode the same way")
                 return
             }
@@ -433,7 +433,7 @@ class CerealDecoderTests: XCTestCase {
             let object = ["foo", "bar"]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [String] = try CerealDecoder.rootItemsWithData(data: encoder.toData())
+            let subject: [String] = try CerealDecoder.rootItems(with: encoder.toData())
             XCTAssertEqual(subject, object)
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
@@ -445,7 +445,7 @@ class CerealDecoderTests: XCTestCase {
             let object = [TestCerealType(foo: "bar"), TestCerealType(foo: "baz")]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [TestCerealType] = try CerealDecoder.rootCerealItemsWithData(data: encoder.toData())
+            let subject: [TestCerealType] = try CerealDecoder.rootCerealItems(with: encoder.toData())
             XCTAssertEqual(subject, object)
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
@@ -458,7 +458,7 @@ class CerealDecoderTests: XCTestCase {
             let object: [Fooable] = [TestIdentifyingCerealType(foo: "bar"), TestIdentifyingCerealType(foo: "baz")]
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(object.CER_casted(), forKey: rootKey)
-            let subject: [Fooable] = try CerealDecoder.rootIdentifyingCerealItemsWithData(data: encoder.toData()).CER_casted()
+            let subject: [Fooable] = try CerealDecoder.rootIdentifyingCerealItems(with: encoder.toData()).CER_casted()
             XCTAssertEqual(subject[0].foo, object[0].foo)
             XCTAssertEqual(subject[1].foo, object[1].foo)
         } catch let error {
@@ -471,7 +471,7 @@ class CerealDecoderTests: XCTestCase {
             let object = [["Foo": 1], ["Bar": 2]]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [[String: Int]] = try CerealDecoder.rootItemsWithData(data: encoder.toData())
+            let subject: [[String: Int]] = try CerealDecoder.rootItems(with: encoder.toData())
             XCTAssertEqual(subject[0], object[0])
             XCTAssertEqual(subject[1], object[1])
         } catch let error {
@@ -484,7 +484,7 @@ class CerealDecoderTests: XCTestCase {
             let object = [["Foo": TestCerealType(foo: "bar")], ["Bar": TestCerealType(foo: "bar")]]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [[String: TestCerealType]] = try CerealDecoder.rootCerealItemsWithData(data: encoder.toData())
+            let subject: [[String: TestCerealType]] = try CerealDecoder.rootCerealItems(with: encoder.toData())
             XCTAssertEqual(subject.count, 2)
             XCTAssertEqual(subject[0], object[0])
             XCTAssertEqual(subject[1], object[1])
@@ -498,7 +498,7 @@ class CerealDecoderTests: XCTestCase {
             let object = [[TestCerealType(foo: "bar"): TestCerealType(foo: "baz")], [TestCerealType(foo: "fee"): TestCerealType(foo: "foo")]]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [[TestCerealType: TestCerealType]] = try CerealDecoder.rootCerealPairItemsWithData(data: encoder.toData())
+            let subject: [[TestCerealType: TestCerealType]] = try CerealDecoder.rootCerealPairItems(with: encoder.toData())
 
             XCTAssertEqual(subject.count, 2)
             XCTAssertEqual(subject[0], object[0])
@@ -514,7 +514,7 @@ class CerealDecoderTests: XCTestCase {
             let object: [[String: Fooable]] = [["Foo": TestIdentifyingCerealType(foo: "bar")], ["Bar": TestIdentifyingCerealType(foo: "baz")]]
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(deepCast(object), forKey: rootKey)
-            let subject: [[String: Fooable]] = deepCast(try CerealDecoder.rootIdentifyingCerealItemsWithData(data: encoder.toData()))
+            let subject: [[String: Fooable]] = deepCast(try CerealDecoder.rootIdentifyingCerealItems(with: encoder.toData()))
 
             XCTAssertEqual(subject.count, 2)
             XCTAssertEqual(subject[0].count, 1)
@@ -534,7 +534,7 @@ class CerealDecoderTests: XCTestCase {
             let object: [[TestCerealType: Fooable]] = [[first: TestIdentifyingCerealType(foo: "bar")], [second: TestIdentifyingCerealType(foo: "baz")]]
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(deepCast(object), forKey: rootKey)
-            let subject: [[TestCerealType: Fooable]] = deepCast(try CerealDecoder.rootCerealToIdentifyingCerealItemsWithData(data: encoder.toData()))
+            let subject: [[TestCerealType: Fooable]] = deepCast(try CerealDecoder.rootCerealToIdentifyingCerealItems(with: encoder.toData()))
 
             XCTAssertEqual(subject.count, 2)
             XCTAssertEqual(subject[0].count, 1)
@@ -551,7 +551,7 @@ class CerealDecoderTests: XCTestCase {
             let object = ["foo": true]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [String: Bool] = try CerealDecoder.rootItemsWithData(data: encoder.toData())
+            let subject: [String: Bool] = try CerealDecoder.rootItems(with: encoder.toData())
             XCTAssertEqual(subject, object)
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
@@ -563,7 +563,7 @@ class CerealDecoderTests: XCTestCase {
             let object = ["foo": TestCerealType(foo: "bar")]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [String: TestCerealType] = try CerealDecoder.rootCerealItemsWithData(data: encoder.toData())
+            let subject: [String: TestCerealType] = try CerealDecoder.rootCerealItems(with: encoder.toData())
             XCTAssertEqual(subject, object)
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
@@ -576,7 +576,7 @@ class CerealDecoderTests: XCTestCase {
             let object = [key: "foo"]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [TestCerealType: String] = try CerealDecoder.rootCerealItemsWithData(data: encoder.toData())
+            let subject: [TestCerealType: String] = try CerealDecoder.rootCerealItems(with: encoder.toData())
             XCTAssertEqual(subject, object)
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
@@ -589,7 +589,7 @@ class CerealDecoderTests: XCTestCase {
             let object: [String: Fooable] = ["foo": TestIdentifyingCerealType(foo: "bar")]
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(object.CER_casted() as [String: IdentifyingCerealType], forKey: rootKey)
-            let subject: [String: Fooable] = (try CerealDecoder.rootIdentifyingCerealItemsWithData(data: encoder.toData()) as [String: IdentifyingCerealType]).CER_casted()
+            let subject: [String: Fooable] = (try CerealDecoder.rootIdentifyingCerealItems(with: encoder.toData()) as [String: IdentifyingCerealType]).CER_casted()
             XCTAssertEqual(subject.count, 1)
             XCTAssertNotNil(subject["foo"])
             XCTAssertEqual(subject["foo"]?.foo, object["foo"]?.foo)
@@ -603,7 +603,7 @@ class CerealDecoderTests: XCTestCase {
             let object = [TestCerealType(foo: "baz"): TestCerealType(foo: "bar")]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [TestCerealType: TestCerealType] = try CerealDecoder.rootCerealPairItemsWithData(data: encoder.toData())
+            let subject: [TestCerealType: TestCerealType] = try CerealDecoder.rootCerealPairItems(with: encoder.toData())
             XCTAssertEqual(subject, object)
         } catch let error {
             XCTFail("Encoding failed due to error: \(error)")
@@ -617,7 +617,7 @@ class CerealDecoderTests: XCTestCase {
             let object: [TestCerealType: Fooable] = [key: TestIdentifyingCerealType(foo: "bar")]
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(object.CER_casted() as [TestCerealType: IdentifyingCerealType], forKey: rootKey)
-            let subject: [TestCerealType: Fooable] = (try CerealDecoder.rootCerealToIdentifyingCerealItemsWithData(data: encoder.toData()) as [TestCerealType: IdentifyingCerealType]).CER_casted()
+            let subject: [TestCerealType: Fooable] = (try CerealDecoder.rootCerealToIdentifyingCerealItems(with: encoder.toData()) as [TestCerealType: IdentifyingCerealType]).CER_casted()
             XCTAssertEqual(subject.count, 1)
             XCTAssertNotNil(subject[key])
             XCTAssertEqual(subject[key]?.foo, object[key]?.foo)
@@ -631,7 +631,7 @@ class CerealDecoderTests: XCTestCase {
             let object = ["hai": [1, 2]]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [String: [Int]] = try CerealDecoder.rootItemsWithData(data: encoder.toData())
+            let subject: [String: [Int]] = try CerealDecoder.rootItems(with: encoder.toData())
 
             XCTAssertNotNil(subject["hai"])
             guard subject["hai"] != nil else { return }
@@ -646,7 +646,7 @@ class CerealDecoderTests: XCTestCase {
             let object = ["foo": [TestCerealType(foo: "bar"), TestCerealType(foo: "baz")]]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [String: [TestCerealType]] = try CerealDecoder.rootCerealItemsWithData(data: encoder.toData())
+            let subject: [String: [TestCerealType]] = try CerealDecoder.rootCerealItems(with: encoder.toData())
             XCTAssertNotNil(subject["foo"])
             guard subject["hai"] != nil else { return }
             XCTAssertEqual(subject["foo"]!, object["foo"]!)
@@ -661,7 +661,7 @@ class CerealDecoderTests: XCTestCase {
             let object = [key: ["foo", "bar"]]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [TestCerealType: [String]] = try CerealDecoder.rootCerealItemsWithData(data: encoder.toData())
+            let subject: [TestCerealType: [String]] = try CerealDecoder.rootCerealItems(with: encoder.toData())
             XCTAssertNotNil(subject[key])
             guard subject[key] != nil else { return }
             XCTAssertEqual(subject[key]!, object[key]!)
@@ -676,7 +676,7 @@ class CerealDecoderTests: XCTestCase {
             let object = [key: [TestCerealType(foo: "bar"), TestCerealType(foo: "baz")]]
             var encoder = CerealEncoder()
             try encoder.encode(object, forKey: rootKey)
-            let subject: [TestCerealType: [TestCerealType]] = try CerealDecoder.rootCerealPairItemsWithData(data: encoder.toData())
+            let subject: [TestCerealType: [TestCerealType]] = try CerealDecoder.rootCerealPairItems(with: encoder.toData())
             XCTAssertNotNil(subject[key])
             guard subject[key] != nil else { return }
             XCTAssertEqual(subject[key]!, object[key]!)
@@ -691,7 +691,7 @@ class CerealDecoderTests: XCTestCase {
             let object: [String: [Fooable]] = ["foo": [TestIdentifyingCerealType(foo: "bar"), TestIdentifyingCerealType(foo: "baz")]]
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(deepArrayCast(object), forKey: rootKey)
-            let subject: [String: [Fooable]] = deepArrayCast(try CerealDecoder.rootIdentifyingCerealItemsWithData(data: encoder.toData()))
+            let subject: [String: [Fooable]] = deepArrayCast(try CerealDecoder.rootIdentifyingCerealItems(with: encoder.toData()))
             XCTAssertNotNil(subject["foo"])
             guard subject["foo"] != nil else { return }
             XCTAssertEqual(subject["foo"]![0].foo, object["foo"]![0].foo)
@@ -707,7 +707,7 @@ class CerealDecoderTests: XCTestCase {
             let object: [TestCerealType: [Fooable]] = [key: [TestIdentifyingCerealType(foo: "bar"), TestIdentifyingCerealType(foo: "baz")]]
             var encoder = CerealEncoder()
             try encoder.encodeIdentifyingItems(deepArrayCast(object), forKey: rootKey)
-            let subject: [TestCerealType: [Fooable]] = deepArrayCast(try CerealDecoder.rootCerealToIdentifyingCerealItemsWithData(data: encoder.toData()))
+            let subject: [TestCerealType: [Fooable]] = deepArrayCast(try CerealDecoder.rootCerealToIdentifyingCerealItems(with: encoder.toData()))
             XCTAssertNotNil(subject[key])
             guard subject[key] != nil else { return }
             XCTAssertEqual(subject[key]![0].foo, object[key]![0].foo)
