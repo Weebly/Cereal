@@ -721,11 +721,11 @@ public struct CerealDecoder {
     // MARK: Basic items
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemType: CerealRepresentable>(_: ItemType)`.
+    Decodes objects encoded with `CerealEncoder.data<ItemType: CerealRepresentable>(with rootItem: ItemType)`.
     
     If you encoded custom objects conforming to `CerealType`, use `CerealDecoder.rootCerealItem(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem(_: ItemType)`.
+    - parameter     data:    The data returned by `CerealEncoder.data(withRoot: ItemType)`.
     - returns:      The instantiated object.
     */
     public static func rootItem<ItemType: CerealRepresentable>(with data: Data) throws -> ItemType {
@@ -735,11 +735,11 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemType: CerealRepresentable>(_: ItemType)`.
+    Decodes objects encoded with `CerealEncoder.data<ItemType: CerealRepresentable>(withRoot: ItemType)`.
     
     This method will instantiate your custom `CerealType` objects.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemType: CerealRepresentable>(_: ItemType)`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemType: CerealRepresentable>(withRoot: ItemType)`.
     - returns:      The instantiated object.
     */
     public static func rootCerealItem<ItemType: CerealType>(with data: Data) throws -> ItemType {
@@ -749,12 +749,12 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem(_: IdentifyingCerealType)`.
+    Decodes objects encoded with `CerealEncoder.data(withRoot: IdentifyingCerealType)`.
     
     The `IdentifyingCerealType` for the returned object must be registered
     before calling this method.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem(_: IdentifyingCerealType)`.
+    - parameter     data:    The data returned by `CerealEncoder.data(withRoot: IdentifyingCerealType)`.
     - returns:      The instantiated object.
     */
     public static func rootIdentifyingCerealItem(with data: Data) throws -> IdentifyingCerealType {
@@ -766,11 +766,11 @@ public struct CerealDecoder {
     // MARK: Arrays
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemType: CerealRepresentable>(_: [ItemType])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemType: CerealRepresentable>(withRoot: [ItemType])`.
     
     If you encoded custom objects conforming to `CerealType`, use `CerealDecoder.rootCerealItems(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemType: CerealRepresentable>(_: [ItemType])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemType: CerealRepresentable>(withRoot: [ItemType])`.
     - returns:      The instantiated object.
     */
     public static func rootItems<ItemType: CerealRepresentable>(with data: Data) throws -> [ItemType] {
@@ -780,11 +780,11 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemType: CerealRepresentable>(_: [ItemType])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemType: CerealRepresentable>(withRoot: [ItemType])`.
     
     This method will instantiate your custom `CerealType` objects.
 
-    - param         data:    The data returned by `CerealEncoder.dataWithRootItem<ItemType: CerealRepresentable>(_: [ItemType])`.
+    - param         data:    The data returned by `CerealEncoder.data<ItemType: CerealRepresentable>(withRoot: [ItemType])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealItems<ItemType: CerealType>(with data: Data) throws -> [ItemType] {
@@ -794,12 +794,12 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem(_: [IdentifyingCerealType])`.
+    Decodes objects encoded with `CerealEncoder.data(withRoot: [IdentifyingCerealType])`.
 
     The `IdentifyingCerealType` for the returned object must be registered
     before calling this method.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem(_: [IdentifyingCerealType])`.
+    - parameter     data:    The data returned by `CerealEncoder.data(withRoot: [IdentifyingCerealType])`.
     - returns:      The instantiated object.
     */
     public static func rootIdentifyingCerealItems(with data: Data) throws -> [IdentifyingCerealType] {
@@ -811,11 +811,11 @@ public struct CerealDecoder {
     // MARK: Arrays of Dictionaries
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(_: [[ItemKeyType: ItemValueType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [[ItemKeyType: ItemValueType]])`.
     
     If you encoded custom objects conforming to `CerealType`, use `CerealDecoder.rootCerealItems` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(_: [[ItemKeyType: ItemValueType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [[ItemKeyType: ItemValueType]])`.
     - returns:      The instantiated object.
     */
     public static func rootItems<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(with data: Data) throws -> [[ItemKeyType: ItemValueType]] {
@@ -825,13 +825,13 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(_: [[ItemKeyType: ItemValueType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [[ItemKeyType: ItemValueType]])`.
     
     This method will instantiate your custom `CerealType` objects.
     
     If you encoded custom objects for the ItemKeyType conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(_: [[ItemKeyType: ItemValueType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [[ItemKeyType: ItemValueType]])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealItems<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealType>(with data: Data) throws -> [[ItemKeyType: ItemValueType]] {
@@ -841,11 +841,11 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(_: [[ItemKeyType: ItemValueType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [[ItemKeyType: ItemValueType]])`.
 
     This method will instantiate your custom `CerealType` objects.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(_: [[ItemKeyType: ItemValueType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [[ItemKeyType: ItemValueType]])`.
     - returns:      The instantiated object.
     */
 
@@ -856,14 +856,14 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(_: [[ItemKeyType: IdentifyingCerealType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot: [[ItemKeyType: IdentifyingCerealType]])`.
 
     If you encoded custom objects for the ItemKeyType conforming to `CerealType`, use `CerealDecoder.rootCerealToIdentifyingCerealItems(with:)` instead.
     
     The `IdentifyingCerealType` for the returned object must be registered
     before calling this method.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(_: [[ItemKeyType: IdentifyingCerealType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot: [[ItemKeyType: IdentifyingCerealType]])`.
     - returns:      The instantiated object.
     */
 
@@ -874,14 +874,14 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(_: [[ItemKeyType: IdentifyingCerealType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot: [[ItemKeyType: IdentifyingCerealType]])`.
 
     If you encoded custom objects for the ItemKeyType conforming to `CerealType`, use `CerealDecoder.rootCerealToIdentifyingCerealItems(with:)` instead.
 
     The `IdentifyingCerealType` for the returned object must be registered
     before calling this method.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(_: [[ItemKeyType: IdentifyingCerealType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot: [[ItemKeyType: IdentifyingCerealType]])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealToIdentifyingCerealItems<ItemKeyType: CerealType & Hashable>(with data: Data) throws -> [[ItemKeyType: IdentifyingCerealType]] {
@@ -893,13 +893,13 @@ public struct CerealDecoder {
     // MARK: Dictionaries
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: ItemValueType])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: ItemValueType])`.
 
     If you encoded custom objects for your values or keys conforming to `CerealType`, use `CerealDecoder.rootCerealItems(with:)` instead.
     
     If you encoded custom objects for your values and keys conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: ItemValueType])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: ItemValueType])`.
     - returns:      The instantiated object.
     */
     public static func rootItems<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(with data: Data) throws -> [ItemKeyType: ItemValueType] {
@@ -909,11 +909,11 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: ItemValueType])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: ItemValueType])`.
 
     If you encoded custom objects for your keys conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: ItemValueType])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: ItemValueType])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealItems<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealType>(with data: Data) throws -> [ItemKeyType: ItemValueType] {
@@ -923,11 +923,11 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: ItemValueType])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: ItemValueType])`.
 
     If you encoded custom objects for your values conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: ItemValueType])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: ItemValueType])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealItems<ItemKeyType: CerealType & Hashable, ItemValueType: CerealRepresentable>(with data: Data) throws -> [ItemKeyType: ItemValueType] {
@@ -937,9 +937,9 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: ItemValueType])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: ItemValueType])`.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: ItemValueType])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: ItemValueType])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealPairItems<ItemKeyType: CerealType & Hashable, ItemValueType: CerealType>(with data: Data) throws -> [ItemKeyType: ItemValueType] {
@@ -949,14 +949,14 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: IdentifyingCerealType])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot: [ItemKeyType: IdentifyingCerealType])`.
     
     If you encoded custom objects for your keys conforming to `CerealType`, use `CerealDecoder.rootCerealToIdentifyingCerealItems(with:)` instead.
 
     The `IdentifyingCerealType` for the returned object must be registered
     before calling this method.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: IdentifyingCerealType])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot: [ItemKeyType: IdentifyingCerealType])`.
     - returns:      The instantiated object.
     */
     public static func rootIdentifyingCerealItems<ItemKeyType: CerealRepresentable & Hashable>(with data: Data) throws -> [ItemKeyType: IdentifyingCerealType] {
@@ -966,12 +966,12 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: IdentifyingCerealType])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot: [ItemKeyType: IdentifyingCerealType])`.
 
     The `IdentifyingCerealType` for the returned object must be registered
     before calling this method.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: IdentifyingCerealType])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot: [ItemKeyType: IdentifyingCerealType])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealToIdentifyingCerealItems<ItemKeyType: CerealType & Hashable>(with data: Data) throws -> [ItemKeyType: IdentifyingCerealType] {
@@ -983,13 +983,13 @@ public struct CerealDecoder {
     // MARK: Dictionaries of Arrays
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot: [ItemKeyType: [ItemValueType]])`.
 
     If you encoded custom objects for your values or keys conforming to `CerealType`, use `CerealDecoder.rootCerealItems(with:)` instead.
 
     If you encoded custom objects for your values and keys conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
     - returns:       The instantiated object.
     */
     public static func rootItems<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] {
@@ -999,11 +999,11 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
 
     If you encoded custom objects for your keys conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealItems<ItemKeyType: CerealRepresentable & Hashable, ItemValueType: CerealType>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] {
@@ -1013,11 +1013,11 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
 
     If you encoded custom objects for your values conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
     - returns:       The instantiated object.
     */
     public static func rootCerealItems<ItemKeyType: CerealType & Hashable, ItemValueType: CerealRepresentable>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] {
@@ -1027,9 +1027,9 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
     - returns:       The instantiated object.
     */
     public static func rootCerealPairItems<ItemKeyType: CerealType & Hashable, ItemValueType: CerealType>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] {
@@ -1039,14 +1039,14 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: [IdentifyingCerealType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot:  [ItemKeyType: [IdentifyingCerealType]])`.
 
     If you encoded custom objects for your keys conforming to `CerealType`, use `CerealDecoder.rootCerealToIdentifyingCerealItems(with:)` instead.
     
     The `IdentifyingCerealType` for the returned object must be registered
     before calling this method.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: [IdentifyingCerealType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot:  [ItemKeyType: [IdentifyingCerealType]])`.
     - returns:       The instantiated object.
     */
     public static func rootIdentifyingCerealItems<ItemKeyType: CerealRepresentable & Hashable>(with data: Data) throws -> [ItemKeyType: [IdentifyingCerealType]] {
@@ -1056,12 +1056,12 @@ public struct CerealDecoder {
     }
 
     /**
-    Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: [IdentifyingCerealType]])`.
+    Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot:  [ItemKeyType: [IdentifyingCerealType]])`.
 
     The `IdentifyingCerealType` for the returned object must be registered
     before calling this method.
 
-    - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: [IdentifyingCerealType]])`.
+    - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot:  [ItemKeyType: [IdentifyingCerealType]])`.
     - returns:      The instantiated object.
     */
     public static func rootCerealToIdentifyingCerealItems<ItemKeyType: CerealType & Hashable>(with data: Data) throws -> [ItemKeyType: [IdentifyingCerealType]] {
@@ -1722,13 +1722,13 @@ public extension CerealDecoder {
     // MARK: Arrays of Dictionaries
 
     /**
-     Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+     Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
 
      If you encoded custom objects for your values or keys conforming to `CerealType`, use `CerealDecoder.rootCerealItems(with:)` instead.
 
      If you encoded custom objects for your values and keys conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-     - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+     - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
      - returns:       The instantiated object.
      */
     public static func rootItems<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable {
@@ -1738,13 +1738,13 @@ public extension CerealDecoder {
     }
 
     /**
-     Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+     Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
 
      If you encoded custom objects for your values or keys conforming to `CerealType`, use `CerealDecoder.rootCerealItems(with:)` instead.
 
      If you encoded custom objects for your values and keys conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-     - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+     - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
      - returns:       The instantiated object.
      */
     public static func rootItems<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
@@ -1754,11 +1754,11 @@ public extension CerealDecoder {
     }
 
     /**
-     Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+     Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
 
      If you encoded custom objects for your keys conforming to `CerealType`, use `CerealDecoder.rootCerealPairItems(with:)` instead.
 
-     - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
+     - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(withRoot:  [ItemKeyType: [ItemValueType]])`.
      - returns:      The instantiated object.
      */
     public static func rootCerealItems<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealType>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable {
@@ -1770,14 +1770,14 @@ public extension CerealDecoder {
     // MARK: Dictionaries of Arrays
 
     /**
-     Decodes objects encoded with `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: [IdentifyingCerealType]])`.
+     Decodes objects encoded with `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot:  [ItemKeyType: [IdentifyingCerealType]])`.
 
      If you encoded custom objects for your keys conforming to `CerealType`, use `CerealDecoder.rootCerealToIdentifyingCerealItems(with:)` instead.
 
      The `IdentifyingCerealType` for the returned object must be registered
      before calling this method.
 
-     - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: [IdentifyingCerealType]])`.
+     - parameter     data:    The data returned by `CerealEncoder.data<ItemKeyType: protocol<CerealRepresentable, Hashable>>(withRoot:  [ItemKeyType: [IdentifyingCerealType]])`.
      - returns:       The instantiated object.
      */
     public static func rootIdentifyingCerealItems<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(with data: Data) throws -> [ItemKeyType: [IdentifyingCerealType]] where ItemKeyType.RawValue: CerealRepresentable {
