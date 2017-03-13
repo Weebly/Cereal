@@ -47,4 +47,12 @@ extension AppDelegate: WCSessionDelegate {
         guard let storedEmployeeData = NSUserDefaults.standardUserDefaults().objectForKey("employeeList") as? NSData else { return }
         reply["employeeList"] = storedEmployeeData
     }
+    @available(iOS 9.3, *)
+    @available(watchOSApplicationExtension 2.2, *)
+    func session(session: WCSession, activationDidCompleteWithState activationState: WCSessionActivationState, error: NSError?) {
+    }
+    func sessionDidBecomeInactive(session: WCSession) {
+    }
+    func sessionDidDeactivate(session: WCSession) {
+    }
 }
