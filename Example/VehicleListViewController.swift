@@ -33,7 +33,7 @@ class VehicleListViewController: UITableViewController {
 
     fileprivate func storeVehicles() {
         do {
-            UserDefaults.standard.set(try CerealEncoder.dataWithRootItem(vehicles.CER_casted() as [IdentifyingCerealType]), forKey: "vehicleList")
+            UserDefaults.standard.set(try CerealEncoder.data(withRoot: vehicles.CER_casted() as [IdentifyingCerealType]), forKey: "vehicleList")
             UserDefaults.standard.synchronize()
         } catch let error {
             NSLog("Couldn't write employees to defaults due to error: \(error)")

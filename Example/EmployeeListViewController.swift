@@ -34,7 +34,7 @@ class EmployeeListViewController: UITableViewController {
 
     fileprivate func storeEmployees() {
         do {
-            let data = try CerealEncoder.dataWithRootItem(employees)
+            let data = try CerealEncoder.data(withRoot: employees)
             UserDefaults.standard.set(data, forKey: "employeeList")
             UserDefaults.standard.synchronize()
 
