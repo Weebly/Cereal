@@ -44,7 +44,7 @@ internal enum CerealCoderTreeValueType: UInt8 {
     case subTree = 11
     case identifyingTree = 12
 
-    case Data = 13
+    case data = 13
 }
 
 // MARK: Helpers
@@ -176,7 +176,7 @@ private extension CoderTreeValue {
 
             case let .data(value):
                 var bytes = [UInt8](value)
-                buffer.append(CerealCoderTreeValueType.Data.rawValue)
+                buffer.append(CerealCoderTreeValueType.data.rawValue)
                 bytes.insert(contentsOf: toByteArray(bytes.count), at: 0)
                 buffer.append(contentsOf: bytes)
         }
@@ -385,7 +385,7 @@ private extension CoderTreeValue {
                 return
 
 
-            case .Data:
+            case .data:
                 let valueBytes = Array(bytes[startIndex..<endIndex])
                 let data = Data(bytes: UnsafePointer<UInt8>(valueBytes), count: valueBytes.count)
                 self = .data(data)
