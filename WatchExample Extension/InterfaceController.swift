@@ -54,7 +54,7 @@ class InterfaceController: WKInterfaceController {
 
     fileprivate func updateEmployeesWithData(_ employeeData: Data) {
         do {
-            employees = try CerealDecoder.rootCerealItemsWithData(data: employeeData)
+            employees = try CerealDecoder.rootCerealItems(with: employeeData)
             configureTable()
         } catch let error {
             NSLog("Data was unable to be decoded due to error: \(error)")

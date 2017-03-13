@@ -25,7 +25,7 @@ class VehicleListViewController: UITableViewController {
     fileprivate func loadStoredVehicles() {
         guard let storedVehicleData = UserDefaults.standard.object(forKey: "vehicleList") as? Data else { return }
         do {
-            vehicles = try CerealDecoder.rootIdentifyingCerealItemsWithData(data: storedVehicleData).CER_casted()
+            vehicles = try CerealDecoder.rootIdentifyingCerealItems(with: storedVehicleData).CER_casted()
         } catch let error {
             NSLog("Couldn't decode employees due to error: \(error)")
         }

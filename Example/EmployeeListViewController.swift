@@ -26,7 +26,7 @@ class EmployeeListViewController: UITableViewController {
     fileprivate func loadStoredEmployees() {
         guard let storedEmployeeData = UserDefaults.standard.object(forKey: "employeeList") as? Data else { return }
         do {
-            employees = try CerealDecoder.rootCerealItemsWithData(data: storedEmployeeData)
+            employees = try CerealDecoder.rootCerealItems(with: storedEmployeeData)
         } catch let error {
             NSLog("Couldn't decode employees due to error: \(error)")
         }
