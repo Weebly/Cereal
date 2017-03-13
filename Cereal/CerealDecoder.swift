@@ -1731,7 +1731,7 @@ public extension CerealDecoder {
      - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
      - returns:       The instantiated object.
      */
-    public static func rootItemsWithData<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable {
+    public static func rootItems<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealRepresentable>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable {
         let decoder = try CerealDecoder(data: data)
         guard let item: [ItemKeyType: [ItemValueType]] = try decoder.decode(key: rootKey) else { throw CerealError.rootItemNotFound }
         return item
@@ -1747,7 +1747,7 @@ public extension CerealDecoder {
      - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
      - returns:       The instantiated object.
      */
-    public static func rootItemsWithData<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
+    public static func rootItems<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: RawRepresentable & CerealRepresentable>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable, ItemValueType.RawValue: CerealRepresentable {
         let decoder = try CerealDecoder(data: data)
         guard let item: [ItemKeyType: [ItemValueType]] = try decoder.decode(key: rootKey) else { throw CerealError.rootItemNotFound }
         return item
@@ -1761,7 +1761,7 @@ public extension CerealDecoder {
      - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>, ItemValueType: CerealRepresentable>(root: [ItemKeyType: [ItemValueType]])`.
      - returns:      The instantiated object.
      */
-    public static func rootCerealItemsWithData<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealType>(data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable {
+    public static func rootCerealItems<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable, ItemValueType: CerealType>(with data: Data) throws -> [ItemKeyType: [ItemValueType]] where ItemKeyType.RawValue: CerealRepresentable {
         let decoder = try CerealDecoder(data: data)
         guard let item: [ItemKeyType: [ItemValueType]] = try decoder.decodeCereal(key: rootKey) else { throw CerealError.rootItemNotFound }
         return item
@@ -1780,7 +1780,7 @@ public extension CerealDecoder {
      - parameter     data:    The data returned by `CerealEncoder.dataWithRootItem<ItemKeyType: protocol<CerealRepresentable, Hashable>>(root: [ItemKeyType: [IdentifyingCerealType]])`.
      - returns:       The instantiated object.
      */
-    public static func rootIdentifyingCerealItemsWithData<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(data: Data) throws -> [ItemKeyType: [IdentifyingCerealType]] where ItemKeyType.RawValue: CerealRepresentable {
+    public static func rootIdentifyingCerealItems<ItemKeyType: RawRepresentable & CerealRepresentable & Hashable>(with data: Data) throws -> [ItemKeyType: [IdentifyingCerealType]] where ItemKeyType.RawValue: CerealRepresentable {
         let decoder = try CerealDecoder(data: data)
         guard let item: [ItemKeyType: [IdentifyingCerealType]] = try decoder.decodeIdentifyingCerealDictionary(key: rootKey) else { throw CerealError.rootItemNotFound }
         return item
