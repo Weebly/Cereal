@@ -26,7 +26,7 @@ private class TypeIndexMapHolder: SyncHolder<TypeIndexMap> {
         return result
     }
 
-    func save(map: [String: Int], forType type: Any.Type) {
+    func save(map: [String: Int], for type: Any.Type) {
         self.appendData(TypeIndexMap(type: type, map: map))
     }
 }
@@ -1123,12 +1123,12 @@ public struct CerealDecoder {
         switch value {
         case let .identifyingTree(_, items):
             let map = buildIndexMap(items: items)
-            typesHolder.save(map: map, forType: type)
+            typesHolder.save(map: map, for: type)
             return map
 
         case let .subTree(items):
             let map = buildIndexMap(items: items)
-            typesHolder.save(map: map, forType: type)
+            typesHolder.save(map: map, for: type)
             return map
         default:
             return [:]
