@@ -35,7 +35,7 @@ class InterfaceController: WKInterfaceController {
     fileprivate func refreshEmployees() {
         WCSession.default().sendMessage(["action": "updateEmployees"], replyHandler: { reply in
             guard let employeeData = reply["employeeList"] as? Data else { return }
-            self.updateEmployeesWithData(employeeData)
+            self.updateEmployees(withData: employeeData)
         }, errorHandler: { error in
                 NSLog("Failed to update employee list due to error: \(error)")
         })
@@ -52,7 +52,7 @@ class InterfaceController: WKInterfaceController {
         }
     }
 
-    fileprivate func updateEmployeesWithData(_ employeeData: Data) {
+    fileprivate func updateEmployees(withData employeeData: Data) {
         do {
             employees = try CerealDecoder.rootCerealItems(with: employeeData)
             configureTable()
@@ -63,7 +63,7 @@ class InterfaceController: WKInterfaceController {
 
     @objc fileprivate func employeesUpdatedRemotely(_ note: Notification) {
         guard let employeeData = note.userInfo?["employeeList"] as? Data else { return }
-        updateEmployeesWithData(employeeData)
+        updateEmployees(withData: employeeData)
     }
 
     deinit {
