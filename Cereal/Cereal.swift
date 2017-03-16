@@ -59,7 +59,7 @@ public func register(_ identifyingCerealType: IdentifyingCerealType.Type) {
     identifierMap[identifyingCerealType.initializationIdentifier] = identifyingCerealType
 }
 
-func identifyingCerealTypeWithIdentifier(_ identifier: String) throws -> IdentifyingCerealType.Type {
+func identifyingCerealType(withIdentifier identifier: String) throws -> IdentifyingCerealType.Type {
     guard let t = identifierMap[identifier] else {
         throw CerealError.unregisteredCustomType("Type with identifier \(identifier) not found")
     }

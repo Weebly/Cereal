@@ -1157,7 +1157,7 @@ public struct CerealDecoder {
             throw CerealError.rootItemNotFound
         }
 
-        let type = try identifyingCerealTypeWithIdentifier(identifier)
+        let type = try identifyingCerealType(withIdentifier: identifier)
 
         let map = CerealDecoder.propertiesIndexMapForType(type: type.self, value: value)
 
