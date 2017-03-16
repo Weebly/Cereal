@@ -1104,7 +1104,7 @@ public struct CerealDecoder {
 
     /// Helper method to improve decoding speed for large objects:
     /// method returns index map to read value for key without enumerating through all the items
-    fileprivate static func propertiesIndexMapForType(type: Any.Type, value: CoderTreeValue) -> [String: Int] {
+    fileprivate static func propertiesIndexMap(for type: Any.Type, value: CoderTreeValue) -> [String: Int] {
         if let map = typesHolder.typeMap(forType: type) {
             return map
         }
@@ -1137,7 +1137,7 @@ public struct CerealDecoder {
 
     /// Used for CerealType where we have type data from the compiler
     fileprivate static func instantiateCereal<DecodedType: CerealType>(value: CoderTreeValue) throws -> DecodedType {
-        let map = CerealDecoder.propertiesIndexMapForType(type: DecodedType.self, value: value)
+        let map = CerealDecoder.propertiesIndexMap(for: DecodedType.self, value: value)
 
         let cereal: CerealDecoder
         switch value {
@@ -1159,7 +1159,7 @@ public struct CerealDecoder {
 
         let type = try identifyingCerealType(withIdentifier: identifier)
 
-        let map = CerealDecoder.propertiesIndexMapForType(type: type.self, value: value)
+        let map = CerealDecoder.propertiesIndexMap(for: type.self, value: value)
 
         let cereal = CerealDecoder(items: items, map: map)
         return try type.init(decoder: cereal)
