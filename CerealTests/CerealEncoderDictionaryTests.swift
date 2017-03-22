@@ -15,13 +15,13 @@ class CerealEncoderDictionaryTests: XCTestCase {
         super.tearDown()
     }
 
-    // MARK: [NSDate: XXX]
+    // MARK: [Date: XXX]
 
-    func testToBytes_withNSDateToBoolDictionary() {
+    func testToBytes_withDateToBoolDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([first: true, second: false], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -32,11 +32,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSDateToIntDictionary() {
+    func testToBytes_withDateToIntDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 15.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 25.0)
+            let first = Date(timeIntervalSinceReferenceDate: 15.0)
+            let second = Date(timeIntervalSinceReferenceDate: 25.0)
             try subject.encode([first: 1, second: 3], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,100,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,70,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -47,12 +47,12 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSDateToInt64Dictionary() {
+    func testToBytes_withDateToInt64Dictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
-            try subject.encode([first: 1, second: 123456789012345678] as [NSDate: Int64], forKey: "wat")
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
+            try subject.encode([first: 1, second: 123456789012345678] as [Date: Int64], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,100,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,70,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
             XCTAssertTrue(result.containsSubArray([9,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,52,64,3,8,0,0,0,0,0,0,0,78,243,48,166,75,155,182,1]))
@@ -62,11 +62,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSDateToStringDictionary() {
+    func testToBytes_withDateToStringDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([first: "hello", second: "world"], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,94,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,64,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -77,12 +77,12 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSDateToFloatDictionary() {
+    func testToBytes_withDateToFloatDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
-            try subject.encode([first: 1.3, second: 3.14] as [NSDate: Float], forKey: "wat")
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
+            try subject.encode([first: 1.3, second: 3.14] as [Date: Float], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,92,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,62,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
             XCTAssertTrue(result.containsSubArray([9,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,52,64,5,4,0,0,0,0,0,0,0,195,245,72, 64]))
@@ -92,11 +92,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSDateToDoubleDictionary() {
+    func testToBytes_withDateToDoubleDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([first: 2.3, second: 1.14], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,100,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,70,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -107,11 +107,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSDateToCerealDictionary() {
+    func testToBytes_withDateToCerealDictionary() {
         do {
             var subject = CerealEncoder()
-            let firstKey = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let secondKey = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let firstKey = Date(timeIntervalSinceReferenceDate: 10.0)
+            let secondKey = Date(timeIntervalSinceReferenceDate: 20.0)
             let first = TestCerealType(foo: "bar")
             let second = TestCerealType(foo: "baz")
             try subject.encode([firstKey: first, secondKey: second], forKey: "wat")
@@ -124,11 +124,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSDateToIdentifyingCerealDictionary() {
+    func testToBytes_withDateToIdentifyingCerealDictionary() {
         do {
             var subject = CerealEncoder()
-            let firstKey = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let secondKey = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let firstKey = Date(timeIntervalSinceReferenceDate: 10.0)
+            let secondKey = Date(timeIntervalSinceReferenceDate: 20.0)
             let first = TestIdentifyingCerealType(foo: "bar")
             let second = TestIdentifyingCerealType(foo: "baz")
             try subject.encodeIdentifyingItems([firstKey: first, secondKey: second], forKey: "wat")
@@ -141,11 +141,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSDateToProtocoledIdentifyingCerealDictionary() {
+    func testToBytes_withDateToProtocoledIdentifyingCerealDictionary() {
         do {
             var subject = CerealEncoder()
-            let firstKey = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let secondKey = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let firstKey = Date(timeIntervalSinceReferenceDate: 10.0)
+            let secondKey = Date(timeIntervalSinceReferenceDate: 20.0)
             let first = TestIdentifyingCerealType(foo: "bar")
             let second = TestIdentifyingCerealType(foo: "baz")
             try subject.encodeIdentifyingItems([firstKey: first, secondKey: second], forKey: "wat")
@@ -158,13 +158,13 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
     
-    // MARK: [NSURL: XXX]
+    // MARK: [URL: XXX]
     
-    func testToBytes_withNSURLToBoolDictionary() {
+    func testToBytes_withURLToBoolDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSURL(string: "http://test.com")!
-            let second = NSURL(string: "http://test1.com")!
+            let first = URL(string: "http://test.com")!
+            let second = URL(string: "http://test1.com")!
             try subject.encode([first: true, second: false], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,101,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,71,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -175,11 +175,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSURLToIntDictionary() {
+    func testToBytes_withURLToIntDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSURL(string: "http://test.com")!
-            let second = NSURL(string: "http://test1.com")!
+            let first = URL(string: "http://test.com")!
+            let second = URL(string: "http://test1.com")!
             try subject.encode([first: 1, second: 3], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,115,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,85,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -190,12 +190,12 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
     
-    func testToBytes_withNSURLToInt64Dictionary() {
+    func testToBytes_withURLToInt64Dictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSURL(string: "http://test.com")!
-            let second = NSURL(string: "http://test1.com")!
-            try subject.encode([first: 1, second: 123456789012345678] as [NSURL: Int64], forKey: "wat")
+            let first = URL(string: "http://test.com")!
+            let second = URL(string: "http://test1.com")!
+            try subject.encode([first: 1, second: 123456789012345678] as [URL: Int64], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,115,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,85,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
             XCTAssertTrue(result.containsSubArray([9,8,15,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,46,99,111,109,3,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]))
@@ -205,11 +205,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
     
-    func testToBytes_withNSURLToStringDictionary() {
+    func testToBytes_withURLToStringDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSURL(string: "http://test.com")!
-            let second = NSURL(string: "http://test1.com")!
+            let first = URL(string: "http://test.com")!
+            let second = URL(string: "http://test1.com")!
             try subject.encode([first: "hello", second: "world"], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,109,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,79,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -220,12 +220,12 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSURLToFloatDictionary() {
+    func testToBytes_withURLToFloatDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSURL(string: "http://test.com")!
-            let second = NSURL(string: "http://test1.com")!
-            try subject.encode([first: 1.3, second: 3.14] as [NSURL: Float], forKey: "wat")
+            let first = URL(string: "http://test.com")!
+            let second = URL(string: "http://test1.com")!
+            try subject.encode([first: 1.3, second: 3.14] as [URL: Float], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,107,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,77,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
             XCTAssertTrue(result.containsSubArray([9,8,15,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,46,99,111,109,5,4,0,0,0,0,0,0,0,102,102,166,63]))
@@ -235,11 +235,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
     
-    func testToBytes_withNSURLToDoubleDictionary() {
+    func testToBytes_withURLToDoubleDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSURL(string: "http://test.com")!
-            let second = NSURL(string: "http://test1.com")!
+            let first = URL(string: "http://test.com")!
+            let second = URL(string: "http://test1.com")!
             try subject.encode([first: 2.3, second: 1.14], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,115,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,85,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -250,11 +250,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSURLToCerealDictionary() {
+    func testToBytes_withURLToCerealDictionary() {
         do {
             var subject = CerealEncoder()
-            let firstKey = NSURL(string: "http://test.com")!
-            let secondKey = NSURL(string: "http://test1.com")!
+            let firstKey = URL(string: "http://test.com")!
+            let secondKey = URL(string: "http://test1.com")!
             let first = TestCerealType(foo: "bar")
             let second = TestCerealType(foo: "baz")
             try subject.encode([firstKey: first, secondKey: second], forKey: "wat")
@@ -267,11 +267,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withNSURLToIdentifyingCerealDictionary() {
+    func testToBytes_withURLToIdentifyingCerealDictionary() {
         do {
             var subject = CerealEncoder()
-            let firstKey = NSURL(string: "http://test.com")!
-            let secondKey = NSURL(string: "http://test1.com")!
+            let firstKey = URL(string: "http://test.com")!
+            let secondKey = URL(string: "http://test1.com")!
             let first = TestIdentifyingCerealType(foo: "bar")
             let second = TestIdentifyingCerealType(foo: "baz")
             try subject.encodeIdentifyingItems([firstKey: first, secondKey: second], forKey: "wat")
@@ -286,11 +286,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
     
-    func testToBytes_withNSURLToProtocoledIdentifyingCerealDictionary() {
+    func testToBytes_withURLToProtocoledIdentifyingCerealDictionary() {
         do {
             var subject = CerealEncoder()
-            let firstKey = NSURL(string: "http://test.com")!
-            let secondKey = NSURL(string: "http://test1.com")!
+            let firstKey = URL(string: "http://test.com")!
+            let secondKey = URL(string: "http://test1.com")!
             let first = TestIdentifyingCerealType(foo: "bar")
             let second = TestIdentifyingCerealType(foo: "baz")
             try subject.encodeIdentifyingItems([firstKey: first, secondKey: second], forKey: "wat")
@@ -385,11 +385,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withBoolToNSDateDictionary() {
+    func testToBytes_withBoolToDateDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([true: first, false: second], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,86,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,56,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -525,11 +525,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withIntToNSDateDictionary() {
+    func testToBytes_withIntToDateDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([0: first, 1: second], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,100,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,70,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -665,7 +665,7 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withInt64ToNSDateDictionary() {
+    func testToBytes_withInt64ToDateDictionary() {
         do {
             var subject = CerealEncoder()
             try subject.encode([0: 8.6, 123456789012345678: 9.4] as [Int64: Double], forKey: "wat")
@@ -791,11 +791,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withStringToNSDateDictionary() {
+    func testToBytes_withStringToDateDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode(["foo": first, "bar": second], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,90,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,60,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -916,12 +916,12 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withFloatToNSDateDictionary() {
+    func testToBytes_withFloatToDateDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 11.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 19.0)
-            try subject.encode([1.0: first, 1.1: second] as [Float: NSDate], forKey: "wat")
+            let first = Date(timeIntervalSinceReferenceDate: 11.0)
+            let second = Date(timeIntervalSinceReferenceDate: 19.0)
+            try subject.encode([1.0: first, 1.1: second] as [Float: Date], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,92,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,62,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
             XCTAssertTrue(result.containsSubArray([9,5,4,0,0,0,0,0,0,0,0,0,128,63,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,38,64]))
@@ -1041,11 +1041,11 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withDoubleToNSDateDictionary() {
+    func testToBytes_withDoubleToDateDictionary() {
         do {
             var subject = CerealEncoder()
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([1.0: first, 1.1: second], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,100,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,70,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -1178,13 +1178,13 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withCerealToNSDateDictionary() {
+    func testToBytes_withCerealToDateDictionary() {
         do {
             var subject = CerealEncoder()
             let firstKey = TestCerealType(foo: "bar")
             let secondKey = TestCerealType(foo: "baz")
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([firstKey: first, secondKey: second], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,150,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,120,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -1323,13 +1323,13 @@ class CerealEncoderDictionaryTests: XCTestCase {
         }
     }
 
-    func testToBytes_withIdentifyingCerealToNSDateDictionary() {
+    func testToBytes_withIdentifyingCerealToDateDictionary() {
         do {
             var subject = CerealEncoder()
             let firstKey = TestIdentifyingCerealType(foo: "bar")
             let secondKey = TestIdentifyingCerealType(foo: "baz")
-            let first = NSDate(timeIntervalSinceReferenceDate: 10.0)
-            let second = NSDate(timeIntervalSinceReferenceDate: 20.0)
+            let first = Date(timeIntervalSinceReferenceDate: 10.0)
+            let second = Date(timeIntervalSinceReferenceDate: 20.0)
             try subject.encode([firstKey: first, secondKey: second], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,176,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,146,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
@@ -1379,7 +1379,7 @@ class CerealEncoderDictionaryTests: XCTestCase {
     func testToBytes_withStringEnumToIntDictionary() {
         do {
             var subject = CerealEncoder()
-            try subject.encode([TestEnum.TestCase1: 1, TestEnum.TestCase2: 2], forKey: "wat")
+            try subject.encode([TestEnum.testCase1: 1, TestEnum.testCase2: 2], forKey: "wat")
             let result = subject.toBytes()
             XCTAssertTrue(result.hasArrayPrefix([11,102,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,119,97,116,10,72,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0]))
             XCTAssertTrue(result.containsSubArray([9,1,9,0,0,0,0,0,0,0,84,101,115,116,67,97,115,101,49,2,8,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0]))

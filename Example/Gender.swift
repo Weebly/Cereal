@@ -9,6 +9,6 @@
 import Cereal
 
 enum Gender: Int {
-    case Female
-    case Male
+    case female
+    case male
 }

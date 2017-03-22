@@ -91,7 +91,7 @@ class CerealEncoderArrayTests: XCTestCase {
 
     func testToBytes_withDateArray() {
         do {
-            try subject.encode([NSDate(timeIntervalSinceReferenceDate: 10.0),NSDate(timeIntervalSinceReferenceDate: 11.0),NSDate(timeIntervalSinceReferenceDate: 20.0)], forKey: "date")
+            try subject.encode([Date(timeIntervalSinceReferenceDate: 10.0),Date(timeIntervalSinceReferenceDate: 11.0),Date(timeIntervalSinceReferenceDate: 20.0)], forKey: "date")
             let result = subject.toBytes()
             let expected: [UInt8] = [11,82,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,100,97,116,101,10,51,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,36,64,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,38,64,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,52,64]
             XCTAssertEqual(result, expected)
@@ -102,7 +102,7 @@ class CerealEncoderArrayTests: XCTestCase {
     
     func testToBytes_withURLArray() {
         do {
-            try subject.encode([NSURL(string: "http://test.com")!,NSURL(string: "http://test1.com")!,NSURL(string: "http://test2.com")!], forKey: "urls")
+            try subject.encode([URL(string: "http://test.com")!,URL(string: "http://test1.com")!,URL(string: "http://test2.com")!], forKey: "urls")
             let result = subject.toBytes()
             let expected: [UInt8] = [11,105,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,117,114,108,115,10,74,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,8,15,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,46,99,111,109,8,16,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,49,46,99,111,109,8,16,0,0,0,0,0,0,0,104,116,116,112,58,47,47,116,101,115,116,50,46,99,111,109]
             XCTAssertEqual(result, expected)
@@ -113,9 +113,10 @@ class CerealEncoderArrayTests: XCTestCase {
 
     func testToBytes_withUnsupportedCerealRepresentable_returnsCorrectError() {
         do {
-            try subject.encode(NSHashTable(), forKey: "string")
-            XCTFail("Expected an error to be thrown")
-        } catch CerealError.UnsupportedCerealRepresentable {
+            let test = NSIndexSet()
+            try subject.encode(test, forKey: "string")
+            XCTFail("Expected an error to be thrown on \(test)")
+        } catch CerealError.unsupportedCerealRepresentable {
             // The test passes if this block is executed
         } catch {
             XCTFail("The expected type of error was not thrown")
@@ -164,7 +165,7 @@ class CerealEncoderArrayTests: XCTestCase {
 
     func testToBytes_withStringEnumRawRepresentableArray() {
         do {
-            try subject.encode([TestEnum.TestCase1, TestEnum.TestCase2], forKey: "raws")
+            try subject.encode([TestEnum.testCase1, TestEnum.testCase2], forKey: "raws")
             let result = subject.toBytes()
             let expected: [UInt8] = [11,67,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,114,97,119,115,10,36,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,9,0,0,0,0,0,0,0,84,101,115,116,67,97,115,101,49,1,9,0,0,0,0,0,0,0,84,101,115,116,67,97,115,101,50]
             XCTAssertEqual(result, expected)

@@ -19,12 +19,12 @@ private struct SharedKeys {
     static let model = "model"
 }
 
-enum VehicleError: ErrorType {
-    case MissingData
+enum VehicleError: Error {
+    case missingData
 }
 
 struct Car: Vehicle {
-    private struct Keys {
+    fileprivate struct Keys {
         static let cylinders = "cylinders"
     }
 
@@ -39,13 +39,13 @@ struct Car: Vehicle {
     static let initializationIdentifier = "car"
 
     init(decoder: CerealDecoder) throws {
-        guard let make: String = try decoder.decode(SharedKeys.make) else { throw VehicleError.MissingData }
+        guard let make: String = try decoder.decode(key: SharedKeys.make) else { throw VehicleError.missingData }
         self.make = make
 
-        guard let model: String = try decoder.decode(SharedKeys.model) else { throw VehicleError.MissingData }
+        guard let model: String = try decoder.decode(key: SharedKeys.model) else { throw VehicleError.missingData }
         self.model = model
 
-        guard let cylinders: Int = try decoder.decode(Keys.cylinders) else { throw VehicleError.MissingData }
+        guard let cylinders: Int = try decoder.decode(key: Keys.cylinders) else { throw VehicleError.missingData }
         self.cylinders = cylinders
     }
 
@@ -55,7 +55,7 @@ struct Car: Vehicle {
         self.cylinders = cylinders
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(make, forKey: SharedKeys.make)
         try cereal.encode(model, forKey: SharedKeys.model)
         try cereal.encode(cylinders, forKey: Keys.cylinders)
@@ -63,7 +63,7 @@ struct Car: Vehicle {
 }
 
 struct Train: Vehicle {
-    private struct Keys {
+    fileprivate struct Keys {
         static let cars = "cars"
     }
 
@@ -78,13 +78,13 @@ struct Train: Vehicle {
     static let initializationIdentifier = "train"
 
     init(decoder: CerealDecoder) throws {
-        guard let make: String = try decoder.decode(SharedKeys.make) else { throw VehicleError.MissingData }
+        guard let make: String = try decoder.decode(key: SharedKeys.make) else { throw VehicleError.missingData }
         self.make = make
 
-        guard let model: String = try decoder.decode(SharedKeys.model) else { throw VehicleError.MissingData }
+        guard let model: String = try decoder.decode(key: SharedKeys.model) else { throw VehicleError.missingData }
         self.model = model
 
-        guard let cars: Int = try decoder.decode(Keys.cars) else { throw VehicleError.MissingData }
+        guard let cars: Int = try decoder.decode(key: Keys.cars) else { throw VehicleError.missingData }
         self.cars = cars
     }
 
@@ -94,7 +94,7 @@ struct Train: Vehicle {
         self.cars = cars
     }
 
-    func encodeWithCereal(inout cereal: CerealEncoder) throws {
+    func encodeWithCereal(_ cereal: inout CerealEncoder) throws {
         try cereal.encode(make, forKey: SharedKeys.make)
         try cereal.encode(model, forKey: SharedKeys.model)
         try cereal.encode(cars, forKey: Keys.cars)
