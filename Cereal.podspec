@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Cereal"
-  s.version      = "2.0"
+  s.version      = "3.0"
   s.summary      = "Object and data serialization in Swift"
 
   s.description  = <<-DESC
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target = "2.0"
   #s.tvos.deployment_target = "1.0"
 
-  s.source       = { :git => "https://github.com/Weebly/Cereal.git", :tag => "v2.0.0" }
+  s.source       = { :git => "https://github.com/Weebly/Cereal.git", :tag => "v3.0.0" }
   s.requires_arc = true
   s.source_files = "Cereal/*.swift"
 
