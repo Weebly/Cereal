@@ -63,7 +63,9 @@ private func toByteArray<Type>(_ value: Type) -> [UInt8] {
 /// function takes an array of bytes and returns a value of type `Type`
 private func fromByteArray<Type>(_ value: [UInt8], _: Type.Type) -> Type {
     return value.withUnsafeBufferPointer {
-        return UnsafeRawPointer($0.baseAddress!).load(as: Type.self)
+        $0.baseAddress!.withMemoryRebound(to: Type.self, capacity: 1) {
+            $0.pointee
+        }
     }
 }
 
