@@ -31,7 +31,7 @@ public protocol CerealType: CerealRepresentable {
     
     - parameter     encoder:    The `CerealDecoder` to encode into.
     */
-    func encodeWithCereal(inout encoder: CerealEncoder) throws
+    func encodeWithCereal(_ encoder: inout CerealEncoder) throws
 }
 
 /**

@@ -12,8 +12,8 @@ import WatchConnectivity
 class ExtensionDelegate: NSObject, WKExtensionDelegate {
 
     func applicationDidFinishLaunching() {
-        WCSession.defaultSession().delegate = self
-        WCSession.defaultSession().activateSession()
+        WCSession.default().delegate = self
+        WCSession.default().activate()
     }
 
     func applicationDidBecomeActive() {
@@ -28,8 +28,11 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
 }
 
 extension ExtensionDelegate: WCSessionDelegate {
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
-        guard message["action"] as? String == "employeesUpdated", let employeeData = message["employeeList"] as? NSData else { return }
-        NSNotificationCenter.defaultCenter().postNotificationName("EmployeeListUpdated", object: nil, userInfo: ["employeeList": employeeData])
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        guard message["action"] as? String == "employeesUpdated", let employeeData = message["employeeList"] as? Data else { return }
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "EmployeeListUpdated"), object: nil, userInfo: ["employeeList": employeeData])
+    }
+    @available(watchOSApplicationExtension 2.2, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
     }
 }
