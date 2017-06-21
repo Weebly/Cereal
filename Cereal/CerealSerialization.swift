@@ -70,7 +70,7 @@ private func fromByteArray<Type>(_ value: [UInt8], _: Type.Type) -> Type {
 }
 
 /// function reads an array of bytes and returns an integer value (Int, Int64 etc)
-private func bytesToInteger<Type>(_ from: [UInt8]) -> Type where Type: Integer {
+private func bytesToInteger<Type>(_ from: [UInt8]) -> Type where Type: SignedInteger {
     return from.withUnsafeBufferPointer({
         UnsafeRawPointer($0.baseAddress!).load(as: Type.self)
     })

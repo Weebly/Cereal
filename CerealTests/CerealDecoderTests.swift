@@ -313,7 +313,7 @@ class CerealDecoderTests: XCTestCase {
         do {
             let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,2,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let s: String? = try subject.decode(key: "test")
-            XCTFail("Expected an error, but decoded: \(s)")
+            XCTFail("Expected an error, but decoded: \(String(describing: s))")
         } catch CerealError.invalidEncoding {
             // Test passes if this block is hit
         } catch {
@@ -325,7 +325,7 @@ class CerealDecoderTests: XCTestCase {
         do {
             let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: TestCerealType? = try subject.decodeCereal(key: "test")
-            XCTFail("Expected an error, but decoded: \(object)")
+            XCTFail("Expected an error, but decoded: \(String(describing: object))")
         } catch CerealError.invalidEncoding {
             // Test passes if this block is hit
         } catch {
@@ -337,7 +337,7 @@ class CerealDecoderTests: XCTestCase {
         do {
             let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: TestCerealType? = try subject.decodeCereal(key: "test")
-            XCTFail("Expected an error, but decoded: \(object)")
+            XCTFail("Expected an error, but decoded: \(String(describing: object))")
         } catch CerealError.invalidEncoding {
             // Test passes if this block is hit
         } catch {
@@ -349,7 +349,7 @@ class CerealDecoderTests: XCTestCase {
         do {
             let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: [Int]? = try subject.decode(key: "test")
-            XCTFail("Expected an error, but decoded: \(object)")
+            XCTFail("Expected an error, but decoded: \(String(describing: object))")
         } catch CerealError.typeMismatch {
             // Test passes if this block is hit
         } catch {
@@ -361,7 +361,7 @@ class CerealDecoderTests: XCTestCase {
         do {
             let subject = try CerealDecoder(encodedBytes: [11,28,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,4,0,0,0,0,0,0,0,116,101,115,116,1,5,0,0,0,0,0,0,0,104,101,108,108,111])
             let object: [Int]? = try subject.decode(key: "test")
-            XCTFail("Expected an error, but decoded: \(object)")
+            XCTFail("Expected an error, but decoded: \(String(describing: object))")
         } catch CerealError.typeMismatch {
             // Test passes if this block is hit
         } catch {

@@ -2160,7 +2160,7 @@ class CerealDecoderArrayTests: XCTestCase {
         do {
             let subject = try CerealDecoder(encodedBytes: [11,88,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9,1,2,0,0,0,0,0,0,0,104,105,10,59,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,2,8,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,9,1,3,0,0,0,0,0,0,0,102,111,111,1,3,0,0,0,0,0,0,0,98,97,114])
             let elements: [CerealRepresentable]? = try subject.decode(key: "hi")
-            XCTFail("Request should of thrown, but got elements: \(elements)")
+            XCTFail("Request should of thrown, but got elements: \(String(describing: elements))")
         } catch CerealError.invalidEncoding {
             // If this block is hit the test is a success
         } catch let error {
