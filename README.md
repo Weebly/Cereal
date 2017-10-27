@@ -23,7 +23,7 @@ Please note that the data stored in Cereal 2.0 is different from Cereal 1.3, and
 # Requirements
 
 * iOS 8.0+ / Mac OS X 10.9 / watchOS 2
-* Xcode 7.0+ (7.1 for CocoaPods w/ Watch OS 2)
+* Xcode 9.0+
 
 # Installation
 
@@ -39,7 +39,7 @@ both your watchOS target and iOS target, you'll need to use 0.39 to resolve a bu
 For basic integration, add this to your Podfile:
 
 ```
-pod 'Cereal', '~> 2.0'
+pod 'Cereal', '~> 4.0'
 ```
 
 ### Multiple Targets
@@ -48,7 +48,7 @@ If you want to incorporate Cereal with your watchOS target and your iOS target, 
 
 ```ruby
 def shared_pods 
-  pod 'Cereal', '~> 2.0'
+  pod 'Cereal', '~> 4.0'
 end
 
 target :"iOS App Target" do
@@ -67,7 +67,7 @@ end
 Carthage is a decentralized dependency manager. Add the following to your Cartfile to build Cereal:
 
 ```
-github "Weebly/Cereal" ~> 1.3.0
+github "Weebly/Cereal" ~> 4.0.0
 ```
 
 ## Manually
@@ -364,7 +364,7 @@ There are a lot of permutations that can be done with Cereal. I strongly encoura
 
 # LICENSE
 
-Copyright (c) 2015, Weebly All rights reserved.
+Copyright (c) 2017, Weebly All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
